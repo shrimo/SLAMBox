@@ -19,7 +19,7 @@ class NodeColorStyle:
         self.Fusion = (50, 100, 100)
         self.Draw = (50, 100, 50)
         self.Transform = (100, 50, 20)
-        self.Grade = (0, 30, 120)
+        self.Grade = (10, 50, 100)
         self.Filter = (100, 100, 100)
         self.Detection = (50, 30, 100)
         self.DNeuralNetworks = (30, 50, 100)
@@ -44,7 +44,7 @@ class Read(BaseNode):
         super(Read, self).__init__()
         self.add_output('out')
         self.add_text_input('device', 'Device', text='0', tab='attributes')
-        self.add_text_input('file', 'File/Stream', text='./video/road.mp4', tab='attributes')
+        self.add_text_input('file', 'File/Stream', text='../../video/road.mp4', tab='attributes')
         self.add_text_input('start', 'Start frame', text='0', tab='attributes')
         self.add_checkbox('camera', 'Camera', text='On/Off', state=False, tab='attributes')
         self.add_checkbox('loop', 'Loop', text='On/Off', state=True, tab='attributes')
@@ -238,9 +238,23 @@ class Resize(BaseNode):
         super(Resize, self).__init__()
         self.add_input('in', color=(180, 80, 0))
         self.add_output('out')
-        self.add_text_input('resize', 'Size', text='75', tab='attributes')
+        self.add_text_input('resize', 'Size', text='50', tab='attributes')
         self.create_property('label_resize', 'Resize', widget_type=NODE_PROP_QLABEL)
-        self.create_property('resize_x', 75, range=(10, 200), widget_type=NODE_PROP_SLIDER)
+        self.create_property('resize_x', 50, range=(10, 200), widget_type=NODE_PROP_SLIDER)
+        self.set_color(*ncs.Transform)
+
+class Reformat(BaseNode):
+    __identifier__ = 'nodes.Transform'
+    NODE_NAME = 'Reformat'
+    def __init__(self):
+        super(Reformat, self).__init__()
+        self.add_input('in', color=(180, 80, 0))
+        self.add_output('out')
+        self.add_checkbox('show_size', 'Show size', text='On/Off', state=False, tab='attributes')
+        self.create_property('label_width', 'Width', widget_type=NODE_PROP_QLABEL)
+        self.create_property('width_', 1024, range=(10, 1920), widget_type=NODE_PROP_SLIDER)
+        self.create_property('label_height', 'Height', widget_type=NODE_PROP_QLABEL)
+        self.create_property('height_', 576, range=(10, 1080), widget_type=NODE_PROP_SLIDER)
         self.set_color(*ncs.Transform)
 
 class Gamma(BaseNode):
@@ -283,3 +297,13 @@ class GRAY2BGR(BaseNode):
         self.add_output('out')
         self.set_color(*ncs.Grade)
 
+class CLAHE(BaseNode):
+    __identifier__ = 'nodes.Grade'
+    NODE_NAME = 'CLAHE'
+    def __init__(self):
+        super(CLAHE, self).__init__()
+        self.add_input('in', color=(180, 80, 0))
+        self.add_output('out')
+        self.add_text_input('clipLimit', 'Clip limits', text='2.0', tab='attributes')
+        self.add_text_input('tileGridSize', 'Tile grid size', text='8,8', tab='attributes')
+        self.set_color(*ncs.Grade)

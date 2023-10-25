@@ -53,7 +53,7 @@ class Node(SelectionTool):
         self.disabled = param['disabled']
         cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
         # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
-        cv2.moveWindow(self.window_name, 20,100)
+        cv2.moveWindow(self.window_name, 100,100)
         # Initialization to invoke the selection tool
         super().__init__(self.window_name, self.selection_callback)
         self.ROI_coordinates = None

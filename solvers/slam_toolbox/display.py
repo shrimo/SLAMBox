@@ -111,10 +111,10 @@ class Display3D:
         if self.q is None:
             return
         pts, colors, cam_pts = [], [], []
-        poses = mapp.frames[-1].pose # np.linalg.inv(mapp.frames[-1].pose)
+        poses = np.linalg.inv(mapp.frames[-1].pose)
         for f in mapp.frames:
             # invert pose for display only
-            f_pose = f.pose # np.linalg.inv(f.pose)
+            f_pose = np.linalg.inv(f.pose)
             # get position from transform matrix
             cam_position = f_pose[:,[-1]][:3].ravel()
             cam_pts.append(cam_position)

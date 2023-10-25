@@ -3,6 +3,10 @@ Description of the point and location map
 """
 
 import numpy as np
+import g2o # type: ignore
+from .optimize_g2o import optimize
+
+CULLING_ERR_THRES = 0.02
 
 def add_ones(x):
     if len(x.shape) == 1:
@@ -29,7 +33,7 @@ class Point:
         return add_ones(self.pt)
 
     def orb(self):
-        return [f.des[idx] for f,idx in zip(self.frames, self.idxs)]
+        return [f.descriptors[idx] for f,idx in zip(self.frames, self.idxs)]
 
     def orb_distance(self, des):
         return min([hamming_distance(o, des) for o in self.orb()])
@@ -64,5 +68,32 @@ class Map:
         self.max_frame += 1
         self.frames.append(frame)
         return ret
+
+    # Optimizer
+    def optimize(self, local_window=20, fix_points=False, verbose=False, rounds=50):
+        err = optimize(self.frames, self.points, local_window, fix_points, verbose, rounds)
+
+        # prune points
+        culled_pt_count = 0
+        for p in self.points:
+            # <= 4 match point that's old
+            old_point = len(p.frames) <= 4 and p.frames[-1].id+7 < self.max_frame
+
+            # compute reprojection error
+            errs = []
+            for f, idx in zip(p.frames, p.idxs):
+                uv = f.kps[idx]
+                proj = f.pose[:3] @ p.homogeneous()
+                proj = proj[0:2] / proj[2]
+                errs.append(np.linalg.norm(proj-uv))
+
+            # cull
+            if old_point or np.mean(errs) > CULLING_ERR_THRES:
+                culled_pt_count += 1
+                self.points.remove(p)
+                p.delete()
+        print("Culled:   %d points" % (culled_pt_count))
+        # print("Optimize: %f units of error" % err)
+        return err
 
 

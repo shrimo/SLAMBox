@@ -7,7 +7,7 @@ for processing and analyzing a optical stream.
 import sys
 from typing import List, Dict, Any
 from dataclasses import dataclass, field
-from collections import defaultdict
+from collections import defaultdict, Counter
 import socket
 import pickle
 import selectors
@@ -105,6 +105,7 @@ class OpticalCore:
     """ Running the Main Loop ('run' method) Filling the Node script with objects """
     def __init__(self, script: ScriptType) -> None:
         self.buffer = DataBuffer()
+        self.script = script
         self.graph = build_rooted_graph(script, self.buffer)
         self.com = Communication(HOST, PORT)
 
@@ -134,20 +135,23 @@ class OpticalCore:
                 if self.graph.stop():
                     break
 
+    def scripts_comparison(self, script: ScriptType) -> bool:
+        """ comparison of a running script with an updated script """
+        return Counter([x['id'] for x in script]) == Counter([x['id'] for x in self.script])
+
     def execution_controller(self, input_script:NodeType) -> None:
         """ Controller for building a graph of nodes and control parameter updates """
         match input_script['command']:
             case 'action':
-                self.graph = build_rooted_graph(input_script['script'], self.buffer)
+                self.script = input_script['script']
+                self.graph = build_rooted_graph(self.script, self.buffer)
             case 'update':
-                if self.graph:
+                if self.scripts_comparison(input_script['script']):
                     self.graph_update(self.graph, input_script['script'])
             case 'stop':
                 cv2.destroyAllWindows()
                 sys.exit(0)
 
-    # develop a comparison of two graphs and make changes
-    # only to those nodes that have changed their parameters
     def graph_update(self, graph:solvers.base_nodes.Viewer, data_update:ScriptType) -> None:
         """ Updating node graph in real time """
         if graph.get_input():
@@ -163,14 +167,17 @@ class OpticalCore:
     def __del__(self) -> None:
         """ Closing video capture and window """
         print('Optical Core Close')
-        cv2.destroyAllWindows()
+        # cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
+    print('opencv: '+solvers.cv2.__version__)
+    print('open3d: '+solvers.slam_box.o3d.__version__)
+    print('numpy: '+solvers.np.__version__)
     cc = solvers.Color()
-    VERSION_COLOR = str(cc.blue_atoll)[1:-1]
+    VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
     TEXT_COLOR = str(cc.white)[1:-1]
-    TEST_VERSION_SYSTEM = 'Blue Atoll. Version: ' + VERSION
+    TEST_VERSION_SYSTEM = 'SLAM box. Version: ' + VERSION
 
     default: ScriptType = [{'id': '0x7f6520f69fc0', 'type': 'Viewer', 'custom':
     {'node_name': 'Viewport', 'disabled': False},
@@ -179,7 +186,7 @@ if __name__ == '__main__':
     {'constant_color': VERSION_COLOR, 'width_': '1280', 'height_': '720', 'disabled': False},
     'out': ['0x7f6520f6b310'], 'in': []}, {'id': '0x7f6520f6b310', 'type': 'Text', 'custom':
     {'text': TEST_VERSION_SYSTEM, 'text_color_': TEXT_COLOR,
-    'px': '240', 'py': '360', 'size_': '2.0', 'disabled': False},
+    'px': '230', 'py': '370', 'size_': '2.0', 'disabled': False},
     'out': ['0x7f6520f69fc0'], 'in': ['0x7f6520f6ad10']}]
 
     ocore = OpticalCore(default)

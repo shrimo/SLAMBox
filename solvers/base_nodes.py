@@ -32,12 +32,6 @@ class Viewer(Node):
         cv2.imshow(self.window_name, frame)
         return True
 
-    # def caching(self, frame):
-    #     self.frame_cache.append(frame)
-    #     if len(self.frame_cache)>self.cache_size:
-    #         frame_from_cache = self.frame_cache.pop(0)
-    #         cv2.imshow(self.window_name, frame_from_cache)
-
     def stop(self):
         print('Stop Viewer')
         self.buffer.variable['STOPSLAM'] = True
@@ -288,4 +282,29 @@ class Resize(Node):
         self.disabled = param['disabled']
         self.resize = int(param['resize'])
         self.resize_x = param['resize_x']
+
+class Reformat(Node):
+    """ Reformat lets you resize and reposition your image 
+    sequences to a different format (width and height). """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.width = self.param['width_']
+        self.height = self.param['height_']
+
+    def out_frame(self):
+        frame = self.get_frame(0)
+        if frame is None:
+            print('Resize stop')
+            return None
+        if self.disabled:
+            return frame
+        # save temporary values
+        self.buffer.metadata['frame_size'] = [self.width, self.height]
+        return cv2.resize(frame, (self.width, self.height), interpolation=cv2.INTER_AREA)
+
+    def update(self, param):
+        self.disabled = param['disabled']
+        self.width = param['width_']
+        self.height = param['height_']
+        
 
