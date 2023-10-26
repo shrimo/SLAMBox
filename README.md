@@ -1,5 +1,5 @@
 # SLAMBox
-This application is designed for training, research, development using Simultaneous localization and mapping (SLAM) method
+This application is designed for use in education, research and development using the Simultaneous Localization and Mapping (SLAM) method.
 
 ![Screenshot01](screenshot01.png)
 
