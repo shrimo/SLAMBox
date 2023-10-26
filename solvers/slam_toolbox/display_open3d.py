@@ -69,12 +69,8 @@ class DisplayOpen3D:
     def send_to_visualization(self, mapp, psize):
         if self.queue is None:
             return
-        pts, colors = [], []
-        # pts, colors, cam_pts = [], [], []
-        if mapp.points:
-            for p in mapp.points:
-                pts.append(p.pt*self.scale)
-                colors.append(p.color*0.003)
+        pts = [p.pt*self.scale for p in mapp.points]
+        colors = [p.color*0.003 for p in mapp.points]
         self.queue.put((np.array(pts), np.array(colors), psize))
 
     def __del__(self):
