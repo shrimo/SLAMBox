@@ -41,7 +41,7 @@ class DetectorDescriptor(Node):
             self.H = int(self.H * downscale)
             self.W = 1024
 
-        print(self.W, self.H)
+        # print(self.W, self.H)
         # The camera intrinsic matrix represents the internal 
         # parameters of a camera, including the focal length, 
         # and it allows to project 3D points in the world 

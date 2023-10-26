@@ -70,7 +70,7 @@ class DisplayOpen3D:
         if self.queue is None:
             return
         pts = [p.pt*self.scale for p in mapp.points]
-        colors = [p.color*0.003 for p in mapp.points]
+        colors = [p.color*0.003 for p in mapp.points] # 0.003 - coefficient for converting 0:255 to 0:1
         self.queue.put((np.array(pts), np.array(colors), psize))
 
     def __del__(self):
