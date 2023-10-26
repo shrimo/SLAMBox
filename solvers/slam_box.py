@@ -7,8 +7,6 @@ import time
 import numpy as np
 import cv2
 from skimage.measure import LineModelND, ransac # type: ignore
-from scipy.spatial.transform import Rotation as sciR
-import open3d as o3d
 from .slam_toolbox import (Frame, Map, Point, 
     DisplayOpen3D, match_frame)
 from .root_nodes import Node

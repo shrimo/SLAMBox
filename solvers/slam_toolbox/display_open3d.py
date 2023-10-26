@@ -4,18 +4,17 @@ Show 3D map and camera path
 
 from multiprocessing import Process, Queue
 import numpy as np
-from scipy.spatial.transform import Rotation as scipyR
-import open3d as o3d
+from scipy.spatial.transform import Rotation as scipyR # type: ignore
+import open3d as o3d # type: ignore
 
 class DisplayOpen3D:
     def __init__(self, width=1280, height=720, scale=0.05, point_size=2.0):
-        self.amount = 500
+        self.amount = 100
         self.width = width
         self.height = height
         self.scale = scale
         self.point_size = point_size
         self.state = None
-        self.widget3d = None
         self.queue = Queue()
         self.vp = Process(target=self.viewer_thread, args=(self.queue,))
         self.vp.daemon = True
@@ -56,11 +55,12 @@ class DisplayOpen3D:
             self.state = q.get()
 
         if self.state is not None:
-            # draw keypoints
-            self.widget3d.point_size = self.state[2]
-            rotation_matrix = scipyR.from_euler('zyx', [0, 0, 180], degrees=True)
-            self.pcl.points = o3d.utility.Vector3dVector(rotation_matrix.apply(self.state[0]))
-            self.pcl.colors = o3d.utility.Vector3dVector(self.state[1])
+            if self.state[0].shape[0] >= 1:
+                # draw keypoints
+                self.widget3d.point_size = self.state[2]
+                rotation_matrix = scipyR.from_euler('zyx', [0, 0, 180], degrees=True)
+                self.pcl.points = o3d.utility.Vector3dVector(rotation_matrix.apply(self.state[0]))
+                self.pcl.colors = o3d.utility.Vector3dVector(self.state[1])
 
         self.vis.update_geometry(self.pcl)
         self.vis.poll_events()

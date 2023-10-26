@@ -13,7 +13,7 @@ import pickle
 import selectors
 import cv2
 import solvers
-from config import HOST, PORT, RECV_SIZE, VERSION
+from config import HOST, PORT, RECV_SIZE, VERSION, DATE
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -171,9 +171,7 @@ class OpticalCore:
 
 
 if __name__ == '__main__':
-    print('opencv: '+solvers.cv2.__version__)
-    print('open3d: '+solvers.slam_box.o3d.__version__)
-    print('numpy: '+solvers.np.__version__)
+    print('SLAM box. Version: '+VERSION+DATE)
     cc = solvers.Color()
     VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
     TEXT_COLOR = str(cc.white)[1:-1]

@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 .mypy_cache
+debug.txt
 
 # C extensions
 *.so
