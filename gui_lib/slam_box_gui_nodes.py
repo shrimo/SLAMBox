@@ -50,19 +50,6 @@ class MatchPoints(BaseNode):
         self.add_checkbox('show_marker', 'Show marker', text='On/Off', state=False, tab='attributes')
         self.set_color(*ncs.SLAMBox)
 
-class Show3DMap(BaseNode):
-    __identifier__ = 'nodes.SLAMBox'
-    NODE_NAME = 'Show3DMap'
-    def __init__(self):
-        super().__init__()
-        self.add_input('in', color=(180, 80, 180))
-        self.add_output('out')
-        self.create_property('label_size_marker', 'Marker size', widget_type=NODE_PROP_QLABEL)
-        self.create_property('marker_size', 15, widget_type=NODE_PROP_INT)
-        self.create_property('marker_color', (255, 0, 0), widget_type=NODE_PROP_COLORPICKER)
-        self.add_checkbox('show_marker', 'Show marker', text='On/Off', state=False, tab='attributes')
-        self.set_color(*ncs.SLAMBox)
-
 class Open3DMap(BaseNode):
     __identifier__ = 'nodes.SLAMBox'
     NODE_NAME = 'Open3DMap'

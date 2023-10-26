@@ -25,6 +25,12 @@ Image processing in Python **scikit-image** is a
 collection of algorithms for image processing.
 https://scikit-image.org/
 
+**SciPy** (pronounced “Sigh Pie”) is an open-source software for mathematics, science, and engineering.
+https://scipy.org/
+
+**g2o** is an open-source C++ framework for optimizing graph-based nonlinear error functions. g2o has been designed to be easily extensible to a wide range of problems and a new problem typically can be specified in a few lines of code. The current implementation provides solutions to several variants of SLAM and BA.
+https://github.com/RainerKuemmerle/g2o
+
 **Open3D** is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python. 
 http://www.open3d.org/
 
@@ -52,15 +58,19 @@ pip install open3d
 
 pip install scikit-image
 
+pip install scipy
+
+pip install -U g2o-python
+
 pip install PySide2
 
 pip install Qt.py
 
-pip install -U g2o-python
-
 dnf install ffmpeg (apt install ffmpeg) for Ubuntu
 
 ```
+
+Demo video : https://vimeo.com/878101688/42d5fa7642
 
 Based on twitchslam by geohot (https://github.com/geohot/twitchslam)
 

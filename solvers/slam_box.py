@@ -9,7 +9,8 @@ import cv2
 from skimage.measure import LineModelND, ransac # type: ignore
 from scipy.spatial.transform import Rotation as sciR
 import open3d as o3d
-from .slam_toolbox import Frame, Map, Point, Display3D, match_frame
+from .slam_toolbox import (Frame, Map, Point, 
+    DisplayOpen3D, match_frame)
 from .root_nodes import Node
 from .misc import Color, show_attributes
 
@@ -226,68 +227,16 @@ class MatchPoints(Node):
         self.marker_size = param['marker_size']
         self.show_marker = param['show_marker']
 
-class Show3DMap(Node):
-    """
-    SLAM Node 03
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.marker_size = self.param['marker_size']
-        self.marker_color = self.param['marker_color']
-        self.show_marker = self.param['show_marker']
-        self.display3d = Display3D()
-
-    def out_frame(self):
-        image = self.get_frame(0)
-        if image is None:
-            print('Show3DMap stop')
-            return None
-        if self.disabled: return image
-        if self.buffer.variable['slam_data']:
-            self.display3d.paint(self.buffer.variable['slam_data'][1])
-
-        return image
-
-    def update(self, param):
-        self.disabled = param['disabled']
-        self.marker_size = param['marker_size']
-        self.marker_color = param['marker_color']
-        self.show_marker = param['show_marker']
-
 class Open3DMap(Node):
     """
-    SLAM Node 04
+    SLAM Node 03
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.amount = 500
         self.point_size = self.param['point_size']
         self.point_color = self.param['point_color']
-        self.vis = o3d.visualization.Visualizer()
-        self.vis.create_window(window_name='Open3D Map',
-            width = 1024, height = 576, left=100, top=200)
-
-        self.ctr = self.vis.get_view_control()
-        self.ctr.change_field_of_view(step=0.45)
-        self.ctr.set_constant_z_far(100.0)
-        self.ctr.set_constant_z_near(0.01)
-
-        self.widget3d = self.vis.get_render_option()
-        self.widget3d.show_coordinate_frame = True
-        self.widget3d.background_color = np.asarray([0, 0, 0])
-        self.widget3d.point_size = self.point_size
-
-        self.pcl = o3d.geometry.PointCloud()
-        self.pcl.points = o3d.utility.Vector3dVector(np.random.randn(self.amount, 3))
-        self.pcl.paint_uniform_color((0.5, 0.1, 0.1))
-
-        # self.cube = o3d.geometry.TriangleMesh.create_box(0.2, 0.2, 0.2)
-        # self.cube.compute_vertex_normals()
-        # self.cube.paint_uniform_color((1.0, 0.0, 0.0))
-
-        self.vis.add_geometry(self.pcl)
-        # self.vis.add_geometry(self.cube)
-        self.scale = 0.1
+        self.d3d = DisplayOpen3D(width=1280, height=720, scale=0.05, point_size=self.point_size)
 
     def out_frame(self):
         image = self.get_frame(0)
@@ -296,24 +245,7 @@ class Open3DMap(Node):
             return None
         if self.disabled: return image
         if self.buffer.variable['slam_data']:
-            pts, colors, cam_pts = [], [], []
-            mapp = self.buffer.variable['slam_data'][1]
-            # print(mapp.points)
-            if mapp.points:
-                for p in mapp.points:
-                    pts.append(p.pt*self.scale)
-                    colors.append(p.color*0.003)
-                # f_pose = np.linalg.inv(mapp.frames[-1].pose)
-                # get position from transform matrix
-                # cam_position = f_pose[:,[-1]][:3].ravel()
-                rotation_matrix = sciR.from_euler('zyx', [0, 0, 180], degrees=True)
-                self.pcl.points = o3d.utility.Vector3dVector(rotation_matrix.apply(np.array(pts)))
-                self.pcl.colors = o3d.utility.Vector3dVector(np.array(colors))
-                
-                # self.cube.translate((cam_position))
-                self.vis.update_geometry(self.pcl)
-                self.vis.poll_events()
-                self.vis.update_renderer()
+            self.d3d.send_to_visualization(self.buffer.variable['slam_data'][1], self.point_size)
 
         return image
 
@@ -321,14 +253,12 @@ class Open3DMap(Node):
         self.disabled = param['disabled']
         self.point_size = param['point_size']
         self.point_color = param['point_color']
-        self.widget3d.point_size = self.point_size
+        self.point_size = param['point_size']
 
-    def __del__(self):
-        self.vis.destroy_window()
 
 class LineModelOptimization(Node):
     """
-    SLAM Node 05
+    SLAM Node 04
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -369,7 +299,7 @@ class LineModelOptimization(Node):
 
 class GeneralGraphOptimization(Node):
     """
-    SLAM Node 06
+    SLAM Node 05
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
