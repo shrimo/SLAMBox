@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f6f5d548040":{
+    "0x7f02471772b0":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -30,23 +30,23 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":257.0,
+      "height":212.0,
       "pos":[
-        320.0,
-        -150.0
+        69.35624583598917,
+        -253.0042825331551
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
         "device":"0",
-        "file":"./video/road.mp4",
         "start":"0",
         "camera":false,
         "loop":true,
-        "file_x":"./video/road.mp4"
+        "label_file":"File path",
+        "file":"./video/road.mp4"
       }
     },
-    "0x7f6f5d5486d0":{
+    "0x7f02471776a0":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -74,8 +74,8 @@
       "width":160,
       "height":89.0,
       "pos":[
-        319.99999999999994,
-        784.9356173510159
+        103.6910066803743,
+        846.7381868709091
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f6f5d548a00":{
+    "0x7f0247177a00":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -111,13 +111,13 @@
         180
       ],
       "disabled":false,
-      "selected":true,
+      "selected":false,
       "visible":true,
       "width":160,
       "height":67.0,
       "pos":[
-        319.99999999999994,
-        904.9356173510159
+        103.6910066803743,
+        966.7381868709091
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,10 +125,10 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f6f5d549690":{
-      "type_":"nodes.Transform.Resize",
+    "0x7f0247177cd0":{
+      "type_":"nodes.Transform.Reformat",
       "icon":null,
-      "name":"Resize",
+      "name":"Reformat",
       "color":[
         115,
         65,
@@ -148,23 +148,25 @@
         180
       ],
       "disabled":false,
-      "selected":true,
+      "selected":false,
       "visible":true,
       "width":160,
-      "height":89.0,
+      "height":94.0,
       "pos":[
-        152.78968575751344,
-        199.1416128974332
+        68.66952168877003,
+        4.04121180963557e-14
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "resize":"75",
-        "label_resize":"Resize",
-        "resize_x":50
+        "show_size":false,
+        "label_width":"Width",
+        "width_":1024,
+        "label_height":"Height",
+        "height_":576
       }
     },
-    "0x7f6f5d549a50":{
+    "0x7f02471c00a0":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -192,20 +194,20 @@
       "width":160,
       "height":94.0,
       "pos":[
-        154.5064237997325,
-        326.1802280216579
+        97.85406840649725,
+        386.2660594993317
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
         "label_nfeatures":"Number of features",
-        "nfeatures":1000,
+        "nfeatures":3000,
         "show_points":false,
         "label_algorithm":"Algorithm",
         "algorithm":"ORB"
       }
     },
-    "0x7f6f5d549ed0":{
+    "0x7f02471c04f0":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -233,21 +235,71 @@
       "width":160,
       "height":94.0,
       "pos":[
-        154.50642379973266,
-        466.9527474836367
+        96.13733036427803,
+        506.43772245467903
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
+        "label_m_samples":"m_samples",
+        "m_samples":8,
+        "label_r_threshold":"r_threshold",
+        "r_threshold":0.01,
+        "label_m_trials":"m_trials",
+        "m_trials":300,
         "label_size_marker":"Marker size",
-        "marker_size":15,
+        "marker_size":5,
         "show_marker":false
       }
     },
-    "0x7f6f5d54a2c0":{
-      "type_":"nodes.SLAMBox.Show3DMap",
+    "0x7f02471c0880":{
+      "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
-      "name":"Show3DMap",
+      "name":"Open3DMap",
+      "color":[
+        95,
+        115,
+        45,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":true,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        97.85406840649733,
+        755.3647385764707
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_point_size":"point size",
+        "point_size":2.0,
+        "label_point_color":"Point color",
+        "point_color":[
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "0x7f02471f4790":{
+      "type_":"nodes.SLAMBox.GeneralGraphOptimization",
+      "icon":null,
+      "name":"GeneralGraphOptimization",
       "color":[
         95,
         115,
@@ -272,82 +324,152 @@
       "width":160,
       "height":94.0,
       "pos":[
-        154.50642379973254,
-        604.2917908611767
+        97.85406840649742,
+        628.326123452246
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "label_size_marker":"Marker size",
-        "marker_size":15,
-        "marker_color":[
-          255,
-          0,
-          0
-        ],
-        "show_marker":false
+        "label_step_frame":"Step frame",
+        "step_frame":4,
+        "delete_points":false
+      }
+    },
+    "0x7f02471f4bb0":{
+      "type_":"nodes.SLAMBox.DNNMask",
+      "icon":null,
+      "name":"DNNMask",
+      "color":[
+        45,
+        65,
+        115,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":184.0,
+      "pos":[
+        260.9441824173262,
+        135.6223053353209
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_class_names":"Class names file path",
+        "class_names":"data/coco.names",
+        "label_config":"Config file path",
+        "config":"data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt",
+        "label_weights":"Weights file path",
+        "weights":"data/frozen_inference_graph.pb",
+        "threshold":"0.5",
+        "nms_threshold":"0.2",
+        "show_mask":false
       }
     }
   },
   "connections":[
     {
       "out":[
-        "0x7f6f5d548040",
+        "0x7f02471772b0",
         "out"
       ],
       "in":[
-        "0x7f6f5d549690",
+        "0x7f0247177cd0",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f6f5d5486d0",
+        "0x7f02471776a0",
         "in"
       ],
       "out":[
-        "0x7f6f5d54a2c0",
+        "0x7f02471c0880",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f6f5d5486d0",
+        "0x7f02471776a0",
         "out"
       ],
       "in":[
-        "0x7f6f5d548a00",
+        "0x7f0247177a00",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f6f5d549690",
+        "0x7f0247177cd0",
         "out"
       ],
       "in":[
-        "0x7f6f5d549a50",
+        "0x7f02471c00a0",
+        "ina"
+      ]
+    },
+    {
+      "out":[
+        "0x7f0247177cd0",
+        "out"
+      ],
+      "in":[
+        "0x7f02471f4bb0",
+        "in"
+      ]
+    },
+    {
+      "in":[
+        "0x7f02471c00a0",
+        "inb"
+      ],
+      "out":[
+        "0x7f02471f4bb0",
+        "out"
+      ]
+    },
+    {
+      "out":[
+        "0x7f02471c00a0",
+        "out"
+      ],
+      "in":[
+        "0x7f02471c04f0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f6f5d549a50",
+        "0x7f02471c04f0",
         "out"
       ],
       "in":[
-        "0x7f6f5d549ed0",
+        "0x7f02471f4790",
         "in"
       ]
     },
     {
-      "out":[
-        "0x7f6f5d549ed0",
-        "out"
-      ],
       "in":[
-        "0x7f6f5d54a2c0",
+        "0x7f02471c0880",
         "in"
+      ],
+      "out":[
+        "0x7f02471f4790",
+        "out"
       ]
     }
   ]

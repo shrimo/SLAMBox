@@ -44,11 +44,12 @@ class Read(BaseNode):
         super(Read, self).__init__()
         self.add_output('out')
         self.add_text_input('device', 'Device', text='0', tab='attributes')
-        self.add_text_input('file', 'File/Stream', text='../../video/road.mp4', tab='attributes')
+        # self.add_text_input('file', 'File/Stream', text='../../video/road.mp4', tab='attributes')
         self.add_text_input('start', 'Start frame', text='0', tab='attributes')
         self.add_checkbox('camera', 'Camera', text='On/Off', state=False, tab='attributes')
         self.add_checkbox('loop', 'Loop', text='On/Off', state=True, tab='attributes')
-        self.create_property('file_x', './video/road.mp4', widget_type=NODE_PROP_FILE)
+        self.create_property('label_file', 'File path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('file', './video/road.mp4', widget_type=NODE_PROP_FILE)
         self.set_color(*ncs.Read)
 
 class Image(BaseNode):

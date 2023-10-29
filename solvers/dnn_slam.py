@@ -25,7 +25,7 @@ class DNNMask(Node):
         self.net.setInputSwapRB(True)
         self.inclusion_list = ['train', 'truck', 'car', 'bus',
                 'motorcycle', 'bicycle', 'person', 'bird']
-        with open(self.param['coco_names']) as f:
+        with open(self.param['class_names']) as f:
             self.classNames = f.read().rstrip('\n').split('\n')
         self.show_mask = self.param['show_mask']
 

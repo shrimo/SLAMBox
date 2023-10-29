@@ -64,7 +64,9 @@ class DetectorDescriptor(Node):
         if len(self.get_input()) > 1:
             self.mask = cv2.cvtColor(self.get_frame(1), cv2.COLOR_BGR2GRAY)
         if self.disabled: return image
-        frame = Frame(self.mapp, image, self.K, verts=None, algorithm = self.algorithm, mask=self.mask)
+        frame = Frame(self.mapp, image, self.K,
+            verts=None, algorithm = self.algorithm,
+            mask=self.mask, nfeatures=self.nfeatures)
         # save the received object in a buffer
         self.buffer.variable['slam_data'] = [frame, self.mapp, self.K, self.W, self.H]
         if self.show_points:

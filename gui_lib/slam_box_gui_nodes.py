@@ -7,6 +7,7 @@ from NodeGraphQt.constants import (NODE_PROP_QLABEL,
                                    NODE_PROP_QCOMBO,
                                    NODE_PROP_QSPINBOX,
                                    NODE_PROP_COLORPICKER,
+                                   NODE_PROP_FILE,
                                    NODE_PROP_SLIDER,
                                    NODE_PROP_FILE,
                                    NODE_PROP_QCHECKBOX,
@@ -98,9 +99,12 @@ class DNNMask(BaseNode):
         super(DNNMask, self).__init__()
         self.add_input('in', color=(180, 80, 180))
         self.add_output('out')
-        self.add_text_input('coco_names', 'Coco names', text='data/coco.names', tab='attributes')
-        self.add_text_input('config', 'Config', text='data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt', tab='attributes')
-        self.add_text_input('weights', 'Weights', text='data/frozen_inference_graph.pb', tab='attributes')
+        self.create_property('label_class_names', 'Class names file path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('class_names', 'data/coco.names', widget_type=NODE_PROP_FILE)
+        self.create_property('label_config', 'Config file path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('config', 'data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt', widget_type=NODE_PROP_FILE)
+        self.create_property('label_weights', 'Weights file path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('weights', 'data/frozen_inference_graph.pb', widget_type=NODE_PROP_FILE)
         self.add_text_input('threshold', 'Threshold', text='0.5', tab='attributes')
         self.add_text_input('nms_threshold', 'NMS Threshold', text='0.2', tab='attributes')
         self.add_checkbox('show_mask', 'Show mask', text='On/Off', state=False, tab='attributes')
