@@ -56,7 +56,7 @@ https://ffmpeg.org/
 
 ![Screenshot03](screenshot03.png)
 
-### Dependent libraries (Fedora Linux 36 (x86-64), Ubuntu 22.04.2 LTS)
+### Dependent libraries (Fedora Linux 36 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
 
 ```
 pip install numpy
