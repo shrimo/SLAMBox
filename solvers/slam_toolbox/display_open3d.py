@@ -15,6 +15,8 @@ class DisplayOpen3D:
         self.height = height
         self.scale = scale
         self.point_size = point_size
+        # Rotation matrix for the scene
+        self.rotation_matrix = scipyR.from_euler("zyx", [0, 0, 180], degrees=True)
         self.state = None
         self.queue = Queue()
         self.vp = Process(
@@ -49,12 +51,13 @@ class DisplayOpen3D:
         self.pcl.paint_uniform_color((0.5, 0.1, 0.1))
 
         self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame()
-        # self.axis = o3d.geometry.TriangleMesh.create_box(0.2, 0.2, 0.2)
-        # self.axis.compute_vertex_normals()
-        # self.axis.paint_uniform_color((1.0, 0.0, 0.0))
+        self.robot = o3d.geometry.TriangleMesh.create_coordinate_frame()
+        # self.robot.compute_vertex_normals()
+        # self.robot.paint_uniform_color((1.0, 0.0, 0.0))
 
         self.vis.add_geometry(self.pcl)
         self.vis.add_geometry(self.axis)
+        self.vis.add_geometry(self.robot)
 
     def viewer_refresh(self, q):
         while not q.empty():
@@ -63,18 +66,19 @@ class DisplayOpen3D:
         if self.state is not None:
             if self.state[0].shape[0] >= 1:
                 # draw keypoints
-                rotation_matrix = scipyR.from_euler("zyx", [0, 0, 180], degrees=True)
+
                 self.pcl.points = o3d.utility.Vector3dVector(
-                    rotation_matrix.apply(self.state[0])
+                    self.rotation_matrix.apply(self.state[0])
                 )
                 self.pcl.colors = o3d.utility.Vector3dVector(self.state[1])
                 self.widget3d.point_size = self.state[2]
 
-                # This part is not working correctly yet
-                # self.axis.translate(self.state[3], relative=False)
+                self.robot.translate(
+                    self.rotation_matrix.apply(self.state[0][-1]), relative=False
+                )
 
         self.vis.update_geometry(self.pcl)
-        # self.vis.update_geometry(self.axis)
+        self.vis.update_geometry(self.robot)
         self.vis.poll_events()
         self.vis.update_renderer()
 
@@ -88,16 +92,12 @@ class DisplayOpen3D:
         pts = [p.pt * self.scale for p in mapp.points]
         colors = [p.color * 0.003 for p in mapp.points]
         cam_pts = [
-            np.linalg.inv(cam_frame.pose)[:, [-1]][:3].ravel() * self.scale
-            for cam_frame in mapp.frames
+            np.linalg.inv(map_frame.pose)[:, [-1]][:3].ravel() * self.scale
+            for map_frame in mapp.frames
         ]
 
         cam_colors = [(1.0, 0.0, 0.0)] * len(cam_pts)
         self.queue.put((np.array(pts + cam_pts), np.array(colors + cam_colors), psize))
-
-        # This part is not working correctly yet
-        # pose = mapp.frames[-1].pose[:,[-1]][:3].ravel() * self.scale
-        # self.queue.put((np.array(pts + cam_pts), np.array(colors + cam_colors), psize, np.array(pose)))
 
     def __del__(self):
         self.vis.destroy_window()
