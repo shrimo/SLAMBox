@@ -4,7 +4,6 @@ Node and function library for Tracking
 
 import cv2
 import numpy as np
-from functools import reduce
 from .root_nodes import Node
 from .misc import insert_frame, get_tuple, show_attributes, Color
 
@@ -33,9 +32,9 @@ class AllTrackers(Node):
             print("AllTrackers a stop")
         elif self.disabled:
             return frame
-        if self.buffer.roi:
+        if all(self.buffer.roi):
             self.go = self.calculations_for_ROI(frame, self.buffer.roi)
-            self.buffer.roi = None
+            self.buffer.roi = self.empty_roi
         elif self.go:
             tmp, bbox = self.tracker.update(frame)
             (x, y, w, h) = [np.int32(pt) for pt in bbox]

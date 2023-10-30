@@ -3,6 +3,8 @@
 Optical core is a software platform for accessing video stream
 from camera or from video file, functions and methods
 for processing and analyzing a optical stream.
+
+static type version
 """
 import sys
 from typing import List, Dict, Any, Tuple
@@ -23,7 +25,6 @@ ScriptType = List[NodeType]
 # Selector for communication with clients
 sel = selectors.DefaultSelector()
 
-
 @dataclass
 class DataBuffer:
     """Common data exchange buffer"""
@@ -32,18 +33,15 @@ class DataBuffer:
     metadata: Dict[Any, Any] = field(default_factory=dict)
     variable: Dict[Any, Any] = field(default_factory=dict)
 
-
 def move_node_to_end(script: ScriptType, node_type: str) -> ScriptType:
     """Move node to end of list"""
     matching_nodes = [node for node in script if node_type in node["type"]]
     non_matching_nodes = [node for node in script if node_type not in node["type"]]
     return non_matching_nodes + matching_nodes
 
-
 def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeType:
     """get node by id or type attribute"""
     return next(node for node in nodes if node[attribute] == target)
-
 
 def get_object_by_script(
     node: NodeType, root_node: NodeType, buffer: DataBuffer
@@ -57,7 +55,6 @@ def get_object_by_script(
         root_node["custom"]["node_name"],
         buffer,
     )
-
 
 def build_node_graph(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
@@ -76,7 +73,6 @@ def build_node_graph(
     out = node_dict[root_node["id"]]["node"]
     return out
 
-
 def build_rooted_graph(
     script: ScriptType, buffer: DataBuffer
 ) -> solvers.base_nodes.Viewer:
@@ -87,12 +83,11 @@ def build_rooted_graph(
     out = build_node_graph(aligned_script, root_node, buffer)
     return out
 
-
 class Communication:
     """Server for receiving data, non-blocking"""
 
     def __init__(self, host: str, port: int) -> None:
-        self.data_change = None
+        self.data_change: Dict[str, ScriptType] = {}
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind((host, port))
         sock.listen()
@@ -115,11 +110,11 @@ class Communication:
             recv_data = sock.recv(RECV_SIZE)
             if recv_data:
                 self.data_change = pickle.loads(recv_data)
+                # print(type(self.data_change), self.data_change)
             else:
                 print("Closing connection")
                 sel.unregister(sock)
                 sock.close()
-
 
 class OpticalCore:
     """Running the Main Loop ('run' method) Filling the Node script with objects"""
@@ -144,7 +139,7 @@ class OpticalCore:
                     self.com.service_connection(key, mask)
                     if self.com.data_change:
                         self.execution_controller(self.com.data_change)
-                        self.com.data_change = None
+                        self.com.data_change.clear()
 
             # Playback control
             p_key: int = cv2.waitKey(1)
@@ -194,13 +189,12 @@ class OpticalCore:
         print("Optical Core Close")
         # cv2.destroyAllWindows()
 
-
-if __name__ == "__main__":
+def run()-> None:
     print("SLAM box. Version: " + VERSION + DATE)
     cc = solvers.Color()
     VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
     TEXT_COLOR = str(cc.white)[1:-1]
-    TEST_VERSION_SYSTEM = "SLAM box. Version: " + VERSION
+    TEST_VERSION_SYSTEM = "SLAM box. C Version: " + VERSION
 
     default: ScriptType = [
         {
@@ -228,7 +222,7 @@ if __name__ == "__main__":
             "custom": {
                 "text": TEST_VERSION_SYSTEM,
                 "text_color_": TEXT_COLOR,
-                "px": "230",
+                "px": "210",
                 "py": "370",
                 "size_": "2.0",
                 "disabled": False,
@@ -246,3 +240,5 @@ if __name__ == "__main__":
     finally:
         sel.close()
         print("Exit")
+
+run()

@@ -13,11 +13,7 @@ class Viewer(Node):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.window_name = self.param['node_name']
         self.frame_cache = []
-        # self.cache_size = 50
-        # self.buffer.variable['STOPSLAM'] = False
-        # Add switch on/off selection tool
 
     def show_frame(self):
         frame = self.get_frame(0)
@@ -30,7 +26,7 @@ class Viewer(Node):
             # Save the ROI coordinates to the buffer
             self.buffer.roi = self.ROI_coordinates
             self.buffer.switch = True  # old metod
-            self.ROI_coordinates = None
+            self.ROI_coordinates = self.empty_roi
         cv2.imshow(self.window_name, frame)
         return True
 
@@ -55,7 +51,7 @@ class SelectionBuffer(Node):
             return None
         if self.buffer.roi:
             self.calculations_for_ROI(frame, self.buffer.roi)
-            self.buffer.roi = None
+            self.buffer.roi = self.empty_roi
             # self.buffer.switch = True
         return self.Image
 

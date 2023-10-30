@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f02471772b0":{
+    "0x7f5240d73400":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f02471776a0":{
+    "0x7f5240d737f0":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -74,8 +74,8 @@
       "width":160,
       "height":89.0,
       "pos":[
-        103.6910066803743,
-        846.7381868709091
+        84.7874872354796,
+        657.7029924219621
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f0247177a00":{
+    "0x7f5240d73b50":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -116,8 +116,8 @@
       "width":160,
       "height":67.0,
       "pos":[
-        103.6910066803743,
-        966.7381868709091
+        88.22801822191195,
+        848.1562737218924
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,7 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f0247177cd0":{
+    "0x7f5240dc3ca0":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -153,8 +153,8 @@
       "width":160,
       "height":94.0,
       "pos":[
-        68.66952168877003,
-        4.04121180963557e-14
+        36.088537122071585,
+        -12.02951237402391
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -166,7 +166,7 @@
         "height_":576
       }
     },
-    "0x7f02471c00a0":{
+    "0x7f5240df4640":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -194,20 +194,20 @@
       "width":160,
       "height":94.0,
       "pos":[
-        97.85406840649725,
-        386.2660594993317
+        18.90351944489467,
+        132.32463611426272
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
         "label_nfeatures":"Number of features",
-        "nfeatures":3000,
+        "nfeatures":1000,
         "show_points":false,
         "label_algorithm":"Algorithm",
         "algorithm":"ORB"
       }
     },
-    "0x7f02471c04f0":{
+    "0x7f5240df5390":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -235,8 +235,8 @@
       "width":160,
       "height":94.0,
       "pos":[
-        96.13733036427803,
-        506.43772245467903
+        18.903519444894727,
+        274.96028283483184
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -244,7 +244,7 @@
         "label_m_samples":"m_samples",
         "m_samples":8,
         "label_r_threshold":"r_threshold",
-        "r_threshold":0.01,
+        "r_threshold":0.02,
         "label_m_trials":"m_trials",
         "m_trials":300,
         "label_size_marker":"Marker size",
@@ -252,51 +252,7 @@
         "show_marker":false
       }
     },
-    "0x7f02471c0880":{
-      "type_":"nodes.SLAMBox.Open3DMap",
-      "icon":null,
-      "name":"Open3DMap",
-      "color":[
-        95,
-        115,
-        45,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":true,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        97.85406840649733,
-        755.3647385764707
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_point_size":"point size",
-        "point_size":2.0,
-        "label_point_color":"Point color",
-        "point_color":[
-          1,
-          0,
-          0
-        ]
-      }
-    },
-    "0x7f02471f4790":{
+    "0x7f5240df5180":{
       "type_":"nodes.SLAMBox.GeneralGraphOptimization",
       "icon":null,
       "name":"GeneralGraphOptimization",
@@ -324,8 +280,8 @@
       "width":160,
       "height":94.0,
       "pos":[
-        97.85406840649742,
-        628.326123452246
+        39.525540657507094,
+        422.7514348585539
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -335,14 +291,14 @@
         "delete_points":false
       }
     },
-    "0x7f02471f4bb0":{
-      "type_":"nodes.SLAMBox.DNNMask",
+    "0x7f5240df4d00":{
+      "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
-      "name":"DNNMask",
+      "name":"Open3DMap",
       "color":[
-        45,
-        65,
+        95,
         115,
+        45,
         255
       ],
       "border_color":[
@@ -361,115 +317,94 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":184.0,
+      "height":60,
       "pos":[
-        260.9441824173262,
-        135.6223053353209
+        56.71055833468415,
+        565.3870815791229
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "label_class_names":"Class names file path",
-        "class_names":"data/coco.names",
-        "label_config":"Config file path",
-        "config":"data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt",
-        "label_weights":"Weights file path",
-        "weights":"data/frozen_inference_graph.pb",
-        "threshold":"0.5",
-        "nms_threshold":"0.2",
-        "show_mask":false
+        "label_point_size":"point size",
+        "point_size":2.0,
+        "label_point_color":"Point color",
+        "point_color":[
+          1,
+          0,
+          0
+        ]
       }
     }
   },
   "connections":[
     {
       "out":[
-        "0x7f02471772b0",
+        "0x7f5240d73400",
         "out"
       ],
       "in":[
-        "0x7f0247177cd0",
+        "0x7f5240dc3ca0",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f02471776a0",
+        "0x7f5240d737f0",
         "in"
       ],
       "out":[
-        "0x7f02471c0880",
+        "0x7f5240df4d00",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f02471776a0",
+        "0x7f5240d737f0",
         "out"
       ],
       "in":[
-        "0x7f0247177a00",
+        "0x7f5240d73b50",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f0247177cd0",
+        "0x7f5240dc3ca0",
         "out"
       ],
       "in":[
-        "0x7f02471c00a0",
+        "0x7f5240df4640",
         "ina"
       ]
     },
     {
       "out":[
-        "0x7f0247177cd0",
+        "0x7f5240df4640",
         "out"
       ],
       "in":[
-        "0x7f02471f4bb0",
-        "in"
-      ]
-    },
-    {
-      "in":[
-        "0x7f02471c00a0",
-        "inb"
-      ],
-      "out":[
-        "0x7f02471f4bb0",
-        "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f02471c00a0",
-        "out"
-      ],
-      "in":[
-        "0x7f02471c04f0",
+        "0x7f5240df5390",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f02471c04f0",
+        "0x7f5240df5390",
         "out"
       ],
       "in":[
-        "0x7f02471f4790",
+        "0x7f5240df5180",
         "in"
       ]
     },
     {
-      "in":[
-        "0x7f02471c0880",
-        "in"
-      ],
       "out":[
-        "0x7f02471f4790",
+        "0x7f5240df5180",
         "out"
+      ],
+      "in":[
+        "0x7f5240df4d00",
+        "in"
       ]
     }
   ]
