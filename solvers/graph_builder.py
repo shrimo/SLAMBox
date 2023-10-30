@@ -1,8 +1,14 @@
-#!/usr/bin/python3
 """
-Optical core is a software platform for accessing video stream
+Building and execution of a node graph.
+
+Main classes that describe the connection between the 
+server and the graph editor and the construction and 
+execution of a node graph.
+software platform for accessing video stream
 from camera or from video file, functions and methods
 for processing and analyzing a optical stream.
+
+static type version
 """
 import sys
 from typing import List, Dict, Any, Tuple
@@ -14,11 +20,11 @@ import selectors
 import numpy as np
 import cv2
 import solvers
-from config import HOST, PORT, RECV_SIZE, VERSION, DATE
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+RoiType = Tuple[Any, Any, Any, Any] # type for region of interest
 
 # Selector for communication with clients
 sel = selectors.DefaultSelector()
@@ -27,8 +33,9 @@ sel = selectors.DefaultSelector()
 @dataclass
 class DataBuffer:
     """Common data exchange buffer"""
+
     switch: bool = False
-    roi: Tuple[Any, Any, Any, Any] = (np.int64(), np.int64(), np.int64(), np.int64())
+    roi: RoiType = (np.int64(0), np.int64(0), np.int64(0), np.int64(0))
     metadata: Dict[Any, Any] = field(default_factory=dict)
     variable: Dict[Any, Any] = field(default_factory=dict)
 
@@ -88,11 +95,14 @@ def build_rooted_graph(
     return out
 
 
-class Communication:
+class GraphCommunication:
     """Server for receiving data, non-blocking"""
 
-    def __init__(self, host: str, port: int) -> None:
-        self.data_change = None
+    def __init__(
+        self, host: str = "localhost", port: int = 50001, recv_size: int = 10240
+    ) -> None:
+        self.data_change: Dict[str, ScriptType] = {}
+        self.recv_size = recv_size
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind((host, port))
         sock.listen()
@@ -112,23 +122,26 @@ class Communication:
         """Receive and unpack data"""
         sock = key.fileobj
         if mask & selectors.EVENT_READ:
-            recv_data = sock.recv(RECV_SIZE)
+            recv_data = sock.recv(self.recv_size)
             if recv_data:
                 self.data_change = pickle.loads(recv_data)
+                # print(type(self.data_change), self.data_change)
             else:
                 print("Closing connection")
                 sel.unregister(sock)
                 sock.close()
 
 
-class OpticalCore:
-    """Running the Main Loop ('run' method) Filling the Node script with objects"""
+class GraphBuilder:
+    """Building and execution of a node graph."""
 
-    def __init__(self, script: ScriptType) -> None:
+    def __init__(
+        self, script: ScriptType, host: str, port: int, recv_size: int
+    ) -> None:
         self.buffer = DataBuffer()
         self.script = script
         self.graph = build_rooted_graph(script, self.buffer)
-        self.com = Communication(HOST, PORT)
+        self.com = GraphCommunication(host, port, recv_size)
 
     def run(self) -> None:
         """The main loop, processing the node execution script tree"""
@@ -144,7 +157,7 @@ class OpticalCore:
                     self.com.service_connection(key, mask)
                     if self.com.data_change:
                         self.execution_controller(self.com.data_change)
-                        self.com.data_change = None
+                        self.com.data_change.clear()
 
             # Playback control
             p_key: int = cv2.waitKey(1)
@@ -192,57 +205,5 @@ class OpticalCore:
     def __del__(self) -> None:
         """Closing video capture and window"""
         print("Optical Core Close")
-        # cv2.destroyAllWindows()
-
-
-if __name__ == "__main__":
-    print("SLAM box. Version: " + VERSION + DATE)
-    cc = solvers.Color()
-    VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
-    TEXT_COLOR = str(cc.white)[1:-1]
-    TEST_VERSION_SYSTEM = "SLAM box. Version: " + VERSION
-
-    default: ScriptType = [
-        {
-            "id": "0x7f6520f69fc0",
-            "type": "Viewer",
-            "custom": {"node_name": "Viewport", "disabled": False},
-            "out": [],
-            "in": ["0x7f6520f6b310"],
-        },
-        {
-            "id": "0x7f6520f6ad10",
-            "type": "Constant",
-            "custom": {
-                "constant_color": VERSION_COLOR,
-                "width_": "1280",
-                "height_": "720",
-                "disabled": False,
-            },
-            "out": ["0x7f6520f6b310"],
-            "in": [],
-        },
-        {
-            "id": "0x7f6520f6b310",
-            "type": "Text",
-            "custom": {
-                "text": TEST_VERSION_SYSTEM,
-                "text_color_": TEXT_COLOR,
-                "px": "230",
-                "py": "370",
-                "size_": "2.0",
-                "disabled": False,
-            },
-            "out": ["0x7f6520f69fc0"],
-            "in": ["0x7f6520f6ad10"],
-        },
-    ]
-
-    ocore = OpticalCore(default)
-    try:
-        ocore.run()
-    except KeyboardInterrupt:
-        print("Caught keyboard interrupt, exiting")
-    finally:
         sel.close()
-        print("Exit")
+        # cv2.destroyAllWindows()

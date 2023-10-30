@@ -1,3 +1,3 @@
 echo Start node graph core and GUI
-python ocore.py & python gui.py
+python build_graph.py & python node_graph.py
 wait

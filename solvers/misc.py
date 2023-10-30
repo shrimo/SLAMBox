@@ -39,6 +39,7 @@ class Color:
     red_dahlia = (39, 32, 125)
     blue_atoll = (210, 177, 0)
     burnt_sienna = (81, 116, 233)
+    viva_magenta = (85, 52, 190)
 
 cc = Color()
 font = cv2.FONT_HERSHEY_SIMPLEX

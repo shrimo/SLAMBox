@@ -7,3 +7,4 @@ from .slam_box import (DetectorDescriptor, MatchPoints,
 from .dnn_slam import DNNMask
 from .tracking import AllTrackers
 from .cc import *
+from .graph_builder import GraphBuilder
