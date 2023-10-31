@@ -26,30 +26,60 @@ def triangulate(pose1, pose2, pts1, pts2):
         ret[i] = vt[3]
     return ret
 
-class DetectorDescriptor(Node):
+class Camera(Node):
     """
-    SLAM Node 01
+    SLAM Camera Node
+    The camera intrinsic matrix represents the internal 
+    parameters of a camera, including the focal length, 
+    and it allows to project 3D points in the world 
+    onto the 2D image plane. 
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.F = 500
-        self.W, self.H = 1920, 1080
+        self.F = self.param['focal_length']
+        self.W = self.param['frame_width']
+        self.H = self.param['frame_height']
+        self.calibration_data = self.param['calibration_data']
+        self.K = self.camera_intrinsic_matrix()
+        self.buffer.variable['camera_data'] = {
+        'K':self.K, 'W':self.W, 'H':self.H}
 
+    def out_frame(self):
+        # image = self.get_frame(0)
+        # if image is None:
+        #     print('Camera stop')
+        #     return None
+        return self.get_frame(0)
+
+    def camera_intrinsic_matrix(self):
+        # Camera Intrinsic Matrix (Camera-to-Image, Image-to-Pixel):
         if self.W > 1024:
             downscale = 1024.0/self.W
             self.F *= downscale
             self.H = int(self.H * downscale)
             self.W = 1024
 
-        # print(self.W, self.H)
-        # The camera intrinsic matrix represents the internal 
-        # parameters of a camera, including the focal length, 
-        # and it allows to project 3D points in the world 
-        # onto the 2D image plane. 
-        self.K = np.array([[self.F, 0, self.W//2],
+        return np.array([[self.F, 0, self.W//2],
                             [0, self.F, self.H//2],
                             [0, 0, 1]])
 
+
+    def update(self, param):
+        self.disabled = param['disabled']
+        self.F = param['focal_length']
+        self.W = param['frame_width']
+        self.H = param['frame_height']
+        self.K = self.camera_intrinsic_matrix()
+        self.buffer.variable['camera_data'] = {
+        'K':self.K, 'W':self.W, 'H':self.H}
+
+
+class DetectorDescriptor(Node):
+    """
+    SLAM DetectorDescriptor Node
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.algorithm = self.param['algorithm']
         self.nfeatures = self.param['nfeatures']
         self.show_points = self.param['show_points']
@@ -61,14 +91,21 @@ class DetectorDescriptor(Node):
         if image is None:
             print('DetectorDescriptor stop')
             return None
-        if len(self.get_input()) > 1:
+        elif len(self.get_input()) > 1:
             self.mask = cv2.cvtColor(self.get_frame(1), cv2.COLOR_BGR2GRAY)
-        if self.disabled: return image
-        frame = Frame(self.mapp, image, self.K,
+        elif self.disabled: return image
+        # Read Camera data
+        elif not 'camera_data' in self.buffer.variable:
+            print('\nError -> Camera node is missing\n')
+            return None
+        K = self.buffer.variable['camera_data']['K']
+        W = self.buffer.variable['camera_data']['W']
+        H = self.buffer.variable['camera_data']['H']
+        frame = Frame(self.mapp, image, K,
             verts=None, algorithm = self.algorithm,
             mask=self.mask, nfeatures=self.nfeatures)
         # save the received object in a buffer
-        self.buffer.variable['slam_data'] = [frame, self.mapp, self.K, self.W, self.H]
+        self.buffer.variable['slam_data'] = [frame, self.mapp, K, W, H]
         if self.show_points:
             for fpt in frame.key_pts:
                 cv2.circle(image, np.int32(fpt), 3, cc.green, 1)
@@ -84,7 +121,7 @@ class DetectorDescriptor(Node):
 
 class MatchPoints(Node):
     """
-    SLAM Node 02
+    SLAM MatchPoints Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -229,7 +266,7 @@ class MatchPoints(Node):
 
 class Open3DMap(Node):
     """
-    SLAM Node 03
+    SLAM Open3DMap Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -258,7 +295,7 @@ class Open3DMap(Node):
 
 class LineModelOptimization(Node):
     """
-    SLAM Node 04
+    SLAM LineModelOptimization Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -299,7 +336,7 @@ class LineModelOptimization(Node):
 
 class GeneralGraphOptimization(Node):
     """
-    SLAM Node 05
+    SLAM GeneralGraphOptimization Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -5,6 +5,18 @@ This application is designed for use in education, research and development usin
 
 Demo video : https://vimeo.com/878101688/42d5fa7642
 
+### Introduction
+
+The development of robotics generates a request for recognition and control systems for data received from sensory devices. At present, development of Computer Vision systems requires developers to have knowledge of programming languages and a deep understanding of mathematics. It was like the development of computer graphics:  at the beginning, only scientists and researchers were engaged in computer graphics, later applied tools (Presented by such programs as Nuke, Houdini, Blender) were developed for use by less trained users. Over time, the development of computer vision systems should shift to the use of visual, graphical interfaces, such as Node-based UI, so that more ordinary users can access computer vision technologies.
+
+The computer vision systems can be controlled not only by classical programming tools (write text code, which in itself narrows the scope of computer vision technologies), in the architecture of graph nodes it is possible to analyze and modify video streams, data from LIDAR[17], stereo cameras, acoustic sensors through visual programming, which expands the scope of technologies.
+
+In computing, a visual programming language (VPL) or block coding is a programming language that lets users create programs by manipulating program elements graphically rather than by specifying them textually. Visual programming allows programming with visual expressions, spatial arrangements of text and graphic symbols, used either as elements of syntax or secondary notation. For example, many VPLs (known as diagrammatic programming) are based on the idea of "boxes and arrows", where boxes or other screen objects are treated as entities, connected by arrows, lines or arcs which represent relations.
+
+In this study, we study the availability of open source libraries and frameworks, we also study existing solutions, develop a prototype program for applying computer vision methods to video streams and other data coming from the sensor of digital devices.
+
+https://en.wikipedia.org/wiki/Visual_programming_language
+
 ### Simultaneous localization and mapping
 
 Simultaneous localization and mapping **(SLAM)** is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
