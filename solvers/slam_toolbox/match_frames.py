@@ -39,8 +39,11 @@ def fundamentalToRt(F):
 
 bf = cv2.BFMatcher(cv2.NORM_HAMMING)
 def match_frame(f1, f2, m_samples=8, r_threshold=0.01, m_trials=300):
+    """
+    BFMatcher.knnMatch() - method returns k best matches 
+    where k is specified by the user.
+    """
     matches = bf.knnMatch(f1.descriptors, f2.descriptors, k=2)
-
     # Lowe's ratio test
     ret = []
     idx1, idx2 = [], []
@@ -77,4 +80,3 @@ def match_frame(f1, f2, m_samples=8, r_threshold=0.01, m_trials=300):
                             max_trials=m_trials)
     # print("Matches:  %d -> %d -> %d -> %d" % (len(f1.descriptors), len(matches), len(inliers), sum(inliers)))
     return idx1[inliers], idx2[inliers], fundamentalToRt(model.params)
-

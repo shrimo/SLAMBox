@@ -79,6 +79,8 @@ class Open3DMap(BaseNode):
         self.create_property('point_size', 2.0, widget_type=NODE_PROP_FLOAT)
         self.create_property('label_point_color', 'Point color', widget_type=NODE_PROP_QLABEL)
         self.create_property('point_color', (1, 0, 0), widget_type=NODE_PROP_COLORPICKER)
+        self.create_property('label_write_pcd', 'Write point clouds', widget_type=NODE_PROP_QLABEL)
+        self.create_property('write_pcd', False, widget_type=NODE_PROP_QCHECKBOX)
         self.set_color(*ncs.SLAMBox)
 
 class LineModelOptimization(BaseNode):
@@ -106,7 +108,6 @@ class GeneralGraphOptimization(BaseNode):
         self.add_output('out')
         self.create_property('label_step_frame', 'Step frame', widget_type=NODE_PROP_QLABEL)
         self.create_property('step_frame', 4, widget_type=NODE_PROP_INT)
-        self.add_checkbox('delete_points', 'Delete pointst', text='On/Off', state=False, tab='attributes')
         self.set_color(*ncs.SLAMBox)
 
 class DNNMask(BaseNode):

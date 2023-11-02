@@ -9,12 +9,15 @@ import open3d as o3d  # type: ignore
 
 
 class DisplayOpen3D:
-    def __init__(self, width=1280, height=720, scale=0.05, point_size=2.0):
+    def __init__(
+        self, width=1280, height=720, scale=0.05, point_size=2.0, write_pcd=False
+    ):
         self.amount = 100
         self.width = width
         self.height = height
         self.scale = scale
         self.point_size = point_size
+        self.write_pcd = write_pcd
         # Rotation matrix for the scene
         self.rotation_matrix = scipyR.from_euler("zyx", [0, 0, 180], degrees=True)
         self.state = None
@@ -76,6 +79,9 @@ class DisplayOpen3D:
                 self.robot.translate(
                     self.rotation_matrix.apply(self.state[0][-1]), relative=False
                 )
+            if self.write_pcd:
+                # write the point cloud to a file
+                o3d.io.write_point_cloud(f"./pcd/slam_map_{self.state[3]:04}.pcd", self.pcl)
 
         self.vis.update_geometry(self.pcl)
         self.vis.update_geometry(self.robot)
@@ -97,7 +103,7 @@ class DisplayOpen3D:
         ]
 
         cam_colors = [(1.0, 0.0, 0.0)] * len(cam_pts)
-        self.queue.put((np.array(pts + cam_pts), np.array(colors + cam_colors), psize))
+        self.queue.put((np.array(pts + cam_pts), np.array(colors + cam_colors), psize, len(mapp.frames)))
 
     def __del__(self):
         self.vis.destroy_window()
