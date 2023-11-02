@@ -5,6 +5,7 @@ Separate nodes(tools) for SLAM
 
 import time
 import numpy as np
+# from numba import jit
 import cv2
 from skimage.measure import LineModelND, ransac # type: ignore
 from .slam_toolbox import (Frame, Map, Point, 
@@ -14,6 +15,7 @@ from .misc import Color, show_attributes
 
 cc = Color()
 
+# @jit
 def triangulate(pose1, pose2, pts1, pts2):
     ret = np.zeros((pts1.shape[0], 4))
     for i, p in enumerate(zip(pts1, pts2)):
@@ -26,30 +28,61 @@ def triangulate(pose1, pose2, pts1, pts2):
         ret[i] = vt[3]
     return ret
 
-class DetectorDescriptor(Node):
+class Camera(Node):
     """
-    SLAM Node 01
+    SLAM Camera Node
+    The camera intrinsic matrix represents the internal 
+    parameters of a camera, including the focal length, 
+    and it allows to project 3D points in the world 
+    onto the 2D image plane. 
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.F = 500
-        self.W, self.H = 1920, 1080
+        F = self.param['focal_length']
+        W = self.param['frame_width']
+        H = self.param['frame_height']
+        # self.calibration_data = self.param['calibration_data']
+        K = self.camera_intrinsic_matrix(F, W, H)
+        self.buffer.variable['camera_data'] = {
+        'K':K, 'W':W, 'H':H}
 
-        if self.W > 1024:
-            downscale = 1024.0/self.W
-            self.F *= downscale
-            self.H = int(self.H * downscale)
-            self.W = 1024
+    def out_frame(self):
+        # image = self.get_frame(0)
+        # if image is None:
+        #     print('Camera stop')
+        #     return None
+        return self.get_frame(0)
 
-        # print(self.W, self.H)
-        # The camera intrinsic matrix represents the internal 
-        # parameters of a camera, including the focal length, 
-        # and it allows to project 3D points in the world 
-        # onto the 2D image plane. 
-        self.K = np.array([[self.F, 0, self.W//2],
-                            [0, self.F, self.H//2],
-                            [0, 0, 1]])
+    def camera_intrinsic_matrix(self, F, W, H):
+        # Camera Intrinsic Matrix (Camera-to-Image, Image-to-Pixel):
+        if W > 1024:
+            downscale = 1024.0/W
+            F *= downscale
+            H = int(H * downscale)
+            W = 1024
+        return np.array([
+            [F, 0, W//2],
+            [0, F, H//2],
+            [0, 0, 1]])
 
+
+    def update(self, param):
+        self.disabled = param['disabled']
+        F = param['focal_length']
+        W = param['frame_width']
+        H = param['frame_height']
+        # self.calibration_data = param['calibration_data']
+        K = self.camera_intrinsic_matrix(F, W, H)
+        self.buffer.variable['camera_data'] = {
+        'K':K, 'W':W, 'H':H}
+
+
+class DetectorDescriptor(Node):
+    """
+    SLAM DetectorDescriptor Node
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.algorithm = self.param['algorithm']
         self.nfeatures = self.param['nfeatures']
         self.show_points = self.param['show_points']
@@ -61,14 +94,21 @@ class DetectorDescriptor(Node):
         if image is None:
             print('DetectorDescriptor stop')
             return None
-        if len(self.get_input()) > 1:
+        elif len(self.get_input()) > 1:
             self.mask = cv2.cvtColor(self.get_frame(1), cv2.COLOR_BGR2GRAY)
-        if self.disabled: return image
-        frame = Frame(self.mapp, image, self.K,
+        elif self.disabled: return image
+        # Read Camera data
+        elif not 'camera_data' in self.buffer.variable:
+            print('\nError -> Camera node is missing\n')
+            return None
+        K = self.buffer.variable['camera_data']['K']
+        W = self.buffer.variable['camera_data']['W']
+        H = self.buffer.variable['camera_data']['H']
+        frame = Frame(self.mapp, image, K,
             verts=None, algorithm = self.algorithm,
             mask=self.mask, nfeatures=self.nfeatures)
         # save the received object in a buffer
-        self.buffer.variable['slam_data'] = [frame, self.mapp, self.K, self.W, self.H]
+        self.buffer.variable['slam_data'] = [frame, self.mapp, K, W, H]
         if self.show_points:
             for fpt in frame.key_pts:
                 cv2.circle(image, np.int32(fpt), 3, cc.green, 1)
@@ -84,7 +124,7 @@ class DetectorDescriptor(Node):
 
 class MatchPoints(Node):
     """
-    SLAM Node 02
+    SLAM MatchPoints Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -164,7 +204,7 @@ class MatchPoints(Node):
         pts4d /= pts4d[:, 3:]       # homogeneous 3-D coords
 
         # adding new points to the map from pairwise matches
-        new_pts_count = 0
+        # new_pts_count = 0
         for i, p in enumerate(pts4d):
             if not good_pts4d[i]:
                 continue
@@ -205,10 +245,9 @@ class MatchPoints(Node):
             pt = Point(self.mapp, p[0:3], color)
             pt.add_observation(f2, idx2[i])
             pt.add_observation(f1, idx1[i])
-            new_pts_count += 1
+            # new_pts_count += 1
 
         # print("Adding:   %d new points, %d search by projection" % (new_pts_count, sbp_pts_count))
-
         # print("Map:      %d points, %d frames" % (len(self.mapp.points), len(self.mapp.frames)))
         # print("Time:     %.2f ms" % ((time.time()-start_time)*1000.0))
         # print(np.linalg.inv(f1.pose))
@@ -229,14 +268,17 @@ class MatchPoints(Node):
 
 class Open3DMap(Node):
     """
-    SLAM Node 03
+    SLAM Open3DMap Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.amount = 500
         self.point_size = self.param['point_size']
         self.point_color = self.param['point_color']
-        self.d3d = DisplayOpen3D(width=1280, height=720, scale=0.05, point_size=self.point_size)
+        self.write_pcd = self.param['write_pcd']
+        self.d3d = DisplayOpen3D(width=1280, height=720,
+            scale=0.05, point_size=self.point_size,
+            write_pcd=self.write_pcd)
 
     def out_frame(self):
         image = self.get_frame(0)
@@ -254,11 +296,12 @@ class Open3DMap(Node):
         self.point_size = param['point_size']
         self.point_color = param['point_color']
         self.point_size = param['point_size']
+        self.write_pcd = param['write_pcd']
 
 
 class LineModelOptimization(Node):
     """
-    SLAM Node 04
+    SLAM LineModelOptimization Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -299,13 +342,12 @@ class LineModelOptimization(Node):
 
 class GeneralGraphOptimization(Node):
     """
-    SLAM Node 05
+    SLAM GeneralGraphOptimization Node
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mapp = None
-        self.step_frame = self.param['step_frame']
-        self.delete_points = self.param['delete_points']
+        self.step_frame = self.param['step_frame']        
 
     def out_frame(self):
         image = self.get_frame(0)
@@ -324,7 +366,6 @@ class GeneralGraphOptimization(Node):
 
     def update(self, param):
         self.disabled = param['disabled']
-        self.step_frame = param['step_frame']
-        self.delete_points = param['delete_points']
+        self.step_frame = param['step_frame']        
 
 

@@ -1701,7 +1701,7 @@ class NodeGraph(QtCore.QObject):
                     node.set_pos(current_x, current_y)
                     current_x += dx * 0.5 + 10
 
-                current_y += max_height * 0.5 + 100
+                current_y += max_height * 0.5 + 40
 
         nodes_center_1 = self.viewer().nodes_rect_center(node_views)
         dx = nodes_center_0[0] - nodes_center_1[0]

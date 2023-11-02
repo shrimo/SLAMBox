@@ -2,7 +2,7 @@
 HOST : str = 'localhost'
 PORT : int = 50001
 RECV_SIZE  : int = 10240
-NAME : str = 'Optical Core'
+NAME : str = 'SLAM Box'
 VERSION : str = '0.5.5'
 SYSTEM : str = 'Linux'
 GUI : str = 'Node-based UI'

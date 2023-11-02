@@ -17,6 +17,23 @@ from NodeGraphQt.constants import (NODE_PROP_QLABEL,
 ncs = NodeColorStyle()
 ncs.set_value(15)
 
+class Camera(BaseNode):
+    __identifier__ = 'nodes.SLAMBox'
+    NODE_NAME = 'Camera'
+    def __init__(self):
+        super().__init__()
+        self.add_input('in', color=(180, 80, 180))
+        self.add_output('out')
+        self.create_property('label_focal_length', 'Focal length', widget_type=NODE_PROP_QLABEL)
+        self.create_property('focal_length', 500, widget_type=NODE_PROP_INT)
+        self.create_property('label_frame_width', 'Frame width (pix)', widget_type=NODE_PROP_QLABEL)
+        self.create_property('frame_width', 1920, widget_type=NODE_PROP_INT)
+        self.create_property('label_frame_height', 'Frame height (pix)', widget_type=NODE_PROP_QLABEL)
+        self.create_property('frame_height', 1080, widget_type=NODE_PROP_INT)
+        self.create_property('label_calibration_data', 'calibration data path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('calibration_data', 'data/calibration_data.npz', widget_type=NODE_PROP_FILE)
+        self.set_color(*ncs.SLAMBox)
+
 class DetectorDescriptor(BaseNode):
     __identifier__ = 'nodes.SLAMBox'
     NODE_NAME = 'DetectorDescriptor'
@@ -62,6 +79,8 @@ class Open3DMap(BaseNode):
         self.create_property('point_size', 2.0, widget_type=NODE_PROP_FLOAT)
         self.create_property('label_point_color', 'Point color', widget_type=NODE_PROP_QLABEL)
         self.create_property('point_color', (1, 0, 0), widget_type=NODE_PROP_COLORPICKER)
+        self.create_property('label_write_pcd', 'Write point clouds', widget_type=NODE_PROP_QLABEL)
+        self.create_property('write_pcd', False, widget_type=NODE_PROP_QCHECKBOX)
         self.set_color(*ncs.SLAMBox)
 
 class LineModelOptimization(BaseNode):
@@ -89,7 +108,6 @@ class GeneralGraphOptimization(BaseNode):
         self.add_output('out')
         self.create_property('label_step_frame', 'Step frame', widget_type=NODE_PROP_QLABEL)
         self.create_property('step_frame', 4, widget_type=NODE_PROP_INT)
-        self.add_checkbox('delete_points', 'Delete pointst', text='On/Off', state=False, tab='attributes')
         self.set_color(*ncs.SLAMBox)
 
 class DNNMask(BaseNode):
