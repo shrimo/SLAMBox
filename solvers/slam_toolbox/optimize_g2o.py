@@ -12,7 +12,7 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
 
     # create g2o optimizer
     opt = g2o.SparseOptimizer()
-    solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
+    solver = g2o.BlockSolverSE3(g2o.LinearSolverDenseSE3())
     solver = g2o.OptimizationAlgorithmLevenberg(solver)
     opt.set_algorithm(solver)
 
@@ -48,7 +48,7 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
         if not any([f in local_frames for f in p.frames]):
             continue
 
-        pt = g2o.VertexSBAPointXYZ()
+        pt = g2o.VertexPointXYZ()
         pt.set_id(p.id * 2 + 1)
         pt.set_estimate(p.pt[0:3])
         pt.set_marginalized(True)

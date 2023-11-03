@@ -75,7 +75,7 @@ pip install opencv-python
 
 pip install opencv-contrib-python
 
-pip install open3d
+pip3 install open3d
 
 pip install scikit-image
 
