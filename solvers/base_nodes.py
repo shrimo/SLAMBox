@@ -226,7 +226,7 @@ class Insert(Node):
         height_b, width_b, channels_b = frame_b.shape
         """ Check out of the border """
         if width_b + self.pos_x > width_a or height_b + self.pos_y > height_a:
-            return frame_error(frame_a)
+            return frame_error(frame_a, 'Inserted frame B - out of bounds')
             # cv2.putText(frame_a, self.msg, (30, height_a-30), self.font , 1, (0,0,255), 1)
             return frame_a
         frame_a[

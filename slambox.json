@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f0552d90590":{
+    "0x7f3b47788590":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -32,8 +32,8 @@
       "width":160,
       "height":232.0,
       "pos":[
-        320.0,
-        -150.0
+        321.7167380422193,
+        -220.38625973098925
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f0552d96390":{
+    "0x7f3b4778cb10":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -74,8 +74,8 @@
       "width":160,
       "height":93.0,
       "pos":[
-        326.86695216887705,
-        1025.2789432617114
+        319.99999999999983,
+        862.1888292508823
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f0556dc6bd0":{
+    "0x7f3b48f51750":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -111,13 +111,13 @@
         180
       ],
       "disabled":false,
-      "selected":false,
+      "selected":true,
       "visible":true,
       "width":160,
       "height":71.0,
       "pos":[
-        326.86695216887705,
-        1145.2789432617114
+        318.28326195778067,
+        975.3218770820047
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,51 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f05545727d0":{
-      "type_":"nodes.SLAMBox.Camera",
-      "icon":null,
-      "name":"Camera",
-      "color":[
-        95,
-        115,
-        45,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        321.0300138949999,
-        343.34760844385045
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_focal_length":"Focal length",
-        "focal_length":525,
-        "label_frame_width":"Frame width (pix)",
-        "frame_width":1920,
-        "label_frame_height":"Frame height (pix)",
-        "frame_height":1080,
-        "label_calibration_data":"calibration data path",
-        "calibration_data":"data/calibration_data.npz"
-      }
-    },
-    "0x7f0552dac790":{
+    "0x7f3b477b4810":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -195,22 +151,21 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":100.0,
+      "height":60,
       "pos":[
-        322.7467519372192,
-        190.5579226863369
+        322.7467519372193,
+        37.76823692882353
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "show_size":false,
         "label_width":"Width",
         "width_":1024,
         "label_height":"Height",
         "height_":576
       }
     },
-    "0x7f0552da46d0":{
+    "0x7f3b48f57c10":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -238,8 +193,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        315.8797997683423,
-        454.93558118810176
+        319.31327585278075,
+        278.11156283951885
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -251,7 +206,7 @@
         "algorithm":"ORB"
       }
     },
-    "0x7f05539be5d0":{
+    "0x7f3b483cca90":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -279,8 +234,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        317.5965378105616,
-        619.7424332411499
+        319.31327585278103,
+        425.7510344703744
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -296,7 +251,45 @@
         "show_marker":false
       }
     },
-    "0x7f0552da8ad0":{
+    "0x7f3b477d7490":{
+      "type_":"nodes.SLAMBox.Triangulate",
+      "icon":null,
+      "name":"Triangulate",
+      "color":[
+        95,
+        115,
+        45,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        319.31327585278103,
+        557.9398637212565
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_m_orb_distance":"ORB distance",
+        "orb_distance":64.0
+      }
+    },
+    "0x7f3b477ef450":{
       "type_":"nodes.SLAMBox.GeneralGraphOptimization",
       "icon":null,
       "name":"GeneralGraphOptimization",
@@ -324,8 +317,8 @@
       "width":160,
       "height":60,
       "pos":[
-        321.03001389499997,
-        786.2660233364173
+        319.3132758527809,
+        652.3604560433157
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -333,10 +326,10 @@
         "label_solverSE3":"SolverSE3",
         "solverSE3":"SolverEigenSE3",
         "label_step_frame":"Step frame",
-        "step_frame":4
+        "step_frame":10
       }
     },
-    "0x7f0552dba850":{
+    "0x7f3b4779e550":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -364,8 +357,8 @@
       "width":160,
       "height":60,
       "pos":[
-        324.4634899794385,
-        894.4205199962304
+        319.31327585278126,
+        748.4977864075937
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -381,86 +374,140 @@
         "label_write_pcd":"Write point clouds",
         "write_pcd":false
       }
+    },
+    "0x7f3b477b9510":{
+      "type_":"nodes.SLAMBox.Camera",
+      "icon":null,
+      "name":"Camera",
+      "color":[
+        95,
+        115,
+        45,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        322.74675193721936,
+        163.09011401082896
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_focal_length":"Focal length",
+        "focal_length":525,
+        "label_frame_width":"Frame width (pix)",
+        "frame_width":1920,
+        "label_frame_height":"Frame height (pix)",
+        "frame_height":1080,
+        "label_calibration_data":"calibration data path",
+        "calibration_data":"data/calibration_data.npz"
+      }
     }
   },
   "connections":[
     {
       "out":[
-        "0x7f0552d90590",
+        "0x7f3b47788590",
         "out"
       ],
       "in":[
-        "0x7f0552dac790",
+        "0x7f3b477b4810",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f0552d96390",
+        "0x7f3b4778cb10",
         "in"
       ],
       "out":[
-        "0x7f0552dba850",
+        "0x7f3b4779e550",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f0552d96390",
+        "0x7f3b4778cb10",
         "out"
       ],
       "in":[
-        "0x7f0556dc6bd0",
+        "0x7f3b48f51750",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f3b477b4810",
+        "out"
+      ],
+      "in":[
+        "0x7f3b477b9510",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f05545727d0",
-        "in"
-      ],
-      "out":[
-        "0x7f0552dac790",
-        "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f05545727d0",
-        "out"
-      ],
-      "in":[
-        "0x7f0552da46d0",
+        "0x7f3b48f57c10",
         "ina"
+      ],
+      "out":[
+        "0x7f3b477b9510",
+        "out"
       ]
     },
     {
       "out":[
-        "0x7f0552da46d0",
+        "0x7f3b48f57c10",
         "out"
       ],
       "in":[
-        "0x7f05539be5d0",
+        "0x7f3b483cca90",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f05539be5d0",
+        "0x7f3b483cca90",
         "out"
       ],
       "in":[
-        "0x7f0552da8ad0",
+        "0x7f3b477d7490",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f0552da8ad0",
+        "0x7f3b477d7490",
         "out"
       ],
       "in":[
-        "0x7f0552dba850",
+        "0x7f3b477ef450",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f3b477ef450",
+        "out"
+      ],
+      "in":[
+        "0x7f3b4779e550",
         "in"
       ]
     }

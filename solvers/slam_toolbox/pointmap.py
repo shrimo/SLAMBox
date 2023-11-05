@@ -116,6 +116,6 @@ class Map:
                 culled_pt_count += 1
                 self.points.remove(p)
                 p.delete()
-        print("Culled:   %d points" % (culled_pt_count))
+        # print("Culled:   %d points" % (culled_pt_count))
         # print("Optimize: %f units of error" % err)
-        return err
+        return err, culled_pt_count

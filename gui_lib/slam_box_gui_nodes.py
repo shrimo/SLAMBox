@@ -68,6 +68,17 @@ class MatchPoints(BaseNode):
         self.add_checkbox('show_marker', 'Show marker', text='On/Off', state=False, tab='attributes')
         self.set_color(*ncs.SLAMBox)
 
+class Triangulate(BaseNode):
+    __identifier__ = 'nodes.SLAMBox'
+    NODE_NAME = 'Triangulate'
+    def __init__(self):
+        super().__init__()
+        self.add_input('in', color=(180, 80, 180))
+        self.add_output('out')
+        self.create_property('label_m_orb_distance', 'ORB distance', widget_type=NODE_PROP_QLABEL)
+        self.create_property('orb_distance', 64.0, range=(1.0, 100.0), widget_type=NODE_PROP_FLOAT)
+        self.set_color(*ncs.SLAMBox)        
+
 class Open3DMap(BaseNode):
     __identifier__ = 'nodes.SLAMBox'
     NODE_NAME = 'Open3DMap'
