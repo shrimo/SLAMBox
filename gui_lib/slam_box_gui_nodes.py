@@ -25,7 +25,7 @@ class Camera(BaseNode):
         self.add_input('in', color=(180, 80, 180))
         self.add_output('out')
         self.create_property('label_focal_length', 'Focal length', widget_type=NODE_PROP_QLABEL)
-        self.create_property('focal_length', 500, widget_type=NODE_PROP_INT)
+        self.create_property('focal_length', 525, widget_type=NODE_PROP_INT)
         self.create_property('label_frame_width', 'Frame width (pix)', widget_type=NODE_PROP_QLABEL)
         self.create_property('frame_width', 1920, widget_type=NODE_PROP_INT)
         self.create_property('label_frame_height', 'Frame height (pix)', widget_type=NODE_PROP_QLABEL)
@@ -47,7 +47,7 @@ class DetectorDescriptor(BaseNode):
         self.add_checkbox('show_points', 'Show points', text='On/Off', state=False, tab='attributes')
         descriptors_items = ['SIFT', 'ORB', 'AKAZE']
         self.create_property('label_algorithm', 'Algorithm', widget_type=NODE_PROP_QLABEL)
-        self.create_property('algorithm', 'ORB', items=descriptors_items, widget_type=NODE_PROP_QCOMBO)        
+        self.create_property('algorithm', 'ORB', items=descriptors_items, widget_type=NODE_PROP_QCOMBO)
         self.set_color(*ncs.SLAMBox)
 
 class MatchPoints(BaseNode):
@@ -106,6 +106,9 @@ class GeneralGraphOptimization(BaseNode):
         super().__init__()
         self.add_input('in', color=(180, 80, 180))
         self.add_output('out')
+        SolverSE3 = ['SolverCSparseSE3', 'SolverEigenSE3', 'SolverCholmodSE3', 'SolverDenseSE3']
+        self.create_property('label_solverSE3', 'SolverSE3', widget_type=NODE_PROP_QLABEL)
+        self.create_property('solverSE3', 'SolverEigenSE3', items=SolverSE3, widget_type=NODE_PROP_QCOMBO)
         self.create_property('label_step_frame', 'Step frame', widget_type=NODE_PROP_QLABEL)
         self.create_property('step_frame', 4, widget_type=NODE_PROP_INT)
         self.set_color(*ncs.SLAMBox)

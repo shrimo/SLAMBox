@@ -1,10 +1,33 @@
+"""
+g2o is an open-source C++ framework for optimizing graph-based nonlinear error functions.
+"""
+
+import sys
+
+sys.path.append("/home/cds/github/g2o-pymem/build/lib")
+
 import numpy as np
-# np.finfo(np.dtype("float32"))
-# np.finfo(np.dtype("float64"))
-import g2o # type: ignore
+import g2opy as g2o  # type: ignore
 from .match_frames import poseRt
 
-def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50):
+# Dictionary containing solvers
+SolverSE3 = {
+    "SolverCSparseSE3": g2o.LinearSolverCSparseSE3,
+    "SolverEigenSE3": g2o.LinearSolverEigenSE3,
+    "SolverCholmodSE3": g2o.LinearSolverCholmodSE3,
+    "SolverDenseSE3": g2o.LinearSolverDenseSE3,
+}
+
+
+def optimize(
+    frames,
+    points,
+    local_window,
+    fix_points,
+    verbose=False,
+    rounds=50,
+    solverSE3="SolverEigenSE3",
+):
     if local_window is None:
         local_frames = frames
     else:
@@ -12,7 +35,8 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
 
     # create g2o optimizer
     opt = g2o.SparseOptimizer()
-    solver = g2o.BlockSolverSE3(g2o.LinearSolverDenseSE3())
+    # solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
+    solver = g2o.BlockSolverSE3(SolverSE3[solverSE3]())
     solver = g2o.OptimizationAlgorithmLevenberg(solver)
     opt.set_algorithm(solver)
 
@@ -25,7 +49,7 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
     graph_frames, graph_points = {}, {}
 
     # add frames to graph
-    for f in (local_frames if fix_points else frames):
+    for f in local_frames if fix_points else frames:
         pose = f.pose
         se3 = g2o.SE3Quat(pose[0:3, 0:3], pose[0:3, 3])
         v_se3 = g2o.VertexSE3Expmap()
@@ -33,7 +57,7 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
 
         v_se3.set_id(f.id * 2)
         v_se3.set_fixed(f.id <= 1 or f not in local_frames)
-        #v_se3.set_fixed(f.id != 0)
+        # v_se3.set_fixed(f.id != 0)
         opt.add_vertex(v_se3)
 
         # confirm pose correctness
@@ -48,6 +72,7 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
         if not any([f in local_frames for f in p.frames]):
             continue
 
+        # pt = g2o.VertexSBAPointXYZ()
         pt = g2o.VertexPointXYZ()
         pt.set_id(p.id * 2 + 1)
         pt.set_estimate(p.pt[0:3])
@@ -87,4 +112,3 @@ def optimize(frames, points, local_window, fix_points, verbose=False, rounds=50)
             p.pt = np.array(graph_points[p].estimate())
 
     return opt.active_chi2()
-

@@ -3,7 +3,7 @@ This application is designed for use metod simultaneous localization and mapping
 
 ![Screenshot01](screenshot01.png)
 
-[Demo video](https://vimeo.com/878101688/42d5fa7642)
+[Demo video 01](https://vimeo.com/878101688/42d5fa7642), [Demo video 02](https://vimeo.com/881315371/30f17df671)
 
 ### Introduction
 
@@ -66,7 +66,7 @@ https://ffmpeg.org/
 
 ![Screenshot04](screenshot04.png)
 
-### Dependent libraries (Fedora Linux 36 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
+### Dependent libraries (Fedora Linux 38 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
 
 ```
 pip install numpy

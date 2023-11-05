@@ -41,7 +41,7 @@ class DisplayOpen3D:
 
         self.ctr = self.vis.get_view_control()
         self.ctr.change_field_of_view(step=0.45)
-        self.ctr.set_constant_z_far(3000.0)
+        self.ctr.set_constant_z_far(5000.0)
         self.ctr.set_constant_z_near(0.01)
 
         self.widget3d = self.vis.get_render_option()
