@@ -96,7 +96,7 @@ class DetectorDescriptor(Node):
         elif not "camera_data" in self.buffer.variable:
             return frame_error(
                 image,
-                "{} Camera node is missing".format(self.type_),
+                f"{self.type_} Camera node is missing",
                 y_offset=-50,
                 x_offset=400,
             )
@@ -150,7 +150,7 @@ class MatchPoints(Node):
         elif not "slam_data" in self.buffer.variable:
             return frame_error(
                 image,
-                "{} Slam data is missing".format(self.type_),
+                f"{self.type_} Slam data is missing",
                 y_offset=0,
                 x_offset=400,
             )
@@ -204,7 +204,7 @@ class Triangulate(Node):
         elif not "slam_data" in self.buffer.variable:
             return frame_error(
                 image,
-                "{} Slam data is missing".format(self.type_),
+                f"{self.type_} Slam data is missing",
                 y_offset=50,
                 x_offset=400,
             )
@@ -346,7 +346,7 @@ class GeneralGraphOptimization(Node):
         elif not "slam_data" in self.buffer.variable:
             return frame_error(
                 image,
-                "{} Slam data is missing".format(self.type_),
+                f"{self.type_} Slam data is missing",
                 y_offset=100,
                 x_offset=400,
             )
@@ -396,7 +396,7 @@ class LineModelOptimization(Node):
         elif not "slam_data" in self.buffer.variable:
             return frame_error(
                 image,
-                "{} Slam data is missing".format(self.type_),
+                f"{self.type_} Slam data is missing",
                 y_offset=150,
                 x_offset=400,
             )

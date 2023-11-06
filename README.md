@@ -3,7 +3,7 @@ This application is designed for use metod simultaneous localization and mapping
 
 ![Screenshot01](screenshot01.png)
 
-[Demo video 01](https://vimeo.com/878101688/42d5fa7642), [Demo video 02](https://vimeo.com/881315371/30f17df671)
+[Demo video](https://vimeo.com/881531969/eee24a6330)
 
 ### Introduction
 

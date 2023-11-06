@@ -31,7 +31,8 @@ class DisplayOpen3D:
     def viewer_thread(self, q):
         self.viewer_init(self.width, self.height)
         while True:
-            self.viewer_refresh(q)
+            if self.viewer_refresh(q):
+                break
 
     def viewer_init(self, w, h):
         self.vis = o3d.visualization.Visualizer()
@@ -81,11 +82,16 @@ class DisplayOpen3D:
                 )
             if self.write_pcd:
                 # write the point cloud to a file
-                o3d.io.write_point_cloud(f"./pcd/slam_map_{self.state[3]:04}.pcd", self.pcl)
+                o3d.io.write_point_cloud(
+                    f"./pcd/slam_map_{self.state[3]:04}.pcd", self.pcl
+                )
 
         self.vis.update_geometry(self.pcl)
         self.vis.update_geometry(self.robot)
-        self.vis.poll_events()
+        # If closing vis window
+        if not self.vis.poll_events():
+            self.vis.destroy_window()
+            return True
         self.vis.update_renderer()
 
     def send_to_visualization(self, mapp, psize):
@@ -103,7 +109,15 @@ class DisplayOpen3D:
         ]
 
         cam_colors = [(1.0, 0.0, 0.0)] * len(cam_pts)
-        self.queue.put((np.array(pts + cam_pts), np.array(colors + cam_colors), psize, len(mapp.frames)))
+        self.queue.put(
+            (
+                np.array(pts + cam_pts),
+                np.array(colors + cam_colors),
+                psize,
+                len(mapp.frames),
+            )
+        )
 
     def __del__(self):
-        self.vis.destroy_window()
+        print("Close DisplayOpen3D")
+        # self.vis.destroy_window()
