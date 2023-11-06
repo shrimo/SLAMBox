@@ -28,6 +28,7 @@ class NodeColorStyle:
         self.Tracking = (30, 70, 50)
         self.Time = (150, 120, 30)
         self.SLAMBox = (80, 100, 30)
+        self.slam_optimization = (30, 50, 100)
 
     def set_value(self, value):
         """ Change all values in class elements """

@@ -23,7 +23,7 @@ import solvers
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
-RoiType = Tuple[Any, Any, Any, Any] # type for region of interest
+RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 # Selector for communication with clients
 sel = selectors.DefaultSelector()
@@ -32,6 +32,7 @@ sel = selectors.DefaultSelector()
 @dataclass
 class DataBuffer:
     """Common data exchange buffer"""
+
     switch: bool = False
     roi: RoiType = (np.int64(0), np.int64(0), np.int64(0), np.int64(0))
     metadata: Dict[Any, Any] = field(default_factory=dict)
@@ -50,8 +51,9 @@ def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeTyp
     return next(node for node in nodes if node[attribute] == target)
 
 
-def get_object_by_script(node: NodeType, root_node: NodeType,
-    buffer: DataBuffer) -> solvers.Node:
+def get_object_by_script(
+    node: NodeType, root_node: NodeType, buffer: DataBuffer
+) -> solvers.Node:
     """Declare an object by type node"""
     node_object = getattr(solvers, node["type"])
     return node_object(
@@ -59,11 +61,13 @@ def get_object_by_script(node: NodeType, root_node: NodeType,
         node["id"],
         node["custom"],
         root_node["custom"]["node_name"],
-        buffer)
+        buffer,
+    )
 
 
-def build_node_graph(script: ScriptType, root_node: NodeType,
-    buffer: DataBuffer) -> solvers.base_nodes.Viewer:
+def build_node_graph(
+    script: ScriptType, root_node: NodeType, buffer: DataBuffer
+) -> solvers.base_nodes.Viewer:
     """Create dictionary and adding objects to the dictionary"""
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
     for node in script:
@@ -79,8 +83,9 @@ def build_node_graph(script: ScriptType, root_node: NodeType,
     return out
 
 
-def build_rooted_graph(script: ScriptType,
-    buffer: DataBuffer) -> solvers.base_nodes.Viewer:
+def build_rooted_graph(
+    script: ScriptType, buffer: DataBuffer
+) -> solvers.base_nodes.Viewer:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
     aligned_script = move_node_to_end(script, "Viewer")
@@ -92,8 +97,9 @@ def build_rooted_graph(script: ScriptType,
 class GraphCommunication:
     """Server for receiving data, non-blocking"""
 
-    def __init__(self, host: str = "localhost",
-        port: int = 50001, recv_size: int = 10240) -> None:
+    def __init__(
+        self, host: str = "localhost", port: int = 50001, recv_size: int = 10240
+    ) -> None:
         self.data_change: Dict[str, ScriptType] = {}
         self.recv_size = recv_size
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -128,8 +134,9 @@ class GraphCommunication:
 class GraphBuilder:
     """Building and execution of a node graph."""
 
-    def __init__(self, script: ScriptType,
-        host: str, port: int, recv_size: int) -> None:
+    def __init__(
+        self, script: ScriptType, host: str, port: int, recv_size: int
+    ) -> None:
         self.buffer = DataBuffer()
         self.script = script
         self.graph = build_rooted_graph(script, self.buffer)
@@ -160,11 +167,18 @@ class GraphBuilder:
             elif p_key == ord("q") or p_key == 27:
                 if self.graph.stop():
                     break
+            # window close event
+            elif (
+                cv2.getWindowProperty(self.graph.window_name, cv2.WND_PROP_VISIBLE) < 1
+            ):
+                if self.graph.stop():
+                    break
 
     def scripts_comparison(self, script: ScriptType) -> bool:
         """comparison of a running script with an updated script"""
-        return Counter([x["id"] for x in script]) == \
-        Counter([x["id"] for x in self.script])
+        return Counter([x["id"] for x in script]) == Counter(
+            [x["id"] for x in self.script]
+        )
 
     def execution_controller(self, input_script: NodeType) -> None:
         """Controller for building a graph of nodes and control parameter updates"""
@@ -179,8 +193,9 @@ class GraphBuilder:
                 cv2.destroyAllWindows()
                 sys.exit(0)
 
-    def graph_update(self, graph: solvers.base_nodes.Viewer,
-        data_update: ScriptType) -> None:
+    def graph_update(
+        self, graph: solvers.base_nodes.Viewer, data_update: ScriptType
+    ) -> None:
         """Updating node graph in real time"""
         if graph.get_input():
             for node in graph.get_input():

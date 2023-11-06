@@ -108,7 +108,7 @@ class LineModelOptimization(BaseNode):
         self.create_property('label_m_trials', 'm_trials', widget_type=NODE_PROP_QLABEL)
         self.create_property('m_trials', 100, widget_type=NODE_PROP_INT)
         self.add_checkbox('delete_points', 'Delete pointst', text='On/Off', state=False, tab='attributes')
-        self.set_color(*ncs.SLAMBox)
+        self.set_color(*ncs.slam_optimization)
 
 class GeneralGraphOptimization(BaseNode):
     __identifier__ = 'nodes.SLAMBox'
@@ -122,7 +122,26 @@ class GeneralGraphOptimization(BaseNode):
         self.create_property('solverSE3', 'SolverEigenSE3', items=SolverSE3, widget_type=NODE_PROP_QCOMBO)
         self.create_property('label_step_frame', 'Step frame', widget_type=NODE_PROP_QLABEL)
         self.create_property('step_frame', 4, widget_type=NODE_PROP_INT)
-        self.set_color(*ncs.SLAMBox)
+        self.set_color(*ncs.slam_optimization)
+
+class KalmanFilterOptimization(BaseNode):
+    __identifier__ = 'nodes.SLAMBox'
+    NODE_NAME = 'KalmanFilterOptimization'
+    def __init__(self):
+        super().__init__()
+        self.add_input('in', color=(180, 80, 180))
+        self.add_output('out')
+        self.create_property('label_m_fps', 'fps', widget_type=NODE_PROP_QLABEL)
+        self.create_property('fps', 30.0, widget_type=NODE_PROP_FLOAT)
+        self.create_property('label_r_drag', 'drag', widget_type=NODE_PROP_QLABEL)
+        self.create_property('drag', 0.8, widget_type=NODE_PROP_FLOAT)
+        self.create_property('label_m_grav', 'gravity', widget_type=NODE_PROP_QLABEL)
+        self.create_property('grav', 0.0, widget_type=NODE_PROP_FLOAT)
+        self.create_property('label_m_procNoise', 'procNoise', widget_type=NODE_PROP_QLABEL)
+        self.create_property('procNoise', 0.1, widget_type=NODE_PROP_FLOAT)
+        self.create_property('label_m_measNoise', 'measNoise', widget_type=NODE_PROP_QLABEL)
+        self.create_property('measNoise', 0.1, widget_type=NODE_PROP_FLOAT)
+        self.set_color(*ncs.slam_optimization)
 
 class DNNMask(BaseNode):
     __identifier__ = 'nodes.SLAMBox'

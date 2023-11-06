@@ -88,12 +88,12 @@ class DetectorDescriptor(Node):
         if image is None:
             print("DetectorDescriptor stop")
             return None
-        elif len(self.get_input()) > 1:
+        if len(self.get_input()) > 1:
             self.mask = cv2.cvtColor(self.get_frame(1), cv2.COLOR_BGR2GRAY)
-        elif self.disabled:
+        if self.disabled:
             return image
         # Read Camera data
-        elif not "camera_data" in self.buffer.variable:
+        if not "camera_data" in self.buffer.variable:
             return frame_error(
                 image,
                 f"{self.type_} Camera node is missing",
@@ -114,7 +114,7 @@ class DetectorDescriptor(Node):
         self.buffer.variable["slam_data"] = [frame, self.mapp, K, W, H]
         if self.show_points:
             for fpt in frame.key_pts:
-                cv2.circle(image, np.int32(fpt), 3, cc.green, 1)
+                cv2.circle(image, np.int32(fpt), 5, cc.green, 1)
 
         attributes = ["Algorithm: " + self.algorithm]
         return show_attributes(image, attributes)
@@ -323,110 +323,6 @@ class Triangulate(Node):
     def update(self, param):
         self.disabled = param["disabled"]
         self.orb_distance = param["orb_distance"]
-
-
-class GeneralGraphOptimization(Node):
-    """
-    SLAM GeneralGraphOptimization Node
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.solverSE3 = self.param["solverSE3"]
-        self.step_frame = self.param["step_frame"]
-        self.culled_pt = 0
-
-    def out_frame(self):
-        image = self.get_frame(0)
-        if image is None:
-            print("LineModelOptimization stop")
-            return None
-        elif self.disabled:
-            return image
-        elif not "slam_data" in self.buffer.variable:
-            return frame_error(
-                image,
-                f"{self.type_} Slam data is missing",
-                y_offset=100,
-                x_offset=400,
-            )
-
-        frame, self.mapp = self.buffer.variable["slam_data"][:2]
-        # optimize the map
-        if frame.id >= 2 and frame.id % self.step_frame == 0:
-            err, self.culled_pt = self.mapp.g2optimize(
-                solverSE3=self.solverSE3
-            )  # verbose=False
-            # print("Optimize: %f units of error" % err)
-
-        return show_attributes(
-            image,
-            [
-                "solverSE3: " + self.solverSE3,
-                "Culled: {} points".format(self.culled_pt),
-            ],
-            x_offset=200,
-        )
-
-    def update(self, param):
-        self.disabled = param["disabled"]
-        self.solverSE3 = param["solverSE3"]
-        self.step_frame = param["step_frame"]
-
-
-class LineModelOptimization(Node):
-    """
-    SLAM LineModelOptimization Node
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.m_samples = self.param["m_samples"]
-        self.r_threshold = self.param["r_threshold"]
-        self.m_trials = self.param["m_trials"]
-        self.delete_points = self.param["delete_points"]
-
-    def out_frame(self):
-        image = self.get_frame(0)
-        if image is None:
-            print("LineModelOptimization stop")
-            return None
-        elif self.disabled:
-            return image
-        elif not "slam_data" in self.buffer.variable:
-            return frame_error(
-                image,
-                f"{self.type_} Slam data is missing",
-                y_offset=150,
-                x_offset=400,
-            )
-
-        map_points = self.buffer.variable["slam_data"][1].points
-        if map_points:
-            points = np.array([(kp.pt[0], kp.pt[1]) for kp in map_points])
-            model_robust, inliers = ransac(
-                points,
-                LineModelND,
-                min_samples=self.m_samples,
-                residual_threshold=self.r_threshold,
-                max_trials=self.m_trials,
-            )
-            outliers = inliers == False
-            for out_lie, ptx in zip(outliers, map_points):
-                if out_lie:
-                    if self.delete_points:
-                        map_points.remove(ptx)  # remove outliers points
-                    ptx.color = np.array([255.0, 0.0, 0.0])  # the point red color
-
-        return image
-
-    def update(self, param):
-        self.disabled = param["disabled"]
-        self.m_samples = param["m_samples"]
-        self.r_threshold = param["r_threshold"]
-        self.m_trials = param["m_trials"]
-        self.delete_points = param["delete_points"]
-
 
 class Open3DMap(Node):
     """
