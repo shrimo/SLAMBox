@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f0e8af76740":{
+    "0x7f3b47788590":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -30,10 +30,10 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":212.0,
+      "height":232.0,
       "pos":[
-        -444.14995326936673,
-        -19.369869378116263
+        321.7167380422193,
+        -220.38625973098925
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f0e8af76d10":{
+    "0x7f3b4778cb10":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -72,10 +72,10 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":89.0,
+      "height":93.0,
       "pos":[
-        -417.42212332147204,
-        1072.0103514379193
+        319.99999999999983,
+        862.1888292508823
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f0e8af77040":{
+    "0x7f3b48f51750":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -111,13 +111,13 @@
         180
       ],
       "disabled":false,
-      "selected":false,
+      "selected":true,
       "visible":true,
       "width":160,
-      "height":67.0,
+      "height":71.0,
       "pos":[
-        -417.42212332147204,
-        1200.3462321497439
+        318.28326195778067,
+        975.3218770820047
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,7 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f0e8af77d30":{
+    "0x7f3b477b4810":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -151,25 +151,110 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":94.0,
+      "height":60,
       "pos":[
-        -444.14995326936673,
-        220.63013062188372
+        322.7467519372193,
+        37.76823692882353
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "show_size":false,
         "label_width":"Width",
         "width_":1024,
         "label_height":"Height",
         "height_":576
       }
     },
-    "0x7f0e8afb4280":{
-      "type_":"nodes.SLAMBox.Open3DMap",
+    "0x7f3b48f57c10":{
+      "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
-      "name":"Open3DMap",
+      "name":"DetectorDescriptor",
+      "color":[
+        95,
+        115,
+        45,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":100.0,
+      "pos":[
+        319.31327585278075,
+        278.11156283951885
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_nfeatures":"Number of features",
+        "nfeatures":1000,
+        "show_points":false,
+        "label_algorithm":"Algorithm",
+        "algorithm":"ORB"
+      }
+    },
+    "0x7f3b483cca90":{
+      "type_":"nodes.SLAMBox.MatchPoints",
+      "icon":null,
+      "name":"MatchPoints",
+      "color":[
+        95,
+        115,
+        45,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":100.0,
+      "pos":[
+        319.31327585278103,
+        425.7510344703744
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_m_samples":"m_samples",
+        "m_samples":8,
+        "label_r_threshold":"r_threshold",
+        "r_threshold":0.02,
+        "label_m_trials":"m_trials",
+        "m_trials":300,
+        "label_size_marker":"Marker size",
+        "marker_size":5,
+        "show_marker":false
+      }
+    },
+    "0x7f3b477d7490":{
+      "type_":"nodes.SLAMBox.Triangulate",
+      "icon":null,
+      "name":"Triangulate",
       "color":[
         95,
         115,
@@ -194,69 +279,17 @@
       "width":160,
       "height":60,
       "pos":[
-        -417.4221233214721,
-        961.1204453441295
+        319.31327585278103,
+        557.9398637212565
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "label_point_size":"point size",
-        "point_size":2.0,
-        "label_point_color":"Point color",
-        "point_color":[
-          1,
-          0,
-          0
-        ],
-        "label_write_pcd":"Write point clouds",
-        "write_pcd":false
+        "label_m_orb_distance":"ORB distance",
+        "orb_distance":64.0
       }
     },
-    "0x7f0e8afb4400":{
-      "type_":"nodes.SLAMBox.Camera",
-      "icon":null,
-      "name":"Camera",
-      "color":[
-        95,
-        115,
-        45,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        -444.14995326936673,
-        367.6301306218837
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_focal_length":"Focal length",
-        "focal_length":500,
-        "label_frame_width":"Frame width (pix)",
-        "frame_width":1920,
-        "label_frame_height":"Frame height (pix)",
-        "frame_height":1080,
-        "label_calibration_data":"calibration data path",
-        "calibration_data":"data/calibration_data.npz"
-      }
-    },
-    "0x7f0e8afb4640":{
+    "0x7f3b477ef450":{
       "type_":"nodes.SLAMBox.GeneralGraphOptimization",
       "icon":null,
       "name":"GeneralGraphOptimization",
@@ -284,20 +317,22 @@
       "width":160,
       "height":60,
       "pos":[
-        -417.4221233214721,
-        831.1204453441295
+        319.3132758527809,
+        652.3604560433157
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
+        "label_solverSE3":"SolverSE3",
+        "solverSE3":"SolverEigenSE3",
         "label_step_frame":"Step frame",
-        "step_frame":4
+        "step_frame":10
       }
     },
-    "0x7f0e8afb49d0":{
-      "type_":"nodes.SLAMBox.MatchPoints",
+    "0x7f3b4779e550":{
+      "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
-      "name":"MatchPoints",
+      "name":"Open3DMap",
       "color":[
         95,
         115,
@@ -320,29 +355,30 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":94.0,
+      "height":60,
       "pos":[
-        -417.4221233214721,
-        684.1204453441295
+        319.31327585278126,
+        748.4977864075937
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "label_m_samples":"m_samples",
-        "m_samples":8,
-        "label_r_threshold":"r_threshold",
-        "r_threshold":0.02,
-        "label_m_trials":"m_trials",
-        "m_trials":300,
-        "label_size_marker":"Marker size",
-        "marker_size":5,
-        "show_marker":false
+        "label_point_size":"point size",
+        "point_size":2.0,
+        "label_point_color":"Point color",
+        "point_color":[
+          1,
+          0,
+          0
+        ],
+        "label_write_pcd":"Write point clouds",
+        "write_pcd":false
       }
     },
-    "0x7f0e8afb5270":{
-      "type_":"nodes.SLAMBox.DetectorDescriptor",
+    "0x7f3b477b9510":{
+      "type_":"nodes.SLAMBox.Camera",
       "icon":null,
-      "name":"DetectorDescriptor",
+      "name":"Camera",
       "color":[
         95,
         115,
@@ -365,101 +401,114 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":94.0,
+      "height":60,
       "pos":[
-        -417.4221233214721,
-        503.1204453441295
+        322.74675193721936,
+        163.09011401082896
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "label_nfeatures":"Number of features",
-        "nfeatures":1000,
-        "show_points":false,
-        "label_algorithm":"Algorithm",
-        "algorithm":"ORB"
+        "label_focal_length":"Focal length",
+        "focal_length":525,
+        "label_frame_width":"Frame width (pix)",
+        "frame_width":1920,
+        "label_frame_height":"Frame height (pix)",
+        "frame_height":1080,
+        "label_calibration_data":"calibration data path",
+        "calibration_data":"data/calibration_data.npz"
       }
     }
   },
   "connections":[
     {
       "out":[
-        "0x7f0e8af76740",
+        "0x7f3b47788590",
         "out"
       ],
       "in":[
-        "0x7f0e8af77d30",
+        "0x7f3b477b4810",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f0e8af76d10",
+        "0x7f3b4778cb10",
         "in"
       ],
       "out":[
-        "0x7f0e8afb4280",
+        "0x7f3b4779e550",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f0e8af76d10",
+        "0x7f3b4778cb10",
         "out"
       ],
       "in":[
-        "0x7f0e8af77040",
+        "0x7f3b48f51750",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f0e8af77d30",
+        "0x7f3b477b4810",
         "out"
       ],
       "in":[
-        "0x7f0e8afb4400",
+        "0x7f3b477b9510",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f0e8afb4280",
-        "in"
-      ],
-      "out":[
-        "0x7f0e8afb4640",
-        "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f0e8afb4400",
-        "out"
-      ],
-      "in":[
-        "0x7f0e8afb5270",
+        "0x7f3b48f57c10",
         "ina"
-      ]
-    },
-    {
-      "in":[
-        "0x7f0e8afb4640",
-        "in"
       ],
       "out":[
-        "0x7f0e8afb49d0",
+        "0x7f3b477b9510",
         "out"
       ]
     },
     {
-      "in":[
-        "0x7f0e8afb49d0",
-        "in"
-      ],
       "out":[
-        "0x7f0e8afb5270",
+        "0x7f3b48f57c10",
         "out"
+      ],
+      "in":[
+        "0x7f3b483cca90",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f3b483cca90",
+        "out"
+      ],
+      "in":[
+        "0x7f3b477d7490",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f3b477d7490",
+        "out"
+      ],
+      "in":[
+        "0x7f3b477ef450",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f3b477ef450",
+        "out"
+      ],
+      "in":[
+        "0x7f3b4779e550",
+        "in"
       ]
     }
   ]

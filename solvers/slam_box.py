@@ -1,25 +1,26 @@
 """
 SLAM Box
-Separate nodes(tools) for SLAM
+Nodes for launching SLAM pipeline
 """
 
 import time
 import numpy as np
+
 # from numba import jit
 import cv2
-from skimage.measure import LineModelND, ransac # type: ignore
-from .slam_toolbox import (Frame, Map, Point, 
-    DisplayOpen3D, match_frame)
+from skimage.measure import LineModelND, ransac  # type: ignore
+from .slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
 from .root_nodes import Node
-from .misc import Color, show_attributes
+from .misc import Color, show_attributes, frame_error
 
 cc = Color()
+
 
 # @jit
 def triangulate(pose1, pose2, pts1, pts2):
     ret = np.zeros((pts1.shape[0], 4))
     for i, p in enumerate(zip(pts1, pts2)):
-        A = np.zeros((4,4))
+        A = np.zeros((4, 4))
         A[0] = p[0][0] * pose1[2] - pose1[0]
         A[1] = p[0][1] * pose1[2] - pose1[1]
         A[2] = p[1][0] * pose2[2] - pose2[0]
@@ -28,131 +29,192 @@ def triangulate(pose1, pose2, pts1, pts2):
         ret[i] = vt[3]
     return ret
 
+
 class Camera(Node):
     """
     SLAM Camera Node
-    The camera intrinsic matrix represents the internal 
-    parameters of a camera, including the focal length, 
-    and it allows to project 3D points in the world 
-    onto the 2D image plane. 
+    The camera intrinsic matrix represents the internal
+    parameters of a camera, including the focal length,
+    and it allows to project 3D points in the world
+    onto the 2D image plane.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        F = self.param['focal_length']
-        W = self.param['frame_width']
-        H = self.param['frame_height']
+        F = self.param["focal_length"]
+        W = self.param["frame_width"]
+        H = self.param["frame_height"]
         # self.calibration_data = self.param['calibration_data']
         K = self.camera_intrinsic_matrix(F, W, H)
-        self.buffer.variable['camera_data'] = {
-        'K':K, 'W':W, 'H':H}
+        self.buffer.variable["camera_data"] = [K, W, H]
 
     def out_frame(self):
-        # image = self.get_frame(0)
-        # if image is None:
-        #     print('Camera stop')
-        #     return None
         return self.get_frame(0)
 
     def camera_intrinsic_matrix(self, F, W, H):
         # Camera Intrinsic Matrix (Camera-to-Image, Image-to-Pixel):
         if W > 1024:
-            downscale = 1024.0/W
+            downscale = 1024.0 / W
             F *= downscale
             H = int(H * downscale)
             W = 1024
-        return np.array([
-            [F, 0, W//2],
-            [0, F, H//2],
-            [0, 0, 1]])
-
+        return np.array([[F, 0, W // 2], [0, F, H // 2], [0, 0, 1]])
 
     def update(self, param):
-        self.disabled = param['disabled']
-        F = param['focal_length']
-        W = param['frame_width']
-        H = param['frame_height']
+        self.disabled = param["disabled"]
+        F = param["focal_length"]
+        W = param["frame_width"]
+        H = param["frame_height"]
         # self.calibration_data = param['calibration_data']
         K = self.camera_intrinsic_matrix(F, W, H)
-        self.buffer.variable['camera_data'] = {
-        'K':K, 'W':W, 'H':H}
+        self.buffer.variable["camera_data"] = [K, W, H]
 
 
 class DetectorDescriptor(Node):
     """
     SLAM DetectorDescriptor Node
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.algorithm = self.param['algorithm']
-        self.nfeatures = self.param['nfeatures']
-        self.show_points = self.param['show_points']
+        self.algorithm = self.param["algorithm"]
+        self.nfeatures = self.param["nfeatures"]
+        self.show_points = self.param["show_points"]
         self.mapp = Map()
         self.mask = None
 
     def out_frame(self):
         image = self.get_frame(0)
         if image is None:
-            print('DetectorDescriptor stop')
+            print("DetectorDescriptor stop")
             return None
         elif len(self.get_input()) > 1:
             self.mask = cv2.cvtColor(self.get_frame(1), cv2.COLOR_BGR2GRAY)
-        elif self.disabled: return image
+        elif self.disabled:
+            return image
         # Read Camera data
-        elif not 'camera_data' in self.buffer.variable:
-            print('\nError -> Camera node is missing\n')
-            return None
-        K = self.buffer.variable['camera_data']['K']
-        W = self.buffer.variable['camera_data']['W']
-        H = self.buffer.variable['camera_data']['H']
-        frame = Frame(self.mapp, image, K,
-            verts=None, algorithm = self.algorithm,
-            mask=self.mask, nfeatures=self.nfeatures)
+        elif not "camera_data" in self.buffer.variable:
+            return frame_error(
+                image,
+                f"{self.type_} Camera node is missing",
+                y_offset=-50,
+                x_offset=400,
+            )
+        K, W, H = self.buffer.variable["camera_data"]
+        frame = Frame(
+            self.mapp,
+            image,
+            K,
+            verts=None,
+            algorithm=self.algorithm,
+            mask=self.mask,
+            nfeatures=self.nfeatures,
+        )
         # save the received object in a buffer
-        self.buffer.variable['slam_data'] = [frame, self.mapp, K, W, H]
+        self.buffer.variable["slam_data"] = [frame, self.mapp, K, W, H]
         if self.show_points:
             for fpt in frame.key_pts:
                 cv2.circle(image, np.int32(fpt), 3, cc.green, 1)
 
-        attributes = ['Algorithm: '+self.algorithm]
+        attributes = ["Algorithm: " + self.algorithm]
         return show_attributes(image, attributes)
 
     def update(self, param):
-        self.disabled = param['disabled']
-        self.algorithm = param['algorithm']
-        self.nfeatures = param['nfeatures']
-        self.show_points = param['show_points']
+        self.disabled = param["disabled"]
+        self.algorithm = param["algorithm"]
+        self.nfeatures = param["nfeatures"]
+        self.show_points = param["show_points"]
+
 
 class MatchPoints(Node):
     """
     SLAM MatchPoints Node
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K = None
-        self.mapp = None
-        self.m_samples = self.param['m_samples']
-        self.r_threshold = self.param['r_threshold']
-        self.m_trials = self.param['m_trials']
-        self.marker_size = self.param['marker_size']
-        self.show_marker = self.param['show_marker']
+        self.m_samples = self.param["m_samples"]
+        self.r_threshold = self.param["r_threshold"]
+        self.m_trials = self.param["m_trials"]
+        self.marker_size = self.param["marker_size"]
+        self.show_marker = self.param["show_marker"]
 
     def out_frame(self):
         # start_time = time.time()
         image = self.get_frame(0)
         if image is None:
-            print('MatchPoints stop')
+            print("MatchPoints stop")
             return None
-        if self.disabled: return image
+        elif self.disabled:
+            return image
+        elif not "slam_data" in self.buffer.variable:
+            return frame_error(
+                image,
+                f"{self.type_} Slam data is missing",
+                y_offset=0,
+                x_offset=400,
+            )
 
-        frame, self.mapp, self.K, self.W, self.H = self.buffer.variable['slam_data']
+        frame, mapp = self.buffer.variable["slam_data"][:2]
         if frame.id == 0:
             return image
 
-        f1 = self.mapp.frames[-1]
-        f2 = self.mapp.frames[-2]
+        f1 = mapp.frames[-1]
+        f2 = mapp.frames[-2]
 
-        idx1, idx2, Rt = match_frame(f1, f2, self.m_samples, self.r_threshold, self.m_trials)
+        idx1, idx2, Rt = match_frame(
+            f1, f2, self.m_samples, self.r_threshold, self.m_trials
+        )
+        # Adding new data to the buffer
+        self.buffer.variable["slam_data"].extend([idx1, idx2, Rt])
 
+        if self.show_marker:
+            for pt1, pt2 in zip(f1.key_pts[idx1], f2.key_pts[idx2]):
+                cv2.circle(image, np.int32(pt1), self.marker_size, (0, 255, 255))
+                cv2.line(image, np.int32(pt1), np.int32(pt2), (0, 0, 255), 1)
+
+        return image
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.m_samples = param["m_samples"]
+        self.r_threshold = param["r_threshold"]
+        self.m_trials = param["m_trials"]
+        self.marker_size = param["marker_size"]
+        self.show_marker = param["show_marker"]
+
+
+class Triangulate(Node):
+    """
+    SLAM Triangulate Node
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.orb_distance = self.param["orb_distance"]
+
+    def out_frame(self):
+        # start_time = time.time()
+        image = self.get_frame(0)
+        if image is None:
+            print("Triangulate stop")
+            return None
+        elif self.disabled:
+            return image
+        elif not "slam_data" in self.buffer.variable:
+            return frame_error(
+                image,
+                f"{self.type_} Slam data is missing",
+                y_offset=50,
+                x_offset=400,
+            )
+        elif len(self.buffer.variable["slam_data"]) < 6:
+            return image
+
+        frame, mapp, K, W, H, idx1, idx2, Rt = self.buffer.variable["slam_data"]
+
+        f1 = mapp.frames[-1]
+        f2 = mapp.frames[-2]
         # add new observations if the point is already observed in the previous frame
         # TODO: consider tradeoff doing this before/after search by projection
         for i, idx in enumerate(idx2):
@@ -163,21 +225,25 @@ class MatchPoints(Node):
         f1.pose = Rt @ f2.pose
 
         # pose optimization
-        # pose_opt = self.mapp.optimize(local_window=1, fix_points=True)
+        # pose_opt = mapp.optimize(local_window=1, fix_points=True)
         # sbp_pts_count = 0
 
         # search by projection
-        if len(self.mapp.points) > 0:
+        if len(mapp.points) > 0:
             # project *all* the map points into the current frame
-            map_points = np.array([p.homogeneous() for p in self.mapp.points])
-            projs = (self.K @ f1.pose[:3] @ map_points.T).T
+            map_points = np.array([p.homogeneous() for p in mapp.points])
+            projs = (K @ f1.pose[:3] @ map_points.T).T
             projs = projs[:, 0:2] / projs[:, 2:]
 
             # only the points that fit in the frame
-            good_pts = (projs[:, 0] > 0) & (projs[:, 0] < self.W) & \
-                                 (projs[:, 1] > 0) & (projs[:, 1] < self.H)
+            good_pts = (
+                (projs[:, 0] > 0)
+                & (projs[:, 0] < W)
+                & (projs[:, 1] > 0)
+                & (projs[:, 1] < H)
+            )
 
-            for i, p in enumerate(self.mapp.points):
+            for i, p in enumerate(mapp.points):
                 if not good_pts[i]:
                     # point not visible in frame
                     continue
@@ -190,7 +256,7 @@ class MatchPoints(Node):
                     if f1.pts[m_idx] is None:
                         b_dist = p.orb_distance(f1.descriptors[m_idx])
                         # if any descriptors within 64
-                        if b_dist < 64.0:
+                        if b_dist < self.orb_distance:
                             p.add_observation(f1, m_idx)
                             # sbp_pts_count += 1
                             break
@@ -201,7 +267,7 @@ class MatchPoints(Node):
         # do triangulation in global frame
         pts4d = triangulate(f1.pose, f2.pose, f1.kps[idx1], f2.kps[idx2])
         good_pts4d &= np.abs(pts4d[:, 3]) != 0
-        pts4d /= pts4d[:, 3:]       # homogeneous 3-D coords
+        pts4d /= pts4d[:, 3:]  # homogeneous 3-D coords
 
         # adding new points to the map from pairwise matches
         # new_pts_count = 0
@@ -226,8 +292,8 @@ class MatchPoints(Node):
                 continue
 
             # reproject
-            pp1 = self.K @ pl1[:3]
-            pp2 = self.K @ pl2[:3]
+            pp1 = K @ pl1[:3]
+            pp2 = K @ pl2[:3]
 
             # check reprojection error
             pp1 = (pp1[0:2] / pp1[2]) - f1.key_pts[idx1[i]]
@@ -238,11 +304,11 @@ class MatchPoints(Node):
                 continue
 
             # color points from frame
-            cx = np.int32(f1.key_pts[idx1[i],0])
-            cy = np.int32(f1.key_pts[idx1[i],1])
+            cx = np.int32(f1.key_pts[idx1[i], 0])
+            cy = np.int32(f1.key_pts[idx1[i], 1])
             color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)[cy, cx]
 
-            pt = Point(self.mapp, p[0:3], color)
+            pt = Point(mapp, p[0:3], color)
             pt.add_observation(f2, idx2[i])
             pt.add_observation(f1, idx1[i])
             # new_pts_count += 1
@@ -251,121 +317,153 @@ class MatchPoints(Node):
         # print("Map:      %d points, %d frames" % (len(self.mapp.points), len(self.mapp.frames)))
         # print("Time:     %.2f ms" % ((time.time()-start_time)*1000.0))
         # print(np.linalg.inv(f1.pose))
-        if self.show_marker:
-            for pt1, pt2 in zip(f1.key_pts[idx1], f2.key_pts[idx2]):
-                cv2.circle(image, np.int32(pt1), self.marker_size, (0, 255, 255))
-                cv2.line(image, np.int32(pt1), np.int32(pt2), (0, 0, 255), 1)
 
         return image
 
     def update(self, param):
-        self.disabled = param['disabled']
-        self.m_samples = param['m_samples']
-        self.r_threshold = param['r_threshold']
-        self.m_trials = param['m_trials']
-        self.marker_size = param['marker_size']
-        self.show_marker = param['show_marker']
-
-class Open3DMap(Node):
-    """
-    SLAM Open3DMap Node
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.amount = 500
-        self.point_size = self.param['point_size']
-        self.point_color = self.param['point_color']
-        self.write_pcd = self.param['write_pcd']
-        self.d3d = DisplayOpen3D(width=1280, height=720,
-            scale=0.05, point_size=self.point_size,
-            write_pcd=self.write_pcd)
-
-    def out_frame(self):
-        image = self.get_frame(0)
-        if image is None:
-            print('Open3DMap stop')
-            return None
-        if self.disabled: return image
-        if self.buffer.variable['slam_data']:
-            self.d3d.send_to_visualization(self.buffer.variable['slam_data'][1], self.point_size)
-
-        return image
-
-    def update(self, param):
-        self.disabled = param['disabled']
-        self.point_size = param['point_size']
-        self.point_color = param['point_color']
-        self.point_size = param['point_size']
-        self.write_pcd = param['write_pcd']
-
-
-class LineModelOptimization(Node):
-    """
-    SLAM LineModelOptimization Node
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.m_samples = self.param['m_samples']
-        self.r_threshold = self.param['r_threshold']
-        self.m_trials = self.param['m_trials']
-        self.delete_points = self.param['delete_points']
-
-    def out_frame(self):
-        image = self.get_frame(0)
-        if image is None:
-            print('LineModelOptimization stop')
-            return None
-        if self.disabled: return image
-
-        map_points = self.buffer.variable['slam_data'][1].points
-        if map_points:
-            points = np.array([(kp.pt[0], kp.pt[1]) for kp in map_points])
-            model_robust, inliers = ransac(points, LineModelND, min_samples=self.m_samples,
-                                           residual_threshold=self.r_threshold, 
-                                           max_trials=self.m_trials)
-            outliers = inliers == False
-            for out_lie, ptx in zip(outliers, map_points):
-                if out_lie:
-                    if self.delete_points:
-                        map_points.remove(ptx) # remove outliers points
-                    ptx.color = np.array([255.0, 0.0, 0.0]) # the point red color
-
-        return image
-
-    def update(self, param):
-        self.disabled = param['disabled']
-        self.m_samples = param['m_samples']
-        self.r_threshold = param['r_threshold']
-        self.m_trials = param['m_trials']
-        self.delete_points = param['delete_points']
+        self.disabled = param["disabled"]
+        self.orb_distance = param["orb_distance"]
 
 
 class GeneralGraphOptimization(Node):
     """
     SLAM GeneralGraphOptimization Node
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.mapp = None
-        self.step_frame = self.param['step_frame']        
+        self.solverSE3 = self.param["solverSE3"]
+        self.step_frame = self.param["step_frame"]
+        self.culled_pt = 0
 
     def out_frame(self):
         image = self.get_frame(0)
         if image is None:
-            print('LineModelOptimization stop')
+            print("LineModelOptimization stop")
             return None
-        if self.disabled: return image
+        elif self.disabled:
+            return image
+        elif not "slam_data" in self.buffer.variable:
+            return frame_error(
+                image,
+                f"{self.type_} Slam data is missing",
+                y_offset=100,
+                x_offset=400,
+            )
 
-        frame, self.mapp = self.buffer.variable['slam_data'][:2]
-        # optimize the map        
+        frame, self.mapp = self.buffer.variable["slam_data"][:2]
+        # optimize the map
         if frame.id >= 2 and frame.id % self.step_frame == 0:
-            err = self.mapp.optimize() #verbose=True)
+            err, self.culled_pt = self.mapp.g2optimize(
+                solverSE3=self.solverSE3
+            )  # verbose=False
             # print("Optimize: %f units of error" % err)
+
+        return show_attributes(
+            image,
+            [
+                "solverSE3: " + self.solverSE3,
+                "Culled: {} points".format(self.culled_pt),
+            ],
+            x_offset=200,
+        )
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.solverSE3 = param["solverSE3"]
+        self.step_frame = param["step_frame"]
+
+
+class LineModelOptimization(Node):
+    """
+    SLAM LineModelOptimization Node
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.m_samples = self.param["m_samples"]
+        self.r_threshold = self.param["r_threshold"]
+        self.m_trials = self.param["m_trials"]
+        self.delete_points = self.param["delete_points"]
+
+    def out_frame(self):
+        image = self.get_frame(0)
+        if image is None:
+            print("LineModelOptimization stop")
+            return None
+        elif self.disabled:
+            return image
+        elif not "slam_data" in self.buffer.variable:
+            return frame_error(
+                image,
+                f"{self.type_} Slam data is missing",
+                y_offset=150,
+                x_offset=400,
+            )
+
+        map_points = self.buffer.variable["slam_data"][1].points
+        if map_points:
+            points = np.array([(kp.pt[0], kp.pt[1]) for kp in map_points])
+            model_robust, inliers = ransac(
+                points,
+                LineModelND,
+                min_samples=self.m_samples,
+                residual_threshold=self.r_threshold,
+                max_trials=self.m_trials,
+            )
+            outliers = inliers == False
+            for out_lie, ptx in zip(outliers, map_points):
+                if out_lie:
+                    if self.delete_points:
+                        map_points.remove(ptx)  # remove outliers points
+                    ptx.color = np.array([255.0, 0.0, 0.0])  # the point red color
 
         return image
 
     def update(self, param):
-        self.disabled = param['disabled']
-        self.step_frame = param['step_frame']        
+        self.disabled = param["disabled"]
+        self.m_samples = param["m_samples"]
+        self.r_threshold = param["r_threshold"]
+        self.m_trials = param["m_trials"]
+        self.delete_points = param["delete_points"]
 
 
+class Open3DMap(Node):
+    """
+    SLAM Open3DMap Node
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.amount = 500
+        self.point_size = self.param["point_size"]
+        self.point_color = self.param["point_color"]
+        self.write_pcd = self.param["write_pcd"]
+        self.d3d = DisplayOpen3D(
+            width=1280,
+            height=720,
+            scale=0.05,
+            point_size=self.point_size,
+            write_pcd=self.write_pcd,
+        )
+
+    def out_frame(self):
+        image = self.get_frame(0)
+        if image is None:
+            print("Open3DMap stop")
+            return None
+        elif self.disabled:
+            return image
+        elif "slam_data" in self.buffer.variable:
+            self.d3d.send_to_visualization(
+                self.buffer.variable["slam_data"][1], self.point_size
+            )
+
+        return image
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.point_size = param["point_size"]
+        self.point_color = param["point_color"]
+        self.point_size = param["point_size"]
+        self.write_pcd = param["write_pcd"]

@@ -44,17 +44,16 @@ class Color:
 cc = Color()
 font = cv2.FONT_HERSHEY_SIMPLEX
 
-def frame_error(frame):
+def frame_error(frame, msg, x_offset=300, y_offset=0):
     """ Error while working with frames """
-    msg = 'Inserted frame B - out of bounds'
-    cx = (frame.shape[1]//2)-300
-    cy = frame.shape[0]//2
+    cx = (frame.shape[1]//2) - x_offset
+    cy = frame.shape[0]//2 + y_offset
     return cv2.putText(frame, msg, (cx, cy), font, 1, cc.red, 1)
 
 def insert_frame(frame_a, frame_b):
     """ Inserting one frame into another """
     if frame_a.shape[1] < frame_b.shape[1]:
-        return frame_error(frame_a)
+        return frame_error(frame_a, 'Inserted frame B - out of bounds')
     height_b, width_b, channels_b = frame_b.shape
     frame_a[:height_b, :width_b, :] = frame_b
     return frame_a

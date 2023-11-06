@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.10
 """
 Building and execution of a 
 graph using a script from the graph editor

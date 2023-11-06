@@ -3,7 +3,7 @@ This application is designed for use metod simultaneous localization and mapping
 
 ![Screenshot01](screenshot01.png)
 
-[Demo video](https://vimeo.com/878101688/42d5fa7642)
+[Demo video](https://vimeo.com/881531969/eee24a6330)
 
 ### Introduction
 
@@ -66,7 +66,7 @@ https://ffmpeg.org/
 
 ![Screenshot04](screenshot04.png)
 
-### Dependent libraries (Fedora Linux 36 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
+### Dependent libraries (Fedora Linux 38 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
 
 ```
 pip install numpy
@@ -75,7 +75,7 @@ pip install opencv-python
 
 pip install opencv-contrib-python
 
-pip install open3d
+pip3 install open3d
 
 pip install scikit-image
 

@@ -251,7 +251,6 @@ class Reformat(BaseNode):
         super(Reformat, self).__init__()
         self.add_input('in', color=(180, 80, 0))
         self.add_output('out')
-        self.add_checkbox('show_size', 'Show size', text='On/Off', state=False, tab='attributes')
         self.create_property('label_width', 'Width', widget_type=NODE_PROP_QLABEL)
         self.create_property('width_', 1024, range=(10, 1920), widget_type=NODE_PROP_SLIDER)
         self.create_property('label_height', 'Height', widget_type=NODE_PROP_QLABEL)

@@ -2,11 +2,17 @@
 Description of the point and location map
 """
 
+import sys
+
+sys.path.append("/home/cds/github/g2o-pymem/build/lib")
+
 import numpy as np
-import g2o # type: ignore
+
+# import g2opy # type: ignore
 from .optimize_g2o import optimize
 
 CULLING_ERR_THRES = 0.02
+
 
 def add_ones(x):
     if len(x.shape) == 1:
@@ -14,9 +20,11 @@ def add_ones(x):
     else:
         return np.concatenate([x, np.ones((x.shape[0], 1))], axis=1)
 
+
 def hamming_distance(a, b):
-    r = (1 << np.arange(8))[:,None]
-    return np.count_nonzero((np.bitwise_xor(a,b) & r) != 0)
+    r = (1 << np.arange(8))[:, None]
+    return np.count_nonzero((np.bitwise_xor(a, b) & r) != 0)
+
 
 class Point:
     # A Point is a 3-D point in the world
@@ -33,13 +41,13 @@ class Point:
         return add_ones(self.pt)
 
     def orb(self):
-        return [f.descriptors[idx] for f,idx in zip(self.frames, self.idxs)]
+        return [f.descriptors[idx] for f, idx in zip(self.frames, self.idxs)]
 
     def orb_distance(self, des):
         return min([hamming_distance(o, des) for o in self.orb()])
 
     def delete(self):
-        for f,idx in zip(self.frames, self.idxs):
+        for f, idx in zip(self.frames, self.idxs):
             f.pts[idx] = None
         del self
 
@@ -49,6 +57,7 @@ class Point:
         frame.pts[idx] = self
         self.frames.append(frame)
         self.idxs.append(idx)
+
 
 class Map:
     def __init__(self):
@@ -70,14 +79,29 @@ class Map:
         return ret
 
     # Optimizer
-    def optimize(self, local_window=20, fix_points=False, verbose=False, rounds=50):
-        err = optimize(self.frames, self.points, local_window, fix_points, verbose, rounds)
+    def g2optimize(
+        self,
+        local_window=20,
+        fix_points=False,
+        verbose=False,
+        rounds=50,
+        solverSE3="SolverEigenSE3",
+    ):
+        err = optimize(
+            self.frames,
+            self.points,
+            local_window,
+            fix_points,
+            verbose,
+            rounds,
+            solverSE3,
+        )
 
         # prune points
         culled_pt_count = 0
         for p in self.points:
             # <= 4 match point that's old
-            old_point = len(p.frames) <= 4 and p.frames[-1].id+7 < self.max_frame
+            old_point = len(p.frames) <= 4 and p.frames[-1].id + 7 < self.max_frame
 
             # compute reprojection error
             errs = []
@@ -85,15 +109,13 @@ class Map:
                 uv = f.kps[idx]
                 proj = f.pose[:3] @ p.homogeneous()
                 proj = proj[0:2] / proj[2]
-                errs.append(np.linalg.norm(proj-uv))
+                errs.append(np.linalg.norm(proj - uv))
 
             # cull
             if old_point or np.mean(errs) > CULLING_ERR_THRES:
                 culled_pt_count += 1
                 self.points.remove(p)
                 p.delete()
-        print("Culled:   %d points" % (culled_pt_count))
+        # print("Culled:   %d points" % (culled_pt_count))
         # print("Optimize: %f units of error" % err)
-        return err
-
-
+        return err, culled_pt_count
