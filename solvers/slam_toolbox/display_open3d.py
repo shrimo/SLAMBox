@@ -9,10 +9,14 @@ import open3d as o3d  # type: ignore
 
 
 class DisplayOpen3D:
+    """This class is designed to visualize and write to a file
+    the robot's position, key point cloud, and trajectory.
+    """
+
     def __init__(
         self, width=1280, height=720, scale=0.05, point_size=2.0, write_pcd=False
     ):
-        self.amount = 100
+        self.display_id = str(hex(id(self)))
         self.width = width
         self.height = height
         self.scale = scale
@@ -29,12 +33,17 @@ class DisplayOpen3D:
         self.vp.start()
 
     def viewer_thread(self, q):
+        """Loop update point cloud and camera poses
+        After the loop completes, destroy the window
+        """
         self.viewer_init(self.width, self.height)
         while True:
             if self.viewer_refresh(q):
                 break
+        self.vis.destroy_window()
 
     def viewer_init(self, w, h):
+        """Initializing the window, camera and their parameters"""
         self.vis = o3d.visualization.Visualizer()
         self.vis.create_window(
             window_name="Open3D Map", width=w, height=h, left=100, top=200
@@ -51,7 +60,7 @@ class DisplayOpen3D:
         self.widget3d.point_size = self.point_size
 
         self.pcl = o3d.geometry.PointCloud()
-        self.pcl.points = o3d.utility.Vector3dVector(np.random.randn(self.amount, 3))
+        self.pcl.points = o3d.utility.Vector3dVector(np.random.randn(100, 3))
         self.pcl.paint_uniform_color((0.5, 0.1, 0.1))
 
         self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame()
@@ -64,6 +73,10 @@ class DisplayOpen3D:
         self.vis.add_geometry(self.robot)
 
     def viewer_refresh(self, q):
+        """We receive point cloud data and robot positions
+        from the queue and visualize them.
+        We also write the point cloud to a file *.pcd.
+        """
         while not q.empty():
             self.state = q.get()
 
@@ -88,11 +101,10 @@ class DisplayOpen3D:
 
         self.vis.update_geometry(self.pcl)
         self.vis.update_geometry(self.robot)
+        self.vis.update_renderer()
         # If closing vis window
         if not self.vis.poll_events():
-            self.vis.destroy_window()
             return True
-        self.vis.update_renderer()
 
     def send_to_visualization(self, mapp, psize):
         """Sending data to the visualization process
@@ -119,5 +131,5 @@ class DisplayOpen3D:
         )
 
     def __del__(self):
-        print("Close DisplayOpen3D")
-        # self.vis.destroy_window()
+        """When closing an object, display its ID"""
+        print(f"Close {self.display_id} DisplayOpen3D")

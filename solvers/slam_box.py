@@ -44,7 +44,12 @@ class Camera(Node):
         F = self.param["focal_length"]
         W = self.param["frame_width"]
         H = self.param["frame_height"]
+
+        # Loading Camera Calibration Data
         # self.calibration_data = self.param['calibration_data']
+        # cal_data = np.load(self.param['calibration_data'])
+        # K = cal_data.get('intrinsic_matrix')
+
         K = self.camera_intrinsic_matrix(F, W, H)
         self.buffer.variable["camera_data"] = [K, W, H]
 
@@ -323,6 +328,7 @@ class Triangulate(Node):
     def update(self, param):
         self.disabled = param["disabled"]
         self.orb_distance = param["orb_distance"]
+
 
 class Open3DMap(Node):
     """

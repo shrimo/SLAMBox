@@ -29,7 +29,9 @@ def featureMappingAKAZE(*frame):
 
 
 def normalize(count_inv, pts):
-    return (count_inv @ np.concatenate([pts, np.ones((pts.shape[0], 1))], axis=1).T).T[:, 0:2]
+    return (count_inv @ np.concatenate([pts,
+        np.ones((pts.shape[0], 1))], axis=1).T).T[:, 0:2]
+
 
 def denormalize(count_inv, pt):
     ret = count_inv @ np.array([pt[0], pt[1], 1.0])
@@ -44,9 +46,18 @@ FT = {"ORB": featureMappingORB, "AKAZE": featureMappingAKAZE}
 class Frame:
     """Contains poses data"""
 
-    def __init__(self, mapp, image, K,
-        pose=np.eye(4), tid=None, verts=None, algorithm="ORB",
-        mask=None, nfeatures=1000):
+    def __init__(
+        self,
+        mapp,
+        image,
+        K,
+        pose=np.eye(4),
+        tid=None,
+        verts=None,
+        algorithm="ORB",
+        mask=None,
+        nfeatures=1000,
+    ):
         self.K = np.array(K)
         self.pose = np.array(pose)
         self.h, self.w = image.shape[0:2]
