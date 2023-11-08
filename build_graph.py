@@ -11,7 +11,7 @@ def build() -> None:
     print("SLAM box. Version: " + VERSION + DATE)
 
     cc = solvers.Color()
-    VERSION_COLOR = str(cc.viva_magenta)[1:-1]
+    VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
     TEXT_COLOR = str(cc.white)[1:-1]
     TEST_VERSION_SYSTEM = "SLAM box. Version: " + VERSION
 

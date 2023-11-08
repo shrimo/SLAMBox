@@ -93,6 +93,7 @@ class Read(Node):
             "fps": fps,
             "width": width,
             "height": height,
+            "frame_size": [width, height]
         }
 
     def out_frame(self):

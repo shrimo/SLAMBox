@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f3b47788590":{
+    "0x7f29dd7a5590":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -32,8 +32,8 @@
       "width":160,
       "height":232.0,
       "pos":[
-        321.7167380422193,
-        -220.38625973098925
+        307.98283370446546,
+        -194.63518909770048
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f3b4778cb10":{
+    "0x7f29def90650":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -74,8 +74,8 @@
       "width":160,
       "height":93.0,
       "pos":[
-        319.99999999999983,
-        862.1888292508823
+        333.7339043377538,
+        729.9999999999999
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f3b48f51750":{
+    "0x7f29dd7bea50":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -111,13 +111,13 @@
         180
       ],
       "disabled":false,
-      "selected":true,
+      "selected":false,
       "visible":true,
       "width":160,
       "height":71.0,
       "pos":[
-        318.28326195778067,
-        975.3218770820047
+        333.73390433775404,
+        848.28326195778
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,7 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f3b477b4810":{
+    "0x7f29dd7b4510":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -153,8 +153,8 @@
       "width":160,
       "height":60,
       "pos":[
-        322.7467519372193,
-        37.76823692882353
+        307.29610955724587,
+        66.95278364655084
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -165,7 +165,7 @@
         "height_":576
       }
     },
-    "0x7f3b48f57c10":{
+    "0x7f29dd7a6bd0":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -193,8 +193,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        319.31327585278075,
-        278.11156283951885
+        334.7639182327542,
+        278.11156283951874
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -206,7 +206,7 @@
         "algorithm":"ORB"
       }
     },
-    "0x7f3b483cca90":{
+    "0x7f29dd796c10":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -234,8 +234,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        319.31327585278103,
-        425.7510344703744
+        334.7639182327544,
+        394.8497497104278
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -245,13 +245,13 @@
         "label_r_threshold":"r_threshold",
         "r_threshold":0.02,
         "label_m_trials":"m_trials",
-        "m_trials":300,
+        "m_trials":500,
         "label_size_marker":"Marker size",
         "marker_size":5,
         "show_marker":false
       }
     },
-    "0x7f3b477d7490":{
+    "0x7f29dd7b44d0":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -279,8 +279,8 @@
       "width":160,
       "height":60,
       "pos":[
-        319.31327585278103,
-        557.9398637212565
+        334.7639182327544,
+        521.888364834652
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -289,47 +289,7 @@
         "orb_distance":64.0
       }
     },
-    "0x7f3b477ef450":{
-      "type_":"nodes.SLAMBox.GeneralGraphOptimization",
-      "icon":null,
-      "name":"GeneralGraphOptimization",
-      "color":[
-        95,
-        115,
-        45,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        319.3132758527809,
-        652.3604560433157
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_solverSE3":"SolverSE3",
-        "solverSE3":"SolverEigenSE3",
-        "label_step_frame":"Step frame",
-        "step_frame":10
-      }
-    },
-    "0x7f3b4779e550":{
+    "0x7f29def58590":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -357,8 +317,8 @@
       "width":160,
       "height":60,
       "pos":[
-        319.31327585278126,
-        748.4977864075937
+        334.76391823275463,
+        616.308957156711
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -375,7 +335,7 @@
         "write_pcd":false
       }
     },
-    "0x7f3b477b9510":{
+    "0x7f29ddfa2a50":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -403,8 +363,8 @@
       "width":160,
       "height":60,
       "pos":[
-        322.74675193721936,
-        163.09011401082896
+        307.2961095572462,
+        181.97423247524077
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -423,91 +383,81 @@
   "connections":[
     {
       "out":[
-        "0x7f3b47788590",
+        "0x7f29dd7a5590",
         "out"
       ],
       "in":[
-        "0x7f3b477b4810",
+        "0x7f29dd7b4510",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f3b4778cb10",
+        "0x7f29def90650",
         "in"
       ],
       "out":[
-        "0x7f3b4779e550",
+        "0x7f29def58590",
         "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f3b4778cb10",
-        "out"
-      ],
-      "in":[
-        "0x7f3b48f51750",
-        "in"
       ]
     },
     {
       "out":[
-        "0x7f3b477b4810",
+        "0x7f29def90650",
         "out"
       ],
       "in":[
-        "0x7f3b477b9510",
+        "0x7f29dd7bea50",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f29dd7b4510",
+        "out"
+      ],
+      "in":[
+        "0x7f29ddfa2a50",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f3b48f57c10",
+        "0x7f29dd7a6bd0",
         "ina"
       ],
       "out":[
-        "0x7f3b477b9510",
+        "0x7f29ddfa2a50",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f3b48f57c10",
+        "0x7f29dd7a6bd0",
         "out"
       ],
       "in":[
-        "0x7f3b483cca90",
+        "0x7f29dd796c10",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f3b483cca90",
+        "0x7f29dd796c10",
         "out"
       ],
       "in":[
-        "0x7f3b477d7490",
+        "0x7f29dd7b44d0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f3b477d7490",
+        "0x7f29dd7b44d0",
         "out"
       ],
       "in":[
-        "0x7f3b477ef450",
-        "in"
-      ]
-    },
-    {
-      "out":[
-        "0x7f3b477ef450",
-        "out"
-      ],
-      "in":[
-        "0x7f3b4779e550",
+        "0x7f29def58590",
         "in"
       ]
     }
