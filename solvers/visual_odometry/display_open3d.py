@@ -1,7 +1,6 @@
 """
-Show 3D map and camera path
+Show camera and kitti path
 """
-import copy
 from multiprocessing import Process, Queue
 import numpy as np
 from scipy.spatial.transform import Rotation as scipyR  # type: ignore
@@ -14,7 +13,7 @@ class DisplayOpen3D:
     """
 
     def __init__(
-        self, width=1280, height=720, scale=0.05, point_size=2.0, write_pcd=False
+        self, width=1280, height=720, scale=0.5, point_size=2.0, write_pcd=False
     ):
         self.display_id = str(hex(id(self)))
         self.width = width
@@ -52,7 +51,7 @@ class DisplayOpen3D:
         self.ctr = self.vis.get_view_control()
         self.ctr.change_field_of_view(step=0.45)
         # self.ctr.camera_local_translate(0, 10, 0)
-        self.ctr.set_constant_z_far(5000.0)
+        self.ctr.set_constant_z_far(20000.0)
         self.ctr.set_constant_z_near(0.01)
 
         self.widget3d = self.vis.get_render_option()
@@ -64,12 +63,19 @@ class DisplayOpen3D:
         self.pcl.points = o3d.utility.Vector3dVector(np.random.randn(100, 3))
         self.pcl.paint_uniform_color((0.5, 0.1, 0.1))
 
+        self.pcl_kitti = o3d.geometry.PointCloud()
+        self.pcl_kitti.points = o3d.utility.Vector3dVector(np.random.randn(100, 3))
+        self.pcl_kitti.paint_uniform_color((0.0, 0.0, 0.5))
+
         self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame()
+        self.axis.scale(self.scale, center=self.axis.get_center())
         self.robot = o3d.geometry.TriangleMesh.create_coordinate_frame()
+        self.robot.scale(self.scale, center=self.robot.get_center())
         # self.robot.compute_vertex_normals()
         # self.robot.paint_uniform_color((1.0, 0.0, 0.0))
 
         self.vis.add_geometry(self.pcl)
+        self.vis.add_geometry(self.pcl_kitti)
         self.vis.add_geometry(self.axis)
         self.vis.add_geometry(self.robot)
 
@@ -89,7 +95,11 @@ class DisplayOpen3D:
                     self.rotation_matrix.apply(self.state[0])
                 )
                 self.pcl.colors = o3d.utility.Vector3dVector(self.state[1])
-                self.widget3d.point_size = self.state[2]
+
+                self.pcl_kitti.points = o3d.utility.Vector3dVector(
+                    self.rotation_matrix.apply(self.state[2])
+                )
+                self.pcl_kitti.colors = o3d.utility.Vector3dVector(self.state[3])
 
                 self.robot.translate(
                     self.rotation_matrix.apply(self.state[0][-1]), relative=False
@@ -102,35 +112,20 @@ class DisplayOpen3D:
                 )
 
         self.vis.update_geometry(self.pcl)
+        self.vis.update_geometry(self.pcl_kitti)
         self.vis.update_geometry(self.robot)
         self.vis.update_renderer()
         # If closing vis window
         if not self.vis.poll_events():
             return True
 
-    def send_to_visualization(self, mapp, psize):
+    def send_to_visualization(self, track, kitti, color, kitti_color):
         """Sending data to the visualization process
-        0.003 - coefficient for converting 0:255 to 0:1
-        Combine two arrays: an array of points and camera trajectory points,
-        color of camera points is red"""
+        Combine two arrays: an camera trajectory points and kitti points,
+        color of camera points is red, kiiti is green"""
         if self.queue is None:
             return
-        pts = [p.pt * self.scale for p in mapp.points]
-        colors = [p.color * 0.003 for p in mapp.points]
-        cam_pts = [
-            np.linalg.inv(map_frame.pose)[:, [-1]][:3].ravel() * self.scale
-            for map_frame in mapp.frames
-        ]
-
-        cam_colors = [(1.0, 0.0, 0.0)] * len(cam_pts)
-        self.queue.put(
-            (
-                np.array(pts + cam_pts),
-                np.array(colors + cam_colors),
-                psize,
-                len(mapp.frames)
-            )
-        )
+        self.queue.put((track, color, kitti, kitti_color))
 
     def __del__(self):
         """When closing an object, display its ID"""

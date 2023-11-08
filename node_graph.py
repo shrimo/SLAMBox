@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.10
 
 """
 GUI for video or image analysis and processing
