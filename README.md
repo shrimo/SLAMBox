@@ -1,7 +1,7 @@
 # SLAMBox
 This application is designed for use metod simultaneous localization and mapping (SLAM) in education, research and development by Node-based ui.
 
-![Screenshot01](screenshot01.png)
+![Screenshot01](doc/screenshot01.png)
 
 [Demo video](https://vimeo.com/881531969/eee24a6330)
 
@@ -15,13 +15,13 @@ In computing, a visual programming language (VPL) or block coding is a programmi
 
 In this study, we study the availability of open source libraries and frameworks, we also study existing solutions, develop a prototype program for applying computer vision methods to video streams and other data coming from the sensor of digital devices.
 
-![Screenshot02](screenshot02.png)
+![Screenshot02](doc/screenshot02.png)
 
 ### [Simultaneous localization and mapping][def]
 
 Simultaneous localization and mapping **(SLAM)** is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
 
-![Screenshot03](screenshot03.png)
+![Screenshot03](doc/screenshot03.png)
 
 ### The following libraries are used in development:
 
@@ -64,7 +64,7 @@ http://chantonic.com/NodeGraphQt/api/index.html
 
 https://ffmpeg.org/
 
-![Screenshot04](screenshot04.png)
+![Screenshot04](doc/screenshot04.png)
 
 ### Dependent libraries (Fedora Linux 38 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
 

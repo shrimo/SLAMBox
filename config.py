@@ -1,12 +1,12 @@
 # General settings for launching the program
-HOST : str = 'localhost'
-PORT : int = 50001
-RECV_SIZE  : int = 10240
-NAME : str = 'SLAM Box'
-VERSION : str = '0.5.8'
-SYSTEM : str = 'Linux'
-GUI : str = 'Node-based UI'
-DESCRIPTION : str = 'Computer Vision Node Graph Editor'
-DATE :  str = ' (Mon Nov  6 09:39:34 PM EET 2023)'
-NodeGraphQt : str = './NodeGraphQt/'
-CSS_STYLE : str = 'QLabel {background-color: #363636; color: white; font-size: 11pt;}'
+host: str = "localhost"
+port: int = 50001
+recv_size: int = 10240
+name: str = "SLAM Box"
+version: str = "0.5.9"
+system: str = "Linux"
+gui: str = "Node-based UI"
+description: str = "Computer Vision Node Graph Editor"
+date: str = " (Fri Nov 10 07:02:22 AM EET 2023)"
+nodegraphqt: str = "./NodeGraphQt/"
+css_style: str = "QLabel {background-color: #363636; color: white; font-size: 11pt;}"

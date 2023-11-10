@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.10
 
 """
 GUI for video or image analysis and processing
@@ -16,8 +16,8 @@ from PySide2.QtGui import QPixmap
 # Loading configuration data
 import config as cfg
 
-if cfg.NodeGraphQt not in sys.path:
-    sys.path.append(cfg.NodeGraphQt)
+if cfg.nodegraphqt not in sys.path:
+    sys.path.append(cfg.nodegraphqt)
 
 from NodeGraphQt import NodeGraph, PropertiesBinWidget
 import gui_lib as gui
@@ -65,11 +65,11 @@ class NodeBased(NodeGraph):
         """ Show about """
         self.show_about.setWindowTitle('About')
         self.show_about.setAlignment(QtCore.Qt.AlignCenter)
-        self.show_about.setStyleSheet(cfg.CSS_STYLE)
-        self.show_about.setText(str(cfg.NAME+
-                                ' '+cfg.VERSION+
-                                '\n'+cfg.DATE+
-                                '\n'+cfg.SYSTEM))
+        self.show_about.setStyleSheet(cfg.css_style)
+        self.show_about.setText(str(cfg.name+
+                                ' '+cfg.version+
+                                '\n'+cfg.date+
+                                '\n'+cfg.system))
         self.show_about.setFixedSize(500, 300)
         self.show_about.setWordWrap(True)
         self.show_about.show()
@@ -132,7 +132,7 @@ class NodeBased(NodeGraph):
         """ Sending node script by socket"""
         soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            soc.connect((cfg.HOST, cfg.PORT))
+            soc.connect((cfg.host, cfg.port))
             script_serialization = pickle.dumps(script)
             soc.send(script_serialization)
         except socket.error as err:
@@ -202,7 +202,7 @@ class NodeBased(NodeGraph):
 
 
 if __name__ == '__main__':
-    print(cfg.NAME, cfg.GUI)
+    print(cfg.name, cfg.gui)
     app = QtWidgets.QApplication([])
     node_based = NodeBased()
     node_based.create_nodes()
