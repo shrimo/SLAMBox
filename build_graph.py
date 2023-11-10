@@ -3,17 +3,22 @@
 Building and execution of a 
 graph using a script from the graph editor
 """
-import solvers
-from config import HOST, PORT, RECV_SIZE, VERSION, DATE
+from typing import List, Dict, Any
+from solvers import GraphBuilder, Color
+from config import host, port, recv_size, version, date
 
+NodeType = Dict[Any, Any]
+ScriptType = List[NodeType]
 
 def build() -> None:
-    print("SLAM box. Version: " + VERSION + DATE)
+    """ Default script start
+    """
+    print("SLAM box version: " + version + date)
 
-    cc = solvers.Color()
-    VERSION_COLOR = str(cc.burnt_sienna)[1:-1]
-    TEXT_COLOR = str(cc.white)[1:-1]
-    TEST_VERSION_SYSTEM = "SLAM box. Version: " + VERSION
+    cc = Color()
+    version_color = str(cc.burnt_sienna)[1:-1]
+    text_color = str(cc.white)[1:-1]
+    test_version_system = "SLAM box. version: " + version
 
     # default node graph for example
     default: ScriptType = [
@@ -28,7 +33,7 @@ def build() -> None:
             "id": "0x7f6520f6ad10",
             "type": "Constant",
             "custom": {
-                "constant_color": VERSION_COLOR,
+                "constant_color": version_color,
                 "width_": "1280",
                 "height_": "720",
                 "disabled": False,
@@ -40,8 +45,8 @@ def build() -> None:
             "id": "0x7f6520f6b310",
             "type": "Text",
             "custom": {
-                "text": TEST_VERSION_SYSTEM,
-                "text_color_": TEXT_COLOR,
+                "text": test_version_system,
+                "text_color_": text_color,
                 "px": "220",
                 "py": "370",
                 "size_": "2.0",
@@ -52,7 +57,7 @@ def build() -> None:
         },
     ]
 
-    graph = solvers.GraphBuilder(default, HOST, PORT, RECV_SIZE)
+    graph = GraphBuilder(default, host, port, recv_size)
 
     try:
         graph.run()

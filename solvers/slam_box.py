@@ -18,6 +18,9 @@ cc = Color()
 
 # @jit
 def triangulate(pose1, pose2, pts1, pts2):
+    """Taking into account relative poses,
+    we calculate the 3d point
+    """
     ret = np.zeros((pts1.shape[0], 4))
     for i, p in enumerate(zip(pts1, pts2)):
         A = np.zeros((4, 4))
