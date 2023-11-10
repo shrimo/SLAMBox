@@ -9,9 +9,9 @@ import numpy as np
 # from numba import jit
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from .slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
-from .root_nodes import Node
-from .misc import Color, show_attributes, frame_error
+from solvers.root_nodes import Node
+from solvers.misc import Color, show_attributes, frame_error
+from solvers.slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
 
 cc = Color()
 

@@ -3,10 +3,12 @@
 import cv2
 import numpy as np
 
-from kitti_reader import DatasetReaderKITTI
-from feature_tracking import FeatureTracker
-from utils import drawFrameFeatures
-from display_open3d import DisplayOpen3D
+from visual_odometry import (
+    DatasetReaderKITTI,
+    FeatureTracker,
+    drawFrameFeatures,
+    DisplayOpen3D,
+)
 
 if __name__ == "__main__":
     tracker = FeatureTracker()
@@ -74,9 +76,7 @@ if __name__ == "__main__":
         track_positions.append(
             np.array([camera_pos[0][0], 0.0, camera_pos[2][0]]) * scale
         )
-        kitti_positions.append(
-            np.array([kitti_pos[0], 0.0, kitti_pos[2]]) * scale
-        )
+        kitti_positions.append(np.array([kitti_pos[0], 0.0, kitti_pos[2]]) * scale)
         cam_colors = [(1.0, 0.0, 0.0)] * len(track_positions)
         kitti_colors = [(0.0, 1.0, 0.0)] * len(kitti_positions)
 

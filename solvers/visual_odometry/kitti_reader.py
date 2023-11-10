@@ -1,7 +1,6 @@
 import os
 import cv2
 import numpy as np
-from math import isnan, sqrt
 
 
 class DatasetReaderKITTI:
@@ -66,7 +65,7 @@ class DatasetReaderKITTI:
             )
 
             position = (tx, ty, tz)
-            scale = sqrt(
+            scale = np.sqrt(
                 (tx - tx_prev) ** 2 + (ty - ty_prev) ** 2 + (tz - tz_prev) ** 2
             )
 
