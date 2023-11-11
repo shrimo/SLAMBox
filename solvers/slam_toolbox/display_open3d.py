@@ -66,6 +66,7 @@ class DisplayOpen3D:
 
         self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame()
         self.robot = o3d.geometry.TriangleMesh.create_coordinate_frame()
+        self.robot.scale(0.75, center=self.axis.get_center())
         # self.robot.compute_vertex_normals()
         # self.robot.paint_uniform_color((1.0, 0.0, 0.0))
 

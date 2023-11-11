@@ -209,8 +209,8 @@ class Insert(Node):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pos_x = int(self.param["position_x"])
-        self.pos_y = int(self.param["position_y"])
+        self.pos_x = int(self.param["offset_x"])
+        self.pos_y = int(self.param["offset_y"])
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.msg = "Inserted frame B - out of bounds"
 
@@ -236,8 +236,8 @@ class Insert(Node):
         return frame_a
 
     def update(self, param):
-        self.pos_x = int(param["position_x"])
-        self.pos_y = int(param["position_y"])
+        self.pos_x = int(param["offset_x"])
+        self.pos_y = int(param["offset_y"])
 
 
 class Move(Node):
@@ -285,7 +285,6 @@ class Resize(Node):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.resize = int(self.param["resize"])
-        self.resize_x = self.param["resize_x"]
 
     def out_frame(self):
         frame = self.get_frame(0)
@@ -299,8 +298,8 @@ class Resize(Node):
                 self.buffer.metadata["height"],
             ]
             return frame
-        width = int(frame.shape[1] * self.resize_x * 0.01)
-        height = int(frame.shape[0] * self.resize_x * 0.01)
+        width = int(frame.shape[1] * self.resize * 0.01)
+        height = int(frame.shape[0] * self.resize * 0.01)
         # save temporary values
         self.buffer.metadata["frame_size"] = [width, height]
         return cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
@@ -308,7 +307,6 @@ class Resize(Node):
     def update(self, param):
         self.disabled = param["disabled"]
         self.resize = int(param["resize"])
-        self.resize_x = param["resize_x"]
 
 
 class Reformat(Node):

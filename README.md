@@ -1,11 +1,10 @@
-# SLAMBox
-This application is designed for use metod simultaneous localization and mapping (SLAM) in education, research and development by Node-based ui.
+![logo](doc/slambox_logo.png)
+ 
+SLAMBOX is designed for use metod simultaneous localization and mapping (SLAM) in education, experiments, research and development by Node-based user interface. This is a box with tools that you can quickly and conveniently experiment with separate SLAM nodes. You can watch the demo here: [Demo video.](https://vimeo.com/881531969/eee24a6330)
 
 ![Screenshot01](doc/screenshot01.png)
 
-[Demo video](https://vimeo.com/881531969/eee24a6330)
-
-### Introduction
+## Introduction
 
 The development of robotics generates a request for recognition and control systems for data received from sensory devices. At present, development of Computer Vision systems requires developers to have knowledge of programming languages and a deep understanding of mathematics. It was like the development of computer graphics:  at the beginning, only scientists and researchers were engaged in computer graphics, later applied tools [(Presented by such programs as Nuke, Houdini, Blender)](https://en.wikipedia.org/wiki/Visual_programming_language) were developed for use by less trained users. Over time, the development of computer vision systems should shift to the use of visual, graphical interfaces, such as Node-based UI, so that more ordinary users can access computer vision technologies.
 
@@ -15,7 +14,7 @@ In computing, a visual programming language (VPL) or block coding is a programmi
 
 In this study, we study the availability of open source libraries and frameworks, we also study existing solutions, develop a prototype program for applying computer vision methods to video streams and other data coming from the sensor of digital devices.
 
-![Screenshot02](doc/screenshot02.png)
+![Blender](doc/screenshot02.png)
 
 ### [Simultaneous localization and mapping][def]
 
@@ -23,81 +22,81 @@ Simultaneous localization and mapping **(SLAM)** is the computational problem of
 
 ![Screenshot03](doc/screenshot03.png)
 
-### The following libraries are used in development:
+## The following libraries are used in development
 
-**OpenCV** (Open Source Computer Vision Library) is a library of programming functions mainly aimed at real-time computer vision. Originally developed by Intel, it was later supported by Willow Garage then Itseez (which was later acquired by Intel). The library is cross-platform and free for use under the open-source Apache 2 License. Starting with 2011, OpenCV features GPU acceleration for real-time operations.
-
-Some of the nodes presented in the program are made according to the lessons of the documentation for this library. Excellent documentation.
+- **OpenCV** (Open Source Computer Vision Library) is a library of programming functions mainly aimed at real-time computer vision. Originally developed by Intel, it was later supported by Willow Garage then Itseez (which was later acquired by Intel). The library is cross-platform and free for use under the open-source Apache 2 License. Starting with 2011, OpenCV features GPU acceleration for real-time operations.
 
 https://opencv.org/
 
-**NumPy** is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
+- **NumPy** is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
 
 https://numpy.org/
 
-Image processing in Python **scikit-image** is a 
-collection of algorithms for image processing.
+- **scikit-image** Image processing in Python is a collection of algorithms for image processing.
 
 https://scikit-image.org/
 
-**SciPy** (pronounced “Sigh Pie”) is an open-source software for mathematics, science, and engineering.
+- **SciPy** (pronounced “Sigh Pie”) is an open-source software for mathematics, science, and engineering.
 
 https://scipy.org/
 
-**g2o** is an open-source C++ framework for optimizing graph-based nonlinear error functions. g2o has been designed to be easily extensible to a wide range of problems and a new problem typically can be specified in a few lines of code. The current implementation provides solutions to several variants of SLAM and BA.
+- **g2o** is an open-source C++ framework for optimizing graph-based nonlinear error functions. g2o has been designed to be easily extensible to a wide range of problems and a new problem typically can be specified in a few lines of code. The current implementation provides solutions to several variants of SLAM and BA.
 
 https://github.com/RainerKuemmerle/g2o
 
-**Open3D** is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python.
+- **Open3D** is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python.
 
 http://www.open3d.org/
 
-**Qt** is cross-platform software for creating graphical user interfaces as well as cross-platform applications that run on various software and hardware platforms such as Linux, Windows, macOS, Android or embedded systems with little or no change in the underlying codebase while still being a native application with native capabilities and speed.
+- **Qt** is cross-platform software for creating graphical user interfaces as well as cross-platform applications that run on various software and hardware platforms such as Linux, Windows, macOS, Android or embedded systems with little or no change in the underlying codebase while still being a native application with native capabilities and speed.
 
 https://en.wikipedia.org/wiki/Qt_(software)
 
-**NodeGraphQt** a node graph UI framework written in python that can be implemented and re-purposed into applications supporting PySide2.
+- **NodeGraphQt** a node graph UI framework written in python that can be implemented and re-purposed into applications supporting PySide2.
 
 http://chantonic.com/NodeGraphQt/api/index.html
 
-**FFmpeg** is a free and open-source software project consisting of a suite of libraries and programs for handling video, audio, and other multimedia files and streams.
+- **FFmpeg** is a free and open-source software project consisting of a suite of libraries and programs for handling video, audio, and other multimedia files and streams.
 
 https://ffmpeg.org/
 
 ![Screenshot04](doc/screenshot04.png)
 
-### Dependent libraries (Fedora Linux 38 (x86-64), Ubuntu 22.04.2 LTS,  Mac OS X 10.15+)
+### Dependent libraries 
 
-```
-pip install numpy
+- `pip install numpy`
 
-pip install opencv-python
+- `pip install opencv-python`
 
-pip install opencv-contrib-python
+- `pip install opencv-contrib-python`
 
-pip3 install open3d
+- `pip3 install open3d`
 
-pip install scikit-image
+- `pip install scikit-image`
 
-pip install scipy
+- `pip install scipy`
 
-pip install -U g2o-python
+- `pip install -U g2o-python`
 
-pip install PySide2
+- `pip install PySide2`
 
-pip install Qt.py
+- `pip install Qt.py`
 
-dnf install ffmpeg (apt install ffmpeg) for Ubuntu
-```
+- `dnf install ffmpeg` (for Fedora)
+
+- `apt install ffmpeg` (for Ubuntu)
+
+Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15
 
 ### Installation and launch
 
-```
-cd ~/your_fav_code_directory
-git clone https://github.com/shrimo/SLAMBox.git
-cd SLAMBox
-./slambox.sh
-```
+
+- `cd ~/your_fav_code_directory`
+- `git clone https://github.com/shrimo/SLAMBox.git`
+- `cd SLAMBox`
+- `chmod 777 slambox.sh`
+- `./slambox.sh`
+
 
 
 Based on twitchslam by geohot (https://github.com/geohot/twitchslam)

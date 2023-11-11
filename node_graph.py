@@ -20,7 +20,7 @@ if cfg.nodegraphqt not in sys.path:
     sys.path.append(cfg.nodegraphqt)
 
 from NodeGraphQt import NodeGraph, PropertiesBinWidget
-import gui_lib as gui
+import lib_gui as gui
 
 def get_nodes():
     """ Get list of nodes object """
@@ -136,7 +136,7 @@ class NodeBased(NodeGraph):
             script_serialization = pickle.dumps(script)
             soc.send(script_serialization)
         except socket.error as err:
-            msg = (cfg.HOST, cfg.PORT, err)
+            msg = (cfg.host, cfg.port, err)
             print(f"Error {msg[0]}:{msg[1]}. Exception is {msg[2]}")
         finally:
             print ('- Send script')

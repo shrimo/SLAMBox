@@ -92,8 +92,10 @@ class Insert(BaseNode):
         self.add_input('in_a', color=(80, 120, 120))
         self.add_input('in_b', color=(80, 120, 120))
         self.add_output('out', color=(80, 120, 120))
-        self.add_text_input('position_x', 'Position X', text='50', tab='attributes')
-        self.add_text_input('position_y', 'Position Y', text='50', tab='attributes')
+        self.create_property('label_offset_x', 'offset x', widget_type=NODE_PROP_QLABEL)
+        self.create_property('offset_x', 10, range=(0, 1920), widget_type=NODE_PROP_SLIDER)
+        self.create_property('label_offset_y', 'offset y', widget_type=NODE_PROP_QLABEL)
+        self.create_property('offset_y', 10, range=(0, 1920), widget_type=NODE_PROP_SLIDER)
         self.set_color(*ncs.Fusion)
 
 class Merge(BaseNode):
@@ -240,9 +242,8 @@ class Resize(BaseNode):
         super(Resize, self).__init__()
         self.add_input('in', color=(180, 80, 0))
         self.add_output('out')
-        self.add_text_input('resize', 'Size', text='50', tab='attributes')
         self.create_property('label_resize', 'Resize', widget_type=NODE_PROP_QLABEL)
-        self.create_property('resize_x', 50, range=(10, 200), widget_type=NODE_PROP_SLIDER)
+        self.create_property('resize', 50, range=(10, 200), widget_type=NODE_PROP_SLIDER)
         self.set_color(*ncs.Transform)
 
 class Reformat(BaseNode):
