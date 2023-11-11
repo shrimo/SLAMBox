@@ -42,7 +42,8 @@ class Color:
     red_dahlia = (39, 32, 125)
     blue_atoll = (210, 177, 0)
     burnt_sienna = (82, 93, 198)
-    viva_magenta = (85, 52, 190)    
+    viva_magenta = (85, 52, 190)
+    deep_sea_reef = (144, 97, 65)
 
 
 cc = Color()
