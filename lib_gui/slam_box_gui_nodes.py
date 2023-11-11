@@ -1,6 +1,6 @@
 """ GUI for SLAM Box nodes """
 from Qt import QtCore, QtWidgets
-from gui_lib import NodeColorStyle
+from lib_gui import NodeColorStyle
 from NodeGraphQt import BaseNode
 from NodeGraphQt.constants import (
     NODE_PROP_QLABEL,

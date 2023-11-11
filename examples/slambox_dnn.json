@@ -4,49 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7ff9c4d5c650":{
-      "type_":"nodes.Read.Read",
-      "icon":null,
-      "name":"Read",
-      "color":[
-        125,
-        115,
-        65,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":232.0,
-      "pos":[
-        292.532191324492,
-        -318.2403281374866
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "device":"0",
-        "start":"0",
-        "camera":false,
-        "loop":true,
-        "label_file":"File path",
-        "file":"./video/road.mp4"
-      }
-    },
-    "0x7ff9c359bb10":{
+    "0x7efc65d4fd60":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -74,8 +32,8 @@
       "width":160,
       "height":93.0,
       "pos":[
-        319.9999999999998,
-        918.8411846441177
+        448.76518312088376,
+        1097.0330999256119
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -88,7 +46,7 @@
         ]
       }
     },
-    "0x7ff9c4d63550":{
+    "0x7efc65d4ff70":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -116,8 +74,8 @@
       "width":160,
       "height":71.0,
       "pos":[
-        318.2832619577807,
-        1031.9742324752401
+        450.58472130215875,
+        1212.30799592573
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -125,47 +83,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7ff9c35b5ad0":{
-      "type_":"nodes.Transform.Reformat",
-      "icon":null,
-      "name":"Reformat",
-      "color":[
-        115,
-        65,
-        35,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":60,
-      "pos":[
-        293.5622052194919,
-        -60.08583147767382
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_width":"Width",
-        "width_":1024,
-        "label_height":"Height",
-        "height_":576
-      }
-    },
-    "0x7ff9c35b57d0":{
+    "0x7efc65d94250":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -193,8 +111,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        319.31327585278075,
-        309.0128475994654
+        309.4734005012244,
+        301.5557934215042
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -206,7 +124,7 @@
         "algorithm":"ORB"
       }
     },
-    "0x7ff9c35bbad0":{
+    "0x7efc65d946a0":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -234,8 +152,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        319.31327585278103,
-        425.7510344703744
+        309.4734005012245,
+        416.7919938961478
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -251,7 +169,7 @@
         "show_marker":false
       }
     },
-    "0x7ff9c3595b10":{
+    "0x7efc65d94a30":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -279,8 +197,8 @@
       "width":160,
       "height":60,
       "pos":[
-        319.313275852781,
-        552.7896495945987
+        309.4734005012245,
+        537.8459602478823
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -289,7 +207,7 @@
         "orb_distance":64.0
       }
     },
-    "0x7ff9c41eb9d0":{
+    "0x7efc65d94d00":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -317,8 +235,8 @@
       "width":160,
       "height":60,
       "pos":[
-        321.0300138950006,
-        837.7681646029948
+        309.1194253842197,
+        823.7190515994839
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -335,7 +253,7 @@
         "write_pcd":false
       }
     },
-    "0x7ff9c353dbd0":{
+    "0x7efc65d94fa0":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -363,8 +281,8 @@
       "width":160,
       "height":60,
       "pos":[
-        291.8454671772728,
-        140.7725194619787
+        281.79852050979383,
+        183.0953375930311
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -379,7 +297,7 @@
         "calibration_data":"data/calibration_data.npz"
       }
     },
-    "0x7ff9c41eb5d0":{
+    "0x7efc65d95240":{
       "type_":"nodes.SLAMBox.DNNMask",
       "icon":null,
       "name":"DNNMask",
@@ -407,8 +325,8 @@
       "width":160,
       "height":198.0,
       "pos":[
-        556.2231256790374,
-        68.66952168877008
+        570.023792841389,
+        76.18364300950681
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -424,7 +342,7 @@
         "show_mask":false
       }
     },
-    "0x7ff9c35be5d0":{
+    "0x7efc65d95720":{
       "type_":"nodes.SLAMBox.KalmanFilterOptimization",
       "icon":null,
       "name":"KalmanFilterOptimization",
@@ -452,8 +370,8 @@
       "width":160,
       "height":60,
       "pos":[
-        319.31327585278063,
-        638.6265517055616
+        309.35965514863216,
+        617.6982135863555
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -470,7 +388,7 @@
         "measNoise":0.1
       }
     },
-    "0x7ff9c359e5d0":{
+    "0x7efc65d959f0":{
       "type_":"nodes.SLAMBox.LineModelOptimization",
       "icon":null,
       "name":"LineModelOptimization",
@@ -498,8 +416,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        321.0300138950002,
-        717.5965016476473
+        309.1194253842191,
+        701.037080552073
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -512,127 +430,317 @@
         "m_trials":100,
         "delete_points":false
       }
+    },
+    "0x7efc65d95d50":{
+      "type_":"nodes.Transform.Resize",
+      "icon":null,
+      "name":"Resize",
+      "color":[
+        115,
+        65,
+        35,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        569.496941497253,
+        780.4935278794651
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_resize":"Resize",
+        "resize":30
+      }
+    },
+    "0x7efc65d96020":{
+      "type_":"nodes.Fusion.Insert",
+      "icon":null,
+      "name":"Insert",
+      "color":[
+        65,
+        115,
+        115,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        448.0686290192249,
+        995.7080644871659
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_offset_x":"offset x",
+        "offset_x":700,
+        "label_offset_y":"offset y",
+        "offset_y":0
+      }
+    },
+    "0x7efc65d96380":{
+      "type_":"nodes.Transform.Reformat",
+      "icon":null,
+      "name":"Reformat",
+      "color":[
+        115,
+        65,
+        35,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":60,
+      "pos":[
+        284.97851500839585,
+        -17.167380422192483
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_width":"Width",
+        "width_":1024,
+        "label_height":"Height",
+        "height_":576
+      }
+    },
+    "0x7efc65d965f0":{
+      "type_":"nodes.Read.Read",
+      "icon":null,
+      "name":"Read",
+      "color":[
+        125,
+        115,
+        65,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":232.0,
+      "pos":[
+        283.26177696617646,
+        -279.82830088173813
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "device":"0",
+        "start":"0",
+        "camera":false,
+        "loop":true,
+        "label_file":"File path",
+        "file":"./video/road.mp4"
+      }
     }
   },
   "connections":[
     {
-      "out":[
-        "0x7ff9c4d5c650",
-        "out"
-      ],
       "in":[
-        "0x7ff9c35b5ad0",
-        "in"
-      ]
-    },
-    {
-      "in":[
-        "0x7ff9c359bb10",
+        "0x7efc65d4fd60",
         "in"
       ],
       "out":[
-        "0x7ff9c41eb9d0",
+        "0x7efc65d96020",
         "out"
       ]
     },
     {
       "out":[
-        "0x7ff9c359bb10",
+        "0x7efc65d4fd60",
         "out"
       ],
       "in":[
-        "0x7ff9c4d63550",
-        "in"
-      ]
-    },
-    {
-      "out":[
-        "0x7ff9c35b5ad0",
-        "out"
-      ],
-      "in":[
-        "0x7ff9c353dbd0",
-        "in"
-      ]
-    },
-    {
-      "out":[
-        "0x7ff9c35b5ad0",
-        "out"
-      ],
-      "in":[
-        "0x7ff9c41eb5d0",
+        "0x7efc65d4ff70",
         "in"
       ]
     },
     {
       "in":[
-        "0x7ff9c35b57d0",
+        "0x7efc65d94250",
         "ina"
       ],
       "out":[
-        "0x7ff9c353dbd0",
+        "0x7efc65d94fa0",
         "out"
       ]
     },
     {
       "in":[
-        "0x7ff9c35b57d0",
+        "0x7efc65d94250",
         "inb"
       ],
       "out":[
-        "0x7ff9c41eb5d0",
+        "0x7efc65d95240",
         "out"
       ]
     },
     {
       "out":[
-        "0x7ff9c35b57d0",
+        "0x7efc65d94250",
         "out"
       ],
       "in":[
-        "0x7ff9c35bbad0",
+        "0x7efc65d946a0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7ff9c35bbad0",
+        "0x7efc65d946a0",
         "out"
       ],
       "in":[
-        "0x7ff9c3595b10",
+        "0x7efc65d94a30",
         "in"
       ]
     },
     {
       "out":[
-        "0x7ff9c3595b10",
+        "0x7efc65d94a30",
         "out"
       ],
       "in":[
-        "0x7ff9c35be5d0",
+        "0x7efc65d95720",
         "in"
       ]
     },
     {
       "in":[
-        "0x7ff9c41eb9d0",
+        "0x7efc65d94d00",
         "in"
       ],
       "out":[
-        "0x7ff9c359e5d0",
+        "0x7efc65d959f0",
         "out"
       ]
     },
     {
       "out":[
-        "0x7ff9c35be5d0",
+        "0x7efc65d94d00",
         "out"
       ],
       "in":[
-        "0x7ff9c359e5d0",
+        "0x7efc65d96020",
+        "in_a"
+      ]
+    },
+    {
+      "in":[
+        "0x7efc65d94fa0",
         "in"
+      ],
+      "out":[
+        "0x7efc65d96380",
+        "out"
+      ]
+    },
+    {
+      "in":[
+        "0x7efc65d95240",
+        "in"
+      ],
+      "out":[
+        "0x7efc65d96380",
+        "out"
+      ]
+    },
+    {
+      "out":[
+        "0x7efc65d95240",
+        "out"
+      ],
+      "in":[
+        "0x7efc65d95d50",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7efc65d95720",
+        "out"
+      ],
+      "in":[
+        "0x7efc65d959f0",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7efc65d95d50",
+        "out"
+      ],
+      "in":[
+        "0x7efc65d96020",
+        "in_b"
+      ]
+    },
+    {
+      "in":[
+        "0x7efc65d96380",
+        "in"
+      ],
+      "out":[
+        "0x7efc65d965f0",
+        "out"
       ]
     }
   ]
