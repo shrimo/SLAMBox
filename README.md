@@ -1,9 +1,9 @@
-# SLAMBox
-This application is designed for use metod simultaneous localization and mapping (SLAM) in education, research and development by Node-based ui.
+![Screenshot01](doc/slambox_logo.png)
+
+This application is designed for use metod simultaneous localization and mapping (SLAM) in education, experiments, research and development by Node-based ui. [Demo video.](https://vimeo.com/881531969/eee24a6330)
 
 ![Screenshot01](doc/screenshot01.png)
 
-[Demo video](https://vimeo.com/881531969/eee24a6330)
 
 ### Introduction
 
