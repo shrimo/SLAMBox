@@ -10,9 +10,9 @@ from config import host, port, recv_size, version, date
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
 
+
 def build() -> None:
-    """ Default script start
-    """
+    """Default script start"""
     print("SLAM box version: " + version + date)
 
     cc = Color()

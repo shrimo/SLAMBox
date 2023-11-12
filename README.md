@@ -1,10 +1,10 @@
 ![logo](doc/slambox_logo.png)
  
-SLAMBOX is designed for use metod simultaneous localization and mapping (SLAM) in education, experiments, research and development by Node-based user interface. This is a box with tools that you can quickly and conveniently experiment with separate SLAM nodes.
+SLAMBOX is designed for use metod simultaneous localization and mapping ([SLAM][def]) in education, experiments, research and development by Node-based user interface. This is a box with tools that you can quickly and conveniently experiment with separate SLAM nodes. You can watch the demo here: [Demo video.](https://vimeo.com/881531969/eee24a6330)
 <br>
 
 ![Screenshot01](doc/screenshot01.png)
-<sup>You can watch the demo here: [Demo video.](https://vimeo.com/881531969/eee24a6330)</sup>
+<sup>examples/slambox_base.json</sup>
 
 ## Introduction
 
@@ -23,17 +23,18 @@ The computer vision systems can be controlled not only by classical programming 
 
 ### Simultaneous localization and mapping
 
-Simultaneous localization and mapping ([SLAM][def]) is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
+SLAM is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
+
+The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, DetectorDescriptor, MatchPoints, Triangulate, Open3DMap.** There are also nodes for optimization and elimination of erroneous feature points: **DNNMask, GeneralGraphOptimization, LineModelOptimization, KalmanFilterOptimization.**
 
 <br>
 
 ![Screenshot03](doc/screenshot03.png)
-<sup>Application interface 01<sup>
+<sup>examples/slambox_dnn.json<sup>
 
 ## The following libraries are used in development
 
-- [**OpenCV**](https://opencv.org/) (Open Source Computer Vision Library) is a library of programming functions mainly aimed at real-time computer vision. Originally developed by Intel, it was later supported by Willow Garage then Itseez (which was later acquired by Intel). The library is cross-platform and free for use under the open-source Apache 2 License. Starting with 2011, OpenCV features GPU acceleration for real-time operations.
-
+- [**OpenCV**](https://opencv.org/) (Open Source Computer Vision Library) is a library of programming functions mainly aimed at real-time computer vision. Originally developed by Intel, it was later supported by Willow Garage then Itseez (which was later acquired by Intel). The library is cross-platform and free for use under the open-source Apache 2 License. Starting with 2011, OpenCV features GPU acceleration for real-time operations. 
 
 - [**NumPy**](https://numpy.org/) is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
 
@@ -45,7 +46,7 @@ Simultaneous localization and mapping ([SLAM][def]) is the computational problem
 
 - [**Open3D**](http://www.open3d.org/) is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python.
 
-- [**Qt**](https://en.wikipedia.org/wiki/Qt_(software)) is cross-platform software for creating graphical user interfaces as well as cross-platform applications that run on various software and hardware platforms such as Linux, Windows, macOS, Android or embedded systems with little or no change in the underlying codebase while still being a native application with native capabilities and speed.
+- [**Qt**](https://wiki.qt.io/Qt_for_Python) is cross-platform software for creating graphical user interfaces as well as cross-platform applications that run on various software and hardware platforms such as Linux, Windows, macOS, Android or embedded systems with little or no change in the underlying codebase while still being a native application with native capabilities and speed.
 
 - [**NodeGraphQt**](http://chantonic.com/NodeGraphQt/api/index.html) a node graph UI framework written in python that can be implemented and re-purposed into applications supporting PySide2.
 
@@ -56,7 +57,7 @@ Simultaneous localization and mapping ([SLAM][def]) is the computational problem
 
 
 ![Screenshot04](doc/screenshot04.png)
-<sup>Application interface 02<sup>
+<sup>examples/slambox_g2o.json<sup>
 
 ### Dependent libraries 
 
