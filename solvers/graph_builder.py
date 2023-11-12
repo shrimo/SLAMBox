@@ -39,13 +39,6 @@ class DataBuffer:
     variable: Dict[Any, Any] = field(default_factory=dict)
 
 
-def move_node_to_end(script: ScriptType, node_type: str) -> ScriptType:
-    """Move node to end of list"""
-    matching_nodes = [node for node in script if node_type in node["type"]]
-    non_matching_nodes = [node for node in script if node_type not in node["type"]]
-    return non_matching_nodes + matching_nodes
-
-
 def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeType:
     """get node by id or type attribute"""
     return next(node for node in nodes if node[attribute] == target)
@@ -65,10 +58,26 @@ def get_object_by_script(
     )
 
 
+def cleaning_unplugged_nodes(
+    script: ScriptType, processed_node: NodeType, clear_script: ScriptType
+) -> ScriptType:
+    """Clearing the script of unlinked nodes:
+    if a node does not have an incoming node attribute,
+    this node is not included in the script.
+    """
+    for in_node_id in processed_node["in"]:
+        in_node = find_node_by_attr(script, in_node_id, "id")
+        clear_script.append(in_node)
+        if in_node["in"]:
+            cleaning_unplugged_nodes(script, in_node, clear_script)
+    return clear_script
+
+
 def build_node_graph(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
 ) -> solvers.base_nodes.Viewer:
     """Create dictionary and adding objects to the dictionary"""
+
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
     for node in script:
         node_id = node["id"]
@@ -88,10 +97,12 @@ def build_rooted_graph(
 ) -> solvers.base_nodes.Viewer:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
-    aligned_script = move_node_to_end(script, "Viewer")
-    root_node = find_node_by_attr(aligned_script, "Viewer", "type")
-    out = build_node_graph(aligned_script, root_node, buffer)
-    return out
+
+    # Get root node from which graph execution begins
+    root_node = find_node_by_attr(script, "Viewer", "type")
+    # Clearing the script of unlinked nodes
+    clear_script = cleaning_unplugged_nodes(script, root_node, [root_node])
+    return build_node_graph(clear_script, root_node, buffer)
 
 
 class GraphCommunication:
