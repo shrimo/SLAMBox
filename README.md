@@ -14,8 +14,6 @@ The development of robotics generates a request for recognition and control syst
 
 The computer vision systems can be controlled not only by classical programming tools (write text code, which in itself narrows the scope of computer vision technologies), in the architecture of graph nodes it is possible to analyze and modify video streams, data from LIDAR, stereo cameras, acoustic sensors through visual programming, which expands the scope of technologies.
 
-*Slambox is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose.*
-
 <br>
 
 ![Blender](doc/screenshot02.png)
@@ -82,7 +80,8 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 - `dnf install ffmpeg`
 
 <br>
-*Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15*
+
+*SLAMBOX is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose. Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15*
 
 ### Installation and launch
 
