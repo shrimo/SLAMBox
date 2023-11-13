@@ -2,23 +2,18 @@
 Description of the point and location map
 """
 
-import sys
-
-sys.path.append("/home/cds/github/g2o-pymem/build/lib")
-
 import numpy as np
 
-# import g2opy # type: ignore
 from .optimize_g2o import optimize
 
 CULLING_ERR_THRES = 0.02
 
 
-def add_ones(x):
-    if len(x.shape) == 1:
-        return np.concatenate([x, np.array([1.0])], axis=0)
-    else:
-        return np.concatenate([x, np.ones((x.shape[0], 1))], axis=1)
+# def add_ones(x):
+#     if len(x.shape) == 1:
+#         return np.concatenate([x, np.array([1.0])], axis=0)
+#     else:
+#         return np.concatenate([x, np.ones((x.shape[0], 1))], axis=1)
 
 
 def hamming_distance(a, b):
@@ -38,7 +33,10 @@ class Point:
         self.id = tid if tid is not None else mapp.add_point(self)
 
     def homogeneous(self):
-        return add_ones(self.pt)
+        if len(self.pt.shape) == 1:
+            return np.concatenate([self.pt, np.array([1.0])], axis=0)
+        return np.concatenate([self.pt, np.ones((self.pt.shape[0], 1))], axis=1)
+        # return add_ones(self.pt)
 
     def orb(self):
         return [f.descriptors[idx] for f, idx in zip(self.frames, self.idxs)]

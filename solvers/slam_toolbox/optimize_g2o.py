@@ -4,10 +4,10 @@ g2o is an open-source C++ framework for optimizing graph-based nonlinear error f
 
 import sys
 
-sys.path.append("/home/cds/github/g2o-pymem/build/lib")
-
 import numpy as np
 import g2o  # type: ignore
+
+# sys.path.append("/home/cds/github/g2o-pymem/build/lib")
 # import g2opy as g2o  # type: ignore
 from .match_frames import poseRt
 
@@ -23,7 +23,7 @@ from .match_frames import poseRt
 # version by https://github.com/miquelmassot/g2o-python
 SolverSE3 = {
     "SolverEigenSE3": g2o.LinearSolverEigenSE3,
-    "SolverDenseSE3": g2o.LinearSolverDenseSE3
+    "SolverDenseSE3": g2o.LinearSolverDenseSE3,
 }
 
 

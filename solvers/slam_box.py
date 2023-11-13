@@ -19,7 +19,8 @@ cc = Color()
 # @jit
 def triangulate(pose1, pose2, pts1, pts2):
     """Taking into account relative poses,
-    we calculate the 3d point
+    we calculate the 3d point.
+    linalg.svd - Singular Value Decomposition.
     """
     ret = np.zeros((pts1.shape[0], 4))
     for i, p in enumerate(zip(pts1, pts2)):
@@ -167,11 +168,19 @@ class MatchPoints(Node):
         if frame.id == 0:
             return image
 
-        f1 = mapp.frames[-1]
-        f2 = mapp.frames[-2]
+        # f1 = mapp.frames[-1]
+        # f2 = mapp.frames[-2]
+
+        # idx1, idx2, Rt = match_frame(
+        #     f1, f2, self.m_samples, self.r_threshold, self.m_trials
+        # )
 
         idx1, idx2, Rt = match_frame(
-            f1, f2, self.m_samples, self.r_threshold, self.m_trials
+            mapp.frames[-1],
+            mapp.frames[-2],
+            self.m_samples,
+            self.r_threshold,
+            self.m_trials,
         )
         # Adding new data to the buffer
         self.buffer.variable["slam_data"].extend([idx1, idx2, Rt])
@@ -237,7 +246,7 @@ class Triangulate(Node):
         # sbp_pts_count = 0
 
         # search by projection
-        if len(mapp.points) > 0:
+        if mapp.points:
             # project *all* the map points into the current frame
             map_points = np.array([p.homogeneous() for p in mapp.points])
             projs = (K @ f1.pose[:3] @ map_points.T).T
