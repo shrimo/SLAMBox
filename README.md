@@ -29,25 +29,23 @@ Feature-based visual SLAM typically tracks points of interest through successive
 The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, DetectorDescriptor, MatchPoints, Triangulate, Open3DMap.** There are also nodes for optimization and elimination of erroneous feature points: **DNNMask, GeneralGraphOptimization, LineModelOptimization, KalmanFilterOptimization.**
 
 ### Camera node
-- $\begin{bmatrix} Fx & 0 & Cx \\ 0 & Fy & Cy \\ 0 & 0 & 0 \end{bmatrix}$
-<br>
-<br>This node, based on the parameters, calculates [Camera Intrinsic Matrix](https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html)
-<br>**Fx, Fy** are essentially the focal lengths expressed in pixels.
-<br>**Cx, Cy** is a principal point that is usually at the image center
+- 
+  $\begin{bmatrix} Fx & 0 & Cx \\ 0 & Fy & Cy \\ 0 & 0 & 0 \end{bmatrix}$
+
+  This node, based on the parameters, calculates [Camera Intrinsic Matrix][CameraMatrix] <br>
+  **Fx, Fy** are essentially the focal lengths expressed in pixels.<br> 
+  **Cx, Cy** is a principal point that is usually at the image center
 
 ### DetectorDescriptor node
 - [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) (Oriented FAST and Rotated BRIEF)
 - [AKAZE](https://docs.opencv.org/4.8.0/db/d70/tutorial_akaze_matching.html)  local features matching
-<br>
 
 ### MatchPoints node
 - [Brute-Force](https://docs.opencv.org/4.8.0/dc/dc3/tutorial_py_matcher.html) matcher is simple. It takes the descriptor of one feature in first set and is matched with all other features in second set using some distance calculation. And the closest one is returned.
 - [RANSAC](https://en.wikipedia.org/wiki/Random_sample_consensus) (Random sample consensus) is an iterative method to estimate parameters of a mathematical model from a set of observed data that contains outliers, when outliers are to be accorded no influence on the values of the estimates. 
-<br>
 
 ### Triangulate node
 - The descriptors of the remaining features are then matched to the next frame, [triangulated](https://www.diva-portal.org/smash/get/diva2:1635583/FULLTEXT02.pdf) and filtered by their re-projection error. Matches are added as candidate tracks. Candidate tracks are searched after in the next frames and added as proper tracks if they are found and pass the re-projection test.
-<br>
 
 ### Open3DMap node
 - Here we get a point cloud, a camera and visualize them in a separate process using the Open3D library, it is also possible to record points in the [PCD](https://pointclouds.org/documentation/tutorials/pcd_file_format.html) (Point Cloud Data) file format.
@@ -128,3 +126,4 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 :rocket:
 
 [def]: https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping
+[CameraMatrix]: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
