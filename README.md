@@ -29,12 +29,7 @@ Feature-based visual SLAM typically tracks points of interest through successive
 The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, DetectorDescriptor, MatchPoints, Triangulate, Open3DMap.** There are also nodes for optimization and elimination of erroneous feature points: **DNNMask, GeneralGraphOptimization, LineModelOptimization, KalmanFilterOptimization.**
 
 ### Camera node
-- 
-  $\begin{bmatrix} Fx & 0 & Cx \\ 0 & Fy & Cy \\ 0 & 0 & 0 \end{bmatrix}$
-
-  This node, based on the parameters, calculates [Camera Intrinsic Matrix][CameraMatrix] <br>
-  **Fx, Fy** are essentially the focal lengths expressed in pixels.<br> 
-  **Cx, Cy** is a principal point that is usually at the image center
+- This node, based on the parameters, calculates [Camera Intrinsic Matrix][CameraMatrix]. Intrinsic parameters are specific to a camera. They include information like focal length *(Fx, Fy)* and optical centers *(Cx, Cy)*. The focal length and optical centers can be used to create a camera matrix, which can be used to remove distortion due to the lenses of a specific camera. The camera matrix is unique to a specific camera, so once calculated, it can be reused on other images taken by the same camera. It is expressed as a 3x3 matrix:
 
 ### DetectorDescriptor node
 - [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) (Oriented FAST and Rotated BRIEF)
@@ -49,7 +44,7 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 ### Open3DMap node
 - Here we get a point cloud, a camera and visualize them in a separate process using the Open3D library, it is also possible to record points in the [PCD](https://pointclouds.org/documentation/tutorials/pcd_file_format.html) (Point Cloud Data) file format.
-<br>
+
 <br>
 
 ![Screenshot03](doc/screenshot03.png)
