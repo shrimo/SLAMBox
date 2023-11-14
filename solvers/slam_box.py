@@ -3,7 +3,7 @@ SLAM Box
 Nodes for launching SLAM pipeline
 """
 
-import time
+# import time
 import numpy as np
 
 # from numba import jit
@@ -15,8 +15,7 @@ from solvers.slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
 
 cc = Color()
 
-
-# @jit
+# @jit(nopython=True)
 def triangulate(pose1, pose2, pts1, pts2):
     """Taking into account relative poses,
     we calculate the 3d point.

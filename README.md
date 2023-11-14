@@ -14,17 +14,44 @@ The development of robotics generates a request for recognition and control syst
 
 The computer vision systems can be controlled not only by classical programming tools (write text code, which in itself narrows the scope of computer vision technologies), in the architecture of graph nodes it is possible to analyze and modify video streams, data from LIDAR, stereo cameras, acoustic sensors through visual programming, which expands the scope of technologies.
 
+### Simultaneous localization and mapping
+
+SLAM is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
+
 <br>
 
 ![Blender](doc/screenshot02.png)
 <sup>[Blender](https://www.blender.org/)</sup> 
 
-### Simultaneous localization and mapping
-
-SLAM is the computational problem of constructing or updating a map of an unknown environment while simultaneously keeping track of an agent's location within it. While this initially appears to be a chicken or the egg problem, there are several algorithms known to solve it in, at least approximately, tractable time for certain environments. Popular approximate solution methods include the particle filter, extended Kalman filter, covariance intersection, and GraphSLAM. SLAM algorithms are based on concepts in computational geometry and computer vision, and are used in robot navigation, robotic mapping and odometry for virtual reality or augmented reality.
+## Design and main components of SLAM pipeline
+Feature-based visual SLAM typically tracks points of interest through successive camera frames to triangulate the 3D position of the camera, this information is then used to build a 3D map.
 
 The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, DetectorDescriptor, MatchPoints, Triangulate, Open3DMap.** There are also nodes for optimization and elimination of erroneous feature points: **DNNMask, GeneralGraphOptimization, LineModelOptimization, KalmanFilterOptimization.**
 
+### Camera node
+- $\begin{bmatrix} Fx & 0 & Cx \\ 0 & Fy & Cy \\ 0 & 0 & 0 \end{bmatrix}$
+<br>
+<br>This node, based on the parameters, calculates [Camera Intrinsic Matrix](https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html)
+<br>**Fx, Fy** are essentially the focal lengths expressed in pixels.
+<br>**Cx, Cy** is a principal point that is usually at the image center
+
+### DetectorDescriptor node
+- [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) (Oriented FAST and Rotated BRIEF)
+- [AKAZE](https://docs.opencv.org/4.8.0/db/d70/tutorial_akaze_matching.html)  local features matching
+<br>
+
+### MatchPoints node
+- [Brute-Force](https://docs.opencv.org/4.8.0/dc/dc3/tutorial_py_matcher.html) matcher is simple. It takes the descriptor of one feature in first set and is matched with all other features in second set using some distance calculation. And the closest one is returned.
+- [RANSAC](https://en.wikipedia.org/wiki/Random_sample_consensus) (Random sample consensus) is an iterative method to estimate parameters of a mathematical model from a set of observed data that contains outliers, when outliers are to be accorded no influence on the values of the estimates. 
+<br>
+
+### Triangulate node
+- The descriptors of the remaining features are then matched to the next frame, [triangulated](https://www.diva-portal.org/smash/get/diva2:1635583/FULLTEXT02.pdf) and filtered by their re-projection error. Matches are added as candidate tracks. Candidate tracks are searched after in the next frames and added as proper tracks if they are found and pass the re-projection test.
+<br>
+
+### Open3DMap node
+- Here we get a point cloud, a camera and visualize them in a separate process using the Open3D library, it is also possible to record points in the [PCD](https://pointclouds.org/documentation/tutorials/pcd_file_format.html) (Point Cloud Data) file format.
+<br>
 <br>
 
 ![Screenshot03](doc/screenshot03.png)
@@ -79,6 +106,9 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 - `dnf install ffmpeg`
 
+<br>
+
+**g2o** framework for Python can also be build from [source code](https://github.com/RainerKuemmerle/g2o/tree/pymem), also add path to the compiled library in file *config.py*, see the *g2opy_path* variable.
 <br>
 
 *SLAMBOX is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose. Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15*

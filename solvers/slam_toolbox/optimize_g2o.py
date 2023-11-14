@@ -1,30 +1,44 @@
 """
 g2o is an open-source C++ framework for optimizing graph-based nonlinear error functions.
+https://github.com/RainerKuemmerle/g2o/tree/pymem
 """
 
+import os
 import sys
-
 import numpy as np
-import g2o  # type: ignore
 
-# sys.path.append("/home/cds/github/g2o-pymem/build/lib")
-# import g2opy as g2o  # type: ignore
+from config import g2opy_path
+
+if g2opy_path not in sys.path:
+    sys.path.append(g2opy_path)
+
+# Checking for the presence of the framework and required methods
+try:
+    import g2opy as g2o  # type: ignore
+except ModuleNotFoundError as er:
+    print(f"{er}: Framework g2opy not available")
+    try:
+        import g2o  # type: ignore
+    except ModuleNotFoundError as er:
+        print(f"{er}: Framework g2o not available")
+finally:
+    if getattr(g2o, "__name__", None):
+        if getattr(g2o, "LinearSolverCSparseSE3", None):
+            # Pymem version https://github.com/RainerKuemmerle/g2o/tree/pymem
+            SolverSE3 = {
+                "SolverCSparseSE3": g2o.LinearSolverCSparseSE3,
+                "SolverEigenSE3": g2o.LinearSolverEigenSE3,
+                "SolverCholmodSE3": g2o.LinearSolverCholmodSE3,
+                "SolverDenseSE3": g2o.LinearSolverDenseSE3,
+            }
+        else:
+            # g2o version by https://github.com/miquelmassot/g2o-python
+            SolverSE3 = {
+                "SolverEigenSE3": g2o.LinearSolverEigenSE3,
+                "SolverDenseSE3": g2o.LinearSolverDenseSE3,
+            }
+
 from .match_frames import poseRt
-
-# Pymem version Dictionary containing solvers
-# https://github.com/RainerKuemmerle/g2o/tree/pymem
-# SolverSE3 = {
-#     "SolverCSparseSE3": g2o.LinearSolverCSparseSE3,
-#     "SolverEigenSE3": g2o.LinearSolverEigenSE3,
-#     "SolverCholmodSE3": g2o.LinearSolverCholmodSE3,
-#     "SolverDenseSE3": g2o.LinearSolverDenseSE3
-# }
-
-# version by https://github.com/miquelmassot/g2o-python
-SolverSE3 = {
-    "SolverEigenSE3": g2o.LinearSolverEigenSE3,
-    "SolverDenseSE3": g2o.LinearSolverDenseSE3,
-}
 
 
 def optimize(
