@@ -185,17 +185,17 @@ class GeneralGraphOptimization(BaseNode):
         self.add_output("out")
         # Pymem version Dictionary containing solvers
         # https://github.com/RainerKuemmerle/g2o/tree/pymem
-        # SolverSE3 = [
-        #     "SolverCSparseSE3",
-        #     "SolverEigenSE3",
-        #     "SolverCholmodSE3",
-        #     "SolverDenseSE3"
-        # ]
-        # version by https://github.com/miquelmassot/g2o-python
         SolverSE3 = [
+            "SolverCSparseSE3",
             "SolverEigenSE3",
+            "SolverCholmodSE3",
             "SolverDenseSE3"
         ]
+        # version by https://github.com/miquelmassot/g2o-python
+        # SolverSE3 = [
+        #     "SolverEigenSE3",
+        #     "SolverDenseSE3"
+        # ]
         self.create_property(
             "label_solverSE3", "SolverSE3", widget_type=NODE_PROP_QLABEL
         )
