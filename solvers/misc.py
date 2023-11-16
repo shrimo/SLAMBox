@@ -44,7 +44,7 @@ class Color:
     burnt_sienna: tuple = (82, 93, 198)
     viva_magenta: tuple = (85, 52, 190)
     deep_sea_reef: tuple = (144, 97, 65)
-    tcx_rooibos_tea: tuple = (38, 60, 162)
+    pistachio: tuple = (158, 211, 169)
 
 
 cc = Color()

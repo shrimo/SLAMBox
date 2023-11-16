@@ -170,7 +170,6 @@ class MatchPoints(Node):
 
         # f1 = mapp.frames[-1]
         # f2 = mapp.frames[-2]
-
         # idx1, idx2, Rt = match_frame(
         #     f1, f2, self.m_samples, self.r_threshold, self.m_trials
         # )

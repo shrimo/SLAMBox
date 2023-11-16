@@ -110,7 +110,7 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 **g2o** framework for Python can also be build from [source code](https://github.com/RainerKuemmerle/g2o/tree/pymem), also add path to the compiled library in file *config.py*, see the *g2opy_path* variable.
 <br>
 
-*SLAMBOX is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose. Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15*
+*SLAMBOX is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose. Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15 (Only the AKAZE descriptor works; the ORB detector still works with errors.)*
 
 ### Installation and launch
 
