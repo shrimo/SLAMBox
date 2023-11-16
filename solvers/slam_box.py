@@ -15,6 +15,7 @@ from solvers.slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
 
 cc = Color()
 
+
 # @jit(nopython=True)
 def triangulate(pose1, pose2, pts1, pts2):
     """Taking into account relative poses,
@@ -185,9 +186,11 @@ class MatchPoints(Node):
         self.buffer.variable["slam_data"].extend([idx1, idx2, Rt])
 
         if self.show_marker:
-            for pt1, pt2 in zip(f1.key_pts[idx1], f2.key_pts[idx2]):
+            for pt1, pt2 in zip(
+                mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
+            ):
                 cv2.circle(image, np.int32(pt1), self.marker_size, (0, 255, 255))
-                cv2.line(image, np.int32(pt1), np.int32(pt2), (0, 0, 255), 1)
+                # cv2.line(image, np.int32(pt1), np.int32(pt2), (0, 0, 255), 1)
 
         return image
 

@@ -4,7 +4,7 @@ SLAMBOX is designed for use metod simultaneous localization and mapping ([SLAM][
 <br>
 
 ![Screenshot01](doc/screenshot01.png)
-<sup>examples/slambox_base.json</sup>
+<sup> [examples/slambox_base.json](examples/slambox_base.json) </sup>
 
 ## Introduction
 
@@ -28,27 +28,33 @@ Feature-based visual SLAM typically tracks points of interest through successive
 
 The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, DetectorDescriptor, MatchPoints, Triangulate, Open3DMap.** There are also nodes for optimization and elimination of erroneous feature points: **DNNMask, GeneralGraphOptimization, LineModelOptimization, KalmanFilterOptimization.**
 
-### Camera node
+#### Camera node
 - This node, based on the parameters, calculates [Camera Intrinsic Matrix][CameraMatrix]. Intrinsic parameters are specific to a camera. They include information like focal length *(Fx, Fy)* and optical centers *(Cx, Cy)*. The focal length and optical centers can be used to create a camera matrix, which can be used to remove distortion due to the lenses of a specific camera. The camera matrix is unique to a specific camera, so once calculated, it can be reused on other images taken by the same camera. It is expressed as a 3x3 matrix:
 
-### DetectorDescriptor node
+#### DetectorDescriptor node
 - [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) (Oriented FAST and Rotated BRIEF)
 - [AKAZE](https://docs.opencv.org/4.8.0/db/d70/tutorial_akaze_matching.html)  local features matching
 
-### MatchPoints node
+#### MatchPoints node
 - [Brute-Force](https://docs.opencv.org/4.8.0/dc/dc3/tutorial_py_matcher.html) matcher is simple. It takes the descriptor of one feature in first set and is matched with all other features in second set using some distance calculation. And the closest one is returned.
 - [RANSAC](https://en.wikipedia.org/wiki/Random_sample_consensus) (Random sample consensus) is an iterative method to estimate parameters of a mathematical model from a set of observed data that contains outliers, when outliers are to be accorded no influence on the values of the estimates. 
 
-### Triangulate node
+#### Triangulate node
 - The descriptors of the remaining features are then matched to the next frame, [triangulated](https://www.diva-portal.org/smash/get/diva2:1635583/FULLTEXT02.pdf) and filtered by their re-projection error. Matches are added as candidate tracks. Candidate tracks are searched after in the next frames and added as proper tracks if they are found and pass the re-projection test.
 
-### Open3DMap node
+#### Open3DMap node
 - Here we get a point cloud, a camera and visualize them in a separate process using the Open3D library, it is also possible to record points in the [PCD](https://pointclouds.org/documentation/tutorials/pcd_file_format.html) (Point Cloud Data) file format.
+
+#### DNNMask
+- This node creates a mask for a detector/descriptor to cut off moving objects using [Deep Neural Networks](https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/).
+
+#### GeneralGraphOptimization
+- Optimize a pose graph based on the nodes and edge constraints. This node contains three different methods that solve PGO, GaussNewton Levenberg-Marquardt and Powell’s Dogleg. It is mainly used to solve the SLAM problem in robotics and the bundle adjustment problems in computer vision. ORB-SLAM uses [g2o][def2] as a back-end for camera pose optimization.
 
 <br>
 
 ![Screenshot03](doc/screenshot03.png)
-<sup>examples/slambox_dnn.json<sup>
+<sup> [examples/slambox_dnn.json](examples/slambox_dnn.json) <sup>
 
 ## The following libraries are used in development
 
@@ -56,7 +62,7 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 - [**NumPy**](https://numpy.org/) is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays.
 
-- [**g2o**](https://github.com/RainerKuemmerle/g2o) is an open-source C++ framework for optimizing graph-based nonlinear error functions. g2o has been designed to be easily extensible to a wide range of problems and a new problem typically can be specified in a few lines of code. The current implementation provides solutions to several variants of SLAM and BA.
+- [**g2o**][def2] is an open-source C++ framework for optimizing graph-based nonlinear error functions. g2o has been designed to be easily extensible to a wide range of problems and a new problem typically can be specified in a few lines of code. The current implementation provides solutions to several variants of SLAM and BA.
 
 - [**scikit-image**](https://scikit-image.org/) Image processing in Python is a collection of algorithms for image processing.
 
@@ -75,7 +81,7 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 
 ![Screenshot04](doc/screenshot04.png)
-<sup>examples/slambox_g2o.json<sup>
+<sup> [examples/slambox_g2o.json](examples/slambox_g2o.json) <sup>
 
 ### Dependent libraries 
 
@@ -122,3 +128,4 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 [def]: https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping
 [CameraMatrix]: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
+[def2]: https://github.com/RainerKuemmerle/g2o
