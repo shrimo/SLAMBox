@@ -178,12 +178,14 @@ class GraphBuilder:
             elif p_key == ord("q") or p_key == 27:
                 if self.graph.stop():
                     break
+
+            # Doesn't work on Mac OS
             # window close event
-            elif (
-                cv2.getWindowProperty(self.graph.window_name, cv2.WND_PROP_VISIBLE) < 1
-            ):
-                if self.graph.stop():
-                    break
+            # elif (
+            #     cv2.getWindowProperty(self.graph.window_name, cv2.WND_PROP_VISIBLE) < 1
+            # ):
+            #     if self.graph.stop():
+            #         break
 
     def scripts_comparison(self, script: ScriptType) -> bool:
         """comparison of a running script with an updated script"""

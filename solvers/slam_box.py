@@ -168,13 +168,6 @@ class MatchPoints(Node):
         if frame.id == 0:
             return image
 
-        # f1 = mapp.frames[-1]
-        # f2 = mapp.frames[-2]
-
-        # idx1, idx2, Rt = match_frame(
-        #     f1, f2, self.m_samples, self.r_threshold, self.m_trials
-        # )
-
         idx1, idx2, Rt = match_frame(
             mapp.frames[-1],
             mapp.frames[-2],
@@ -182,15 +175,13 @@ class MatchPoints(Node):
             self.r_threshold,
             self.m_trials,
         )
+
         # Adding new data to the buffer
         self.buffer.variable["slam_data"].extend([idx1, idx2, Rt])
 
         if self.show_marker:
-            for pt1, pt2 in zip(
-                mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
-            ):
-                cv2.circle(image, np.int32(pt1), self.marker_size, (0, 255, 255))
-                # cv2.line(image, np.int32(pt1), np.int32(pt2), (0, 0, 255), 1)
+            for pt1 in mapp.frames[-1].key_pts[idx1]:
+                cv2.circle(image, np.int32(pt1), self.marker_size, cc.yellow)
 
         return image
 
@@ -211,6 +202,7 @@ class Triangulate(Node):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.orb_distance = self.param["orb_distance"]
+        self.show_marker = self.param["show_marker"]
 
     def out_frame(self):
         # start_time = time.time()
@@ -336,12 +328,20 @@ class Triangulate(Node):
         # print("Map:      %d points, %d frames" % (len(self.mapp.points), len(self.mapp.frames)))
         # print("Time:     %.2f ms" % ((time.time()-start_time)*1000.0))
         # print(np.linalg.inv(f1.pose))
+        if self.show_marker:
+            for pt1, pt2 in zip(
+                    mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
+                ):
+                # cv2.circle(image, np.int32(pt1), 3, (0, 255, 255))
+                cv2.drawMarker(image, np.int32(pt1), cc.red, 1, 5, 1, 8)
+                cv2.line(image, np.int32(pt1), np.int32(pt2), cc.red, 1)
 
         return image
 
     def update(self, param):
         self.disabled = param["disabled"]
         self.orb_distance = param["orb_distance"]
+        self.show_marker = param["show_marker"]
 
 
 class Open3DMap(Node):
@@ -356,11 +356,11 @@ class Open3DMap(Node):
         self.point_color = self.param["point_color"]
         self.write_pcd = self.param["write_pcd"]
         self.d3d = DisplayOpen3D(
-            width=1280,
-            height=720,
+            width=int(self.param["window_size"][0]),
+            height=int(self.param["window_size"][1]),
             scale=0.05,
             point_size=self.point_size,
-            write_pcd=self.write_pcd,
+            write_pcd=self.write_pcd
         )
 
     def out_frame(self):

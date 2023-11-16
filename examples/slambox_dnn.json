@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7efc65d4fd60":{
+    "0x7eff0cd43e50":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -46,7 +46,7 @@
         ]
       }
     },
-    "0x7efc65d4ff70":{
+    "0x7eff0cd901f0":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -83,7 +83,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7efc65d94250":{
+    "0x7eff0cd90490":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -111,20 +111,20 @@
       "width":160,
       "height":100.0,
       "pos":[
-        309.4734005012244,
-        301.5557934215042
+        311.19013854344365,
+        291.2553651681886
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
         "label_nfeatures":"Number of features",
-        "nfeatures":1000,
+        "nfeatures":600,
         "show_points":false,
         "label_algorithm":"Algorithm",
         "algorithm":"ORB"
       }
     },
-    "0x7efc65d946a0":{
+    "0x7eff0cd908e0":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -152,8 +152,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        309.4734005012245,
-        416.7919938961478
+        309.47340050122455,
+        416.7919938961477
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -161,15 +161,15 @@
         "label_m_samples":"m_samples",
         "m_samples":8,
         "label_r_threshold":"r_threshold",
-        "r_threshold":0.02,
+        "r_threshold":0.015,
         "label_m_trials":"m_trials",
-        "m_trials":500,
+        "m_trials":700,
         "label_size_marker":"Marker size",
         "marker_size":5,
         "show_marker":false
       }
     },
-    "0x7efc65d94a30":{
+    "0x7eff0cd90c70":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -204,10 +204,12 @@
       "subgraph_session":{},
       "custom":{
         "label_m_orb_distance":"ORB distance",
-        "orb_distance":64.0
+        "orb_distance":64.0,
+        "label_show_marker":"Show marker",
+        "show_marker":true
       }
     },
-    "0x7efc65d94d00":{
+    "0x7eff0cd90f40":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -235,8 +237,8 @@
       "width":160,
       "height":60,
       "pos":[
-        309.1194253842197,
-        823.7190515994839
+        310.83616342643893,
+        820.2855755150455
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -249,11 +251,16 @@
           0,
           0
         ],
+        "label_windiw_size":"Windiw size",
+        "window_size":[
+          1024,
+          576
+        ],
         "label_write_pcd":"Write point clouds",
         "write_pcd":false
       }
     },
-    "0x7efc65d94fa0":{
+    "0x7eff0cd911e0":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -281,8 +288,8 @@
       "width":160,
       "height":60,
       "pos":[
-        281.79852050979383,
-        183.0953375930311
+        285.23199659423227,
+        172.7949093397156
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -297,52 +304,7 @@
         "calibration_data":"data/calibration_data.npz"
       }
     },
-    "0x7efc65d95240":{
-      "type_":"nodes.SLAMBox.DNNMask",
-      "icon":null,
-      "name":"DNNMask",
-      "color":[
-        45,
-        65,
-        115,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":198.0,
-      "pos":[
-        570.023792841389,
-        76.18364300950681
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_class_names":"Class names file path",
-        "class_names":"data/coco.names",
-        "label_config":"Config file path",
-        "config":"data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt",
-        "label_weights":"Weights file path",
-        "weights":"data/frozen_inference_graph.pb",
-        "threshold":"0.5",
-        "nms_threshold":"0.2",
-        "show_mask":false
-      }
-    },
-    "0x7efc65d95720":{
+    "0x7eff0cd91480":{
       "type_":"nodes.SLAMBox.KalmanFilterOptimization",
       "icon":null,
       "name":"KalmanFilterOptimization",
@@ -388,50 +350,7 @@
         "measNoise":0.1
       }
     },
-    "0x7efc65d959f0":{
-      "type_":"nodes.SLAMBox.LineModelOptimization",
-      "icon":null,
-      "name":"LineModelOptimization",
-      "color":[
-        45,
-        65,
-        115,
-        255
-      ],
-      "border_color":[
-        74,
-        84,
-        85,
-        255
-      ],
-      "text_color":[
-        255,
-        255,
-        255,
-        180
-      ],
-      "disabled":false,
-      "selected":false,
-      "visible":true,
-      "width":160,
-      "height":100.0,
-      "pos":[
-        309.1194253842191,
-        701.037080552073
-      ],
-      "port_deletion_allowed":false,
-      "subgraph_session":{},
-      "custom":{
-        "label_m_samples":"m_samples",
-        "m_samples":8,
-        "label_r_threshold":"r_threshold",
-        "r_threshold":50,
-        "label_m_trials":"m_trials",
-        "m_trials":100,
-        "delete_points":false
-      }
-    },
-    "0x7efc65d95d50":{
+    "0x7eff0cd91720":{
       "type_":"nodes.Transform.Resize",
       "icon":null,
       "name":"Resize",
@@ -459,8 +378,8 @@
       "width":160,
       "height":60,
       "pos":[
-        569.496941497253,
-        780.4935278794651
+        571.2136795394722,
+        778.7767898372457
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -469,7 +388,7 @@
         "resize":30
       }
     },
-    "0x7efc65d96020":{
+    "0x7eff0cd919c0":{
       "type_":"nodes.Fusion.Insert",
       "icon":null,
       "name":"Insert",
@@ -509,7 +428,7 @@
         "offset_y":0
       }
     },
-    "0x7efc65d96380":{
+    "0x7eff0cd91d20":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -549,7 +468,7 @@
         "height_":576
       }
     },
-    "0x7efc65d965f0":{
+    "0x7eff0cd91f90":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -577,8 +496,8 @@
       "width":160,
       "height":232.0,
       "pos":[
-        283.26177696617646,
-        -279.82830088173813
+        284.9785150083957,
+        -278.1115628395189
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -590,157 +509,245 @@
         "label_file":"File path",
         "file":"./video/road.mp4"
       }
+    },
+    "0x7eff0cd924d0":{
+      "type_":"nodes.SLAMBox.DNNMask",
+      "icon":null,
+      "name":"DNNMask 1",
+      "color":[
+        45,
+        65,
+        115,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":198.0,
+      "pos":[
+        571.673768059011,
+        60.08583147767385
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_class_names":"Class names file path",
+        "class_names":"data/coco.names",
+        "label_config":"Config file path",
+        "config":"data/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt",
+        "label_weights":"Weights file path",
+        "weights":"data/frozen_inference_graph.pb",
+        "threshold":"0.5",
+        "nms_threshold":"0.2",
+        "show_mask":true
+      }
+    },
+    "0x7eff0cd929e0":{
+      "type_":"nodes.SLAMBox.LineModelOptimization",
+      "icon":null,
+      "name":"LineModelOptimization",
+      "color":[
+        45,
+        65,
+        115,
+        255
+      ],
+      "border_color":[
+        74,
+        84,
+        85,
+        255
+      ],
+      "text_color":[
+        255,
+        255,
+        255,
+        180
+      ],
+      "disabled":false,
+      "selected":false,
+      "visible":true,
+      "width":160,
+      "height":100.0,
+      "pos":[
+        310.7295856416846,
+        698.7123831832353
+      ],
+      "port_deletion_allowed":false,
+      "subgraph_session":{},
+      "custom":{
+        "label_m_samples":"m_samples",
+        "m_samples":8,
+        "label_r_threshold":"r_threshold",
+        "r_threshold":50,
+        "label_m_trials":"m_trials",
+        "m_trials":100,
+        "delete_points":true
+      }
     }
   },
   "connections":[
     {
       "in":[
-        "0x7efc65d4fd60",
+        "0x7eff0cd43e50",
         "in"
       ],
       "out":[
-        "0x7efc65d96020",
+        "0x7eff0cd919c0",
         "out"
       ]
     },
     {
       "out":[
-        "0x7efc65d4fd60",
+        "0x7eff0cd43e50",
         "out"
       ],
       "in":[
-        "0x7efc65d4ff70",
+        "0x7eff0cd901f0",
         "in"
       ]
     },
     {
       "in":[
-        "0x7efc65d94250",
+        "0x7eff0cd90490",
         "ina"
       ],
       "out":[
-        "0x7efc65d94fa0",
+        "0x7eff0cd911e0",
         "out"
       ]
     },
     {
       "in":[
-        "0x7efc65d94250",
+        "0x7eff0cd90490",
         "inb"
       ],
       "out":[
-        "0x7efc65d95240",
+        "0x7eff0cd924d0",
         "out"
       ]
     },
     {
       "out":[
-        "0x7efc65d94250",
+        "0x7eff0cd90490",
         "out"
       ],
       "in":[
-        "0x7efc65d946a0",
+        "0x7eff0cd908e0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7efc65d946a0",
+        "0x7eff0cd908e0",
         "out"
       ],
       "in":[
-        "0x7efc65d94a30",
+        "0x7eff0cd90c70",
         "in"
       ]
     },
     {
       "out":[
-        "0x7efc65d94a30",
+        "0x7eff0cd90c70",
         "out"
       ],
       "in":[
-        "0x7efc65d95720",
+        "0x7eff0cd91480",
         "in"
       ]
     },
     {
       "in":[
-        "0x7efc65d94d00",
+        "0x7eff0cd90f40",
         "in"
       ],
       "out":[
-        "0x7efc65d959f0",
+        "0x7eff0cd929e0",
         "out"
       ]
     },
     {
       "out":[
-        "0x7efc65d94d00",
+        "0x7eff0cd90f40",
         "out"
       ],
       "in":[
-        "0x7efc65d96020",
+        "0x7eff0cd919c0",
         "in_a"
       ]
     },
     {
       "in":[
-        "0x7efc65d94fa0",
+        "0x7eff0cd911e0",
         "in"
       ],
       "out":[
-        "0x7efc65d96380",
-        "out"
-      ]
-    },
-    {
-      "in":[
-        "0x7efc65d95240",
-        "in"
-      ],
-      "out":[
-        "0x7efc65d96380",
+        "0x7eff0cd91d20",
         "out"
       ]
     },
     {
       "out":[
-        "0x7efc65d95240",
+        "0x7eff0cd91480",
         "out"
       ],
       "in":[
-        "0x7efc65d95d50",
+        "0x7eff0cd929e0",
         "in"
       ]
     },
     {
-      "out":[
-        "0x7efc65d95720",
-        "out"
-      ],
       "in":[
-        "0x7efc65d959f0",
+        "0x7eff0cd91720",
         "in"
+      ],
+      "out":[
+        "0x7eff0cd924d0",
+        "out"
       ]
     },
     {
       "out":[
-        "0x7efc65d95d50",
+        "0x7eff0cd91720",
         "out"
       ],
       "in":[
-        "0x7efc65d96020",
+        "0x7eff0cd919c0",
         "in_b"
       ]
     },
     {
       "in":[
-        "0x7efc65d96380",
+        "0x7eff0cd91d20",
         "in"
       ],
       "out":[
-        "0x7efc65d965f0",
+        "0x7eff0cd91f90",
         "out"
+      ]
+    },
+    {
+      "out":[
+        "0x7eff0cd91d20",
+        "out"
+      ],
+      "in":[
+        "0x7eff0cd924d0",
+        "in"
       ]
     }
   ]

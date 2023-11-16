@@ -43,8 +43,7 @@ class Color:
     blue_atoll: tuple = (210, 177, 0)
     burnt_sienna: tuple = (82, 93, 198)
     viva_magenta: tuple = (85, 52, 190)
-    deep_sea_reef: tuple = (144, 97, 65)
-    tcx_rooibos_tea: tuple = (38, 60, 162)
+    persimmon: tuple = (102, 120, 246)
 
 
 cc = Color()

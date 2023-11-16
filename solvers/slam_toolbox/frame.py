@@ -39,7 +39,6 @@ def denormalize(count_inv, pt):
     return np.int32(ret[0]), np.int32(ret[1])
 
 
-Identity = np.eye(4)
 FT = {"ORB": featureMappingORB, "AKAZE": featureMappingAKAZE}
 
 
