@@ -4,7 +4,7 @@ Description of the point and location map
 
 import numpy as np
 
-from .optimize_g2o import optimize
+from solvers.slam_toolbox.optimize_g2o import optimize
 
 CULLING_ERR_THRES = 0.02
 

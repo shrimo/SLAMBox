@@ -14,6 +14,7 @@ from NodeGraphQt.constants import (
     NODE_PROP_QCHECKBOX,
     NODE_PROP_FLOAT,
     NODE_PROP_INT,
+    NODE_PROP_VECTOR2
 )
 
 ncs = NodeColorStyle()
@@ -67,7 +68,7 @@ class DetectorDescriptor(BaseNode):
         self.add_checkbox(
             "show_points", "Show points", text="On/Off", state=False, tab="attributes"
         )
-        descriptors_items = ["SIFT", "ORB", "AKAZE"]
+        descriptors_items = ["ORB", "AKAZE"]
         self.create_property(
             "label_algorithm", "Algorithm", widget_type=NODE_PROP_QLABEL
         )
@@ -119,6 +120,9 @@ class Triangulate(BaseNode):
         self.create_property(
             "orb_distance", 64.0, range=(1.0, 100.0), widget_type=NODE_PROP_FLOAT
         )
+        self.create_property("label_show_marker", "Show marker", widget_type=NODE_PROP_QLABEL)
+        self.create_property("show_marker", False, widget_type=NODE_PROP_QCHECKBOX)
+
         self.set_color(*ncs.SLAMBox)
 
 
@@ -140,6 +144,8 @@ class Open3DMap(BaseNode):
         self.create_property(
             "point_color", (1, 0, 0), widget_type=NODE_PROP_COLORPICKER
         )
+        self.create_property('label_windiw_size', 'Windiw size', widget_type=NODE_PROP_QLABEL)
+        self.create_property('window_size', [1024, 576], widget_type=NODE_PROP_VECTOR2)
         self.create_property(
             "label_write_pcd", "Write point clouds", widget_type=NODE_PROP_QLABEL
         )
@@ -169,7 +175,7 @@ class LineModelOptimization(BaseNode):
             "delete_points",
             "Delete pointst",
             text="On/Off",
-            state=False,
+            state=True,
             tab="attributes",
         )
         self.set_color(*ncs.slam_optimization)
@@ -186,10 +192,10 @@ class GeneralGraphOptimization(BaseNode):
         # Pymem version Dictionary containing solvers
         # https://github.com/RainerKuemmerle/g2o/tree/pymem
         SolverSE3 = [
-            "SolverCSparseSE3",
-            "SolverEigenSE3",
-            "SolverCholmodSE3",
-            "SolverDenseSE3"
+            "CSparseSE3",
+            "EigenSE3",
+            "CholmodSE3",
+            "DenseSE3"
         ]
         # version by https://github.com/miquelmassot/g2o-python
         # SolverSE3 = [
@@ -200,7 +206,7 @@ class GeneralGraphOptimization(BaseNode):
             "label_solverSE3", "SolverSE3", widget_type=NODE_PROP_QLABEL
         )
         self.create_property(
-            "solverSE3", "SolverEigenSE3", items=SolverSE3, widget_type=NODE_PROP_QCOMBO
+            "solverSE3", "EigenSE3", items=SolverSE3, widget_type=NODE_PROP_QCOMBO
         )
         self.create_property(
             "label_step_frame", "Step frame", widget_type=NODE_PROP_QLABEL
@@ -267,6 +273,6 @@ class DNNMask(BaseNode):
             "nms_threshold", "NMS Threshold", text="0.2", tab="attributes"
         )
         self.add_checkbox(
-            "show_mask", "Show mask", text="On/Off", state=False, tab="attributes"
+            "show_mask", "Show mask", text="On/Off", state=True, tab="attributes"
         )
         self.set_color(*ncs.DNeuralNetworks)

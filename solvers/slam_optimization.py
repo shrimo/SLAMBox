@@ -9,11 +9,8 @@ import numpy as np
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
 from solvers.root_nodes import Node
-from solvers.misc import Color, show_attributes, frame_error
+from solvers.misc import show_attributes, frame_error
 from solvers.slam_toolbox import Kalman3D
-
-cc = Color()
-
 
 class GeneralGraphOptimization(Node):
     """

@@ -26,19 +26,19 @@ finally:
         if getattr(g2o, "LinearSolverCSparseSE3", None):
             # Pymem version https://github.com/RainerKuemmerle/g2o/tree/pymem
             SolverSE3 = {
-                "SolverCSparseSE3": g2o.LinearSolverCSparseSE3,
-                "SolverEigenSE3": g2o.LinearSolverEigenSE3,
-                "SolverCholmodSE3": g2o.LinearSolverCholmodSE3,
-                "SolverDenseSE3": g2o.LinearSolverDenseSE3,
+                "CSparseSE3": g2o.LinearSolverCSparseSE3,
+                "EigenSE3": g2o.LinearSolverEigenSE3,
+                "CholmodSE3": g2o.LinearSolverCholmodSE3,
+                "DenseSE3": g2o.LinearSolverDenseSE3,
             }
         else:
             # g2o version by https://github.com/miquelmassot/g2o-python
             SolverSE3 = {
-                "SolverEigenSE3": g2o.LinearSolverEigenSE3,
-                "SolverDenseSE3": g2o.LinearSolverDenseSE3,
+                "EigenSE3": g2o.LinearSolverEigenSE3,
+                "DenseSE3": g2o.LinearSolverDenseSE3,
             }
 
-from .match_frames import poseRt
+from solvers.slam_toolbox.match_frames import poseRt
 
 
 def optimize(

@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f36a41119d0":{
+    "0x7f263bd71000":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f369e5bb650":{
+    "0x7f263bd70c10":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "0x7f369e5ac6d0":{
+    "0x7f263bd708b0":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -125,7 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f369e5b4710":{
+    "0x7f263bd705e0":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -165,7 +165,7 @@
         "height_":576
       }
     },
-    "0x7f369f1d2c90":{
+    "0x7f263bd70310":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -206,7 +206,7 @@
         "algorithm":"ORB"
       }
     },
-    "0x7f369e576c10":{
+    "0x7f263bd5f5e0":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -251,7 +251,7 @@
         "show_marker":false
       }
     },
-    "0x7f369e5bc6d0":{
+    "0x7f263bd5f9a0":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -286,10 +286,12 @@
       "subgraph_session":{},
       "custom":{
         "label_m_orb_distance":"ORB distance",
-        "orb_distance":64.0
+        "orb_distance":64.0,
+        "label_show_marker":"Show marker",
+        "show_marker":false
       }
     },
-    "0x7f369e5d8410":{
+    "0x7f263bd5fc70":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -331,11 +333,16 @@
           0,
           0
         ],
+        "label_windiw_size":"Windiw size",
+        "window_size":[
+          1024,
+          576
+        ],
         "label_write_pcd":"Write point clouds",
         "write_pcd":false
       }
     },
-    "0x7f369e5b4950":{
+    "0x7f263bd5ff10":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -379,7 +386,7 @@
         "calibration_data":"data/calibration_data.npz"
       }
     },
-    "0x7f369e598ad0":{
+    "0x7f263bd5f2e0":{
       "type_":"nodes.SLAMBox.GeneralGraphOptimization",
       "icon":null,
       "name":"GeneralGraphOptimization 1",
@@ -414,7 +421,7 @@
       "subgraph_session":{},
       "custom":{
         "label_solverSE3":"SolverSE3",
-        "solverSE3":"SolverEigenSE3",
+        "solverSE3":"EigenSE3",
         "label_step_frame":"Step frame",
         "step_frame":4
       }
@@ -423,91 +430,91 @@
   "connections":[
     {
       "out":[
-        "0x7f36a41119d0",
+        "0x7f263bd71000",
         "out"
       ],
       "in":[
-        "0x7f369e5b4710",
+        "0x7f263bd705e0",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f369e5bb650",
+        "0x7f263bd70c10",
         "in"
       ],
       "out":[
-        "0x7f369e5d8410",
+        "0x7f263bd5fc70",
         "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f369e5bb650",
-        "out"
-      ],
-      "in":[
-        "0x7f369e5ac6d0",
-        "in"
       ]
     },
     {
       "out":[
-        "0x7f369e5b4710",
+        "0x7f263bd70c10",
         "out"
       ],
       "in":[
-        "0x7f369e5b4950",
+        "0x7f263bd708b0",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f263bd705e0",
+        "out"
+      ],
+      "in":[
+        "0x7f263bd5ff10",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f369f1d2c90",
+        "0x7f263bd70310",
         "ina"
       ],
       "out":[
-        "0x7f369e5b4950",
+        "0x7f263bd5ff10",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f369f1d2c90",
+        "0x7f263bd70310",
         "out"
       ],
       "in":[
-        "0x7f369e576c10",
+        "0x7f263bd5f5e0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f369e576c10",
+        "0x7f263bd5f5e0",
         "out"
       ],
       "in":[
-        "0x7f369e5bc6d0",
+        "0x7f263bd5f9a0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f369e5bc6d0",
+        "0x7f263bd5f9a0",
         "out"
       ],
       "in":[
-        "0x7f369e598ad0",
+        "0x7f263bd5f2e0",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f369e5d8410",
+        "0x7f263bd5fc70",
         "in"
       ],
       "out":[
-        "0x7f369e598ad0",
+        "0x7f263bd5f2e0",
         "out"
       ]
     }

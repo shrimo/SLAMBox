@@ -16,7 +16,7 @@ def build() -> None:
     print("SLAM box version: " + version + date)
 
     cc = Color()
-    version_color = str(cc.pistachio)[1:-1]
+    version_color = str(cc.persimmon)[1:-1]
     text_color = str(cc.white)[1:-1]
     test_version_system = "SLAM box. version: " + version
 
