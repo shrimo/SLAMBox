@@ -4,8 +4,8 @@ Basic nodes for common video stream operations
 
 import cv2
 import numpy as np
-from .root_nodes import Node
-from .misc import get_tuple, frame_error
+from solvers.root_nodes import Node
+from solvers.misc import get_tuple, frame_error
 
 
 class Viewer(Node):

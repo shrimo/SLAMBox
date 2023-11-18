@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Streaming</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+            background-color: #333;
+            color: #CECECE;
+        }
+      body {
+            background-color: #333;
+            color: #CECECE;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 75 vh;
+        }
+        #video_container {
+            position: relative;
+            display: inline-block;
+        }
+        #video_feed {
+            width: 75%;
+            height: auto;
+        }
+        #selected_area {
+            position: absolute;
+            border: 2px solid red;
+            pointer-events: none;
+            display: none; 
+        }
+        #text_above_video {
+            margin-top: 20px; 
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="video_container">
+        <h1 id="text_above_video">Web Streaming</h1>
+        <img id="video_feed" src="{{ url_for('video_feed') }}" width="1280" height="720">
+        <div id="selected_area"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var videoContainer = $("#video_container");
+            var selectedArea = $("#selected_area");
+            var startX, startY, endX, endY;
+
+            videoContainer.on("mousedown", function(e) {
+                startX = e.pageX - this.offsetLeft;
+                startY = e.pageY - this.offsetTop;
+                selectedArea.css({top: startY, left: startX, width: 0, height: 0}).show();
+            });
+
+            videoContainer.on("mousemove", function(e) {
+                if(startX != null && startY != null) {
+                    endX = e.pageX - this.offsetLeft;
+                    endY = e.pageY - this.offsetTop;
+                    var width = endX - startX;
+                    var height = endY - startY;
+                    selectedArea.css({width: width, height: height});
+                }
+            });
+
+            videoContainer.on("mouseup", function() {
+                if (startX != null && startY != null) {
+                    var data = { start_x: startX, start_y: startY, end_x: endX, end_y: endY };
+                    $.ajax({
+                        type: "POST",
+                        url: "/selected_area",
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function(response) {
+                            console.log("Area send server:", response);
+                        }
+                    });
+                }
+                startX = null;
+                startY = null;
+                selectedArea.hide();
+            });
+        });
+    </script>
+</body>
+</html>

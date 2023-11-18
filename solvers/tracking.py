@@ -4,8 +4,8 @@ Node and function library for Tracking
 
 import cv2
 import numpy as np
-from .root_nodes import Node
-from .misc import insert_frame, get_tuple, show_attributes, Color
+from solvers.root_nodes import Node
+from solvers.misc import insert_frame, get_tuple, show_attributes, Color
 
 cc = Color()
 

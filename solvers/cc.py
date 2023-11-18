@@ -2,8 +2,8 @@
 
 import cv2
 import numpy as np
-from .root_nodes import Node
-from .misc import get_tuple
+from solvers.root_nodes import Node
+from solvers.misc import get_tuple
 
 class GRAY2BGR(Node):
     """ Gray to color """
