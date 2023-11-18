@@ -330,8 +330,8 @@ class Triangulate(Node):
         # print(np.linalg.inv(f1.pose))
         if self.show_marker:
             for pt1, pt2 in zip(
-                    mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
-                ):
+                mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
+            ):
                 # cv2.circle(image, np.int32(pt1), 3, (0, 255, 255))
                 cv2.drawMarker(image, np.int32(pt1), cc.red, 1, 5, 1, 8)
                 cv2.line(image, np.int32(pt1), np.int32(pt2), cc.red, 1)
@@ -342,6 +342,69 @@ class Triangulate(Node):
         self.disabled = param["disabled"]
         self.orb_distance = param["orb_distance"]
         self.show_marker = param["show_marker"]
+
+
+class Show2DMap(Node):
+    """
+    SLAM Open3DMap Node
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.amount = 500
+        self.point_size = self.param["point_size"]
+        self.point_color = self.param["point_color"]
+        self.offsetx = self.param["offsetx"]
+        self.offsety = self.param["offsety"]
+
+    def out_frame(self):
+        image = self.get_frame(0)
+        if image is None:
+            print("Open3DMap stop")
+            return None
+        elif self.disabled:
+            return image
+        elif "slam_data" in self.buffer.variable:
+            mapp = self.buffer.variable["slam_data"][1]
+            height, width = image.shape[:-1]
+            clean_plate = np.zeros((height, width, 3), np.uint8)
+            clean_plate[:] = (10, 10, 10)
+            for idx, point in enumerate(mapp.points):
+                cv2.circle(
+                    clean_plate,
+                    (
+                        np.int32(point.pt[0] + self.offsetx),
+                        np.int32(point.pt[2] + self.offsety),
+                    ),
+                    self.point_size,
+                    (
+                        int(point.color[0]),
+                        int(point.color[1]),
+                        int(point.color[2])
+                    ),
+                    1,
+                )
+
+            cam_pts = np.linalg.inv(mapp.frames[-1].pose)[:, [-1]][:3].ravel()
+            cv2.circle(
+                clean_plate,
+                (
+                    np.int32(cam_pts[0] + self.offsetx),
+                    np.int32(cam_pts[2] + self.offsety),
+                ),
+                5,
+                (0, 0, 255),
+                2,
+            )
+
+        return clean_plate
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.point_size = param["point_size"]
+        self.point_color = param["point_color"]
+        self.offsetx = param["offsetx"]
+        self.offsety = param["offsety"]
 
 
 class Open3DMap(Node):
@@ -360,7 +423,7 @@ class Open3DMap(Node):
             height=int(self.param["window_size"][1]),
             scale=0.05,
             point_size=self.point_size,
-            write_pcd=self.write_pcd
+            write_pcd=self.write_pcd,
         )
 
     def out_frame(self):
@@ -381,5 +444,4 @@ class Open3DMap(Node):
         self.disabled = param["disabled"]
         self.point_size = param["point_size"]
         self.point_color = param["point_color"]
-        self.point_size = param["point_size"]
         self.write_pcd = param["write_pcd"]

@@ -137,7 +137,7 @@ class NodeBased(NodeGraph):
             self.act = True
         out_script = {'command':'action', 'script':self.buld_script()}
         url = "http://127.0.0.1:5000/json"
-        r = requests.post(url, json=out_script)
+        r = requests.post(url, json=out_script, headers={'Connection':'close'})
         print(f'{r.content}')
 
     def stop_server(self):

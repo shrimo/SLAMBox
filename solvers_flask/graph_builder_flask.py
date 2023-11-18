@@ -120,7 +120,7 @@ class GraphBuilderFlask:
         def receive_json():
             data = request.get_json()
             self.execution_controller(data)
-            return f"Video server received the script"
+            return f"Video server received script"
 
         @self.app.route("/selected_area", methods=["POST"])
         def selected_area():

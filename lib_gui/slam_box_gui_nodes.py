@@ -125,6 +125,33 @@ class Triangulate(BaseNode):
 
         self.set_color(*ncs.SLAMBox)
 
+class Show2DMap(BaseNode):
+    __identifier__ = "nodes.SLAMBox"
+    NODE_NAME = "Show2DMap"
+
+    def __init__(self):
+        super().__init__()
+        self.add_input("in", color=(180, 80, 180))
+        self.add_output("out")
+        self.create_property(
+            "label_point_size", "point size", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("point_size", 2, widget_type=NODE_PROP_INT)
+        self.create_property(
+            "label_point_color", "Point color", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property(
+            "point_color", (1, 0, 0), widget_type=NODE_PROP_COLORPICKER
+        )
+        self.create_property(
+            "label_offsetx", "offset x", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("offsetx", 500, widget_type=NODE_PROP_INT)
+        self.create_property(
+            "label_offsety", "offset y", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("offsety", 0, widget_type=NODE_PROP_INT)
+        self.set_color(*ncs.SLAMBox)
 
 class Open3DMap(BaseNode):
     __identifier__ = "nodes.SLAMBox"

@@ -122,6 +122,16 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 <br>
 
+![Screenshot04](doc/screenshot05.png)
+<sup> [examples/slambox_base_flask.json](examples/slambox_base.json) </sup>
+
+#### Launch Flask version
+
+- `python3.10 build_graph_flask.py`
+- `python3.10 node_graph_flask.py`
+
+<br>
+
 [Based on twitchslam by geohot](https://github.com/geohot/twitchslam)
 
 :rocket:

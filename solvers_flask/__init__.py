@@ -14,6 +14,7 @@ from solvers_flask.slam_box import (
     DetectorDescriptor,
     MatchPoints,
     Triangulate,
+    Show2DMap,
     Open3DMap,
 )
 from solvers_flask.slam_optimization import (
