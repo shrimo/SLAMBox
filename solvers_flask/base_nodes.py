@@ -4,46 +4,8 @@ Basic nodes for common video stream operations
 
 import cv2
 import numpy as np
-from solvers_flask.root_nodes import Node, SelectionTool
+from solvers_flask.root_nodes import Node
 from solvers_flask.misc import get_tuple, frame_error
-
-
-class Viewer(Node):
-    """Displays frames. End node for nodes graph."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
-        # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
-        cv2.moveWindow(self.window_name, 100,100)
-        # Initialization to invoke the selection tool
-        self.selection_tool= SelectionTool(self.window_name, self.selection_callback)
-        self.ROI_coordinates = None
-
-    def show_frame(self):
-        frame = self.get_frame(0)
-        if frame is None:
-            print("ViewerNode stop")
-            return None
-        # Add switch on/off selection tool (draw_selection - metod from class SelectionTool)
-        self.selection_tool.draw_selection(frame)
-        if self.ROI_coordinates:
-            # Save the ROI coordinates to the buffer
-            self.buffer.roi = self.ROI_coordinates
-            self.buffer.switch = True  # old metod
-            self.ROI_coordinates = self.empty_roi
-        cv2.imshow(self.window_name, frame)
-        return True
-
-    def selection_callback(self, rect):
-        self.ROI_coordinates = rect
-
-    def stop(self):
-        print("Stop Viewer")
-        # self.buffer.variable['STOPSLAM'] = True
-        cv2.waitKey(10)
-        return True
 
 
 class SelectionBuffer(Node):

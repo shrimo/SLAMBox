@@ -70,7 +70,7 @@ def cleaning_unplugged_nodes(
 
 def build_node_graph(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
-) -> solvers.base_nodes.Viewer:
+) -> solvers.WebStreaming:
     """Create dictionary and adding objects to the dictionary"""
 
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
@@ -89,7 +89,7 @@ def build_node_graph(
 
 def build_rooted_graph(
     script: ScriptType, buffer: DataBuffer
-) -> solvers.base_nodes.Viewer:
+) -> solvers.WebStreaming:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
 
@@ -172,7 +172,7 @@ class GraphBuilderFlask:
                 sys.exit(0)
 
     def graph_update(
-        self, graph: solvers.base_nodes.Viewer, data_update: ScriptType
+        self, graph: solvers.WebStreaming, data_update: ScriptType
     ) -> None:
         """Updating node graph in real time"""
         if graph.get_input():
