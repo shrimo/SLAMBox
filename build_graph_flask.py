@@ -16,7 +16,7 @@ def build() -> None:
     print("SLAMBOX (flask) version: " + version + date)
 
     cc = Color()
-    version_color = str(cc.kiwi)[1:-1]
+    version_color = str(cc.gray)[1:-1]
     text_color = str(cc.white)[1:-1]
     test_version_system = "SLAMBOX (flask) version: " + version
 

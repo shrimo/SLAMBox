@@ -149,6 +149,7 @@ class GraphBuilderFlask:
 
     def run(self) -> None:
         """The main loop, processing the node execution script tree"""
+        # self.app.run(host='192.168.88.253', debug=True)
         self.app.run(debug=True)
 
     def scripts_comparison(self, script: ScriptType) -> bool:

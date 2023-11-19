@@ -20,7 +20,7 @@ class Color:
     cyan: tuple = (255, 255, 0)
     magenta: tuple = (255, 0, 255)
     white: tuple = (255, 255, 255)
-    gray: tuple = (50, 50, 50)
+    gray: tuple = (25, 25, 25)
     black: tuple = (0, 0, 0)
     midnight_blue: tuple = (110, 50, 30)
     cerulean: tuple = (167, 123, 0)
