@@ -7,10 +7,6 @@
       body {
             background-color: #333;
             color: #CECECE;
-        }
-      body {
-            background-color: #333;
-            color: #CECECE;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,7 +17,7 @@
             display: inline-block;
         }
         #video_feed {
-            width: 75%;
+            width: 100%;
             height: auto;
         }
         #selected_area {
@@ -38,7 +34,7 @@
 </head>
 <body>
     <div id="video_container">
-        <h1 id="text_above_video">Web Streaming</h1>
+        <h1 id="text_above_video">WebStreaming</h1>
         <img id="video_feed" src="{{ url_for('video_feed') }}" width="1280" height="720">
         <div id="selected_area"></div>
     </div>
