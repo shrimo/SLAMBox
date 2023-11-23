@@ -1,5 +1,5 @@
 """
-Building and execution of a node graph(single-stream broadcasting).
+Building and execution of a node graph(isolated streaming).
 
 Main classes that describe the connection between the 
 server and the graph editor and the construction and 
@@ -18,9 +18,12 @@ import numpy as np
 import cv2
 import solvers_flask as solvers
 
+# from base_camera import BaseCamera
+
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
@@ -87,9 +90,7 @@ def build_node_graph(
     return out
 
 
-def build_rooted_graph(
-    script: ScriptType, buffer: DataBuffer
-) -> solvers.WebStreaming:
+def build_rooted_graph(script: ScriptType, buffer: DataBuffer) -> solvers.WebStreaming:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
 
@@ -100,57 +101,13 @@ def build_rooted_graph(
     return build_node_graph(clear_script, root_node, buffer)
 
 
-class GraphBuilderFlask:
-    """Building and execution of a node graph."""
+class GraphBuilderFlaskMS:
+    """Building and execution of a node graph"""
 
-    def __init__(self, script: ScriptType) -> None:
+    def __init__(self, script: ActionScriptType) -> None:
         self.buffer = DataBuffer()
-        self.graph = build_rooted_graph(script, self.buffer)
-        self.app = Flask(__name__)
-
-        @self.app.route("/")
-        def index():
-            return render_template("index.html")
-
-        @self.app.route("/video_feed")
-        def video_feed():
-            return self.get_video()
-
-        @self.app.route("/json", methods=["POST"])
-        def receive_json():
-            data = request.get_json()
-            self.execution_controller(data)
-            return f"Video server received script"
-
-        @self.app.route("/selected_area", methods=["POST"])
-        def selected_area():
-            data = request.get_json()
-            start_x = int(data["start_x"])
-            start_y = int(data["start_y"])
-            end_x = int(data["end_x"])
-            end_y = int(data["end_y"])
-            print(f"-> get roi: {data}")
-            # self.graph.get_roi_from_flask((start_x, start_y, end_x, end_y))
-            return jsonify({"message": "data received"})
-
-    def get_video(self):
-        def generate_frames():
-            while True:
-                frame = self.graph.show_frame()
-                ret, buffer = cv2.imencode(".jpg", frame)
-                frame = buffer.tobytes()
-                yield (
-                    b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
-                )
-
-        return Response(
-            generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame"
-        )
-
-    def run(self) -> None:
-        """The main loop, processing the node execution script tree"""
-        # self.app.run(host='192.168.88.253', debug=True)
-        self.app.run(debug=True)
+        self.script = script["script"]
+        self.graph = build_rooted_graph(script["script"], self.buffer)
 
     def scripts_comparison(self, script: ScriptType) -> bool:
         """comparison of a running script with an updated script"""
@@ -168,7 +125,7 @@ class GraphBuilderFlask:
                 if self.scripts_comparison(input_script["script"]):
                     self.graph_update(self.graph, input_script["script"])
             case "stop":
-                cv2.destroyAllWindows()
+                #     cv2.destroyAllWindows()
                 sys.exit(0)
 
     def graph_update(
@@ -185,7 +142,57 @@ class GraphBuilderFlask:
                 self.graph_update(node, data_update)
         return None
 
+
+class GraphStreaming:
+    """Launching and updating streaming graph"""
+
+    def __init__(self, script: ScriptType) -> None:
+        self.script = script
+        self.app = Flask(__name__)
+        self.update = False
+
+        @self.app.route("/")
+        def index():
+            return render_template("index.html")
+
+        @self.app.route("/video_feed")
+        def video_feed():
+            return Response(
+                self.generate_frames(solvers.GraphBuilderFlaskMS(self.script)),
+                mimetype="multipart/x-mixed-replace; boundary=frame",
+            )
+
+        @self.app.route("/json", methods=["POST"])
+        def receive_json():
+            self.script = request.get_json()
+            self.update = True
+            return f"Video server received script"
+
+        @self.app.route("/selected_area", methods=["POST"])
+        def selected_area():
+            data = request.get_json()
+            start_x = int(data["start_x"])
+            start_y = int(data["start_y"])
+            end_x = int(data["end_x"])
+            end_y = int(data["end_y"])
+            print(f"-> get roi: {data}")
+            return jsonify({"message": "data received"})
+
+    def generate_frames(self, graph_builder):
+        while True:
+            frame = graph_builder.graph.show_frame()
+            if self.update:
+                graph_builder.execution_controller(self.script)
+                self.update = False
+            ret, buffer = cv2.imencode(".jpg", frame)
+            frame = buffer.tobytes()
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+
+    def run(self) -> None:
+        """The main loop, processing the node execution script tree"""
+        # self.app.run(host='192.168.88.253', debug=True)
+        self.app.run(debug=True)
+
     def __del__(self) -> None:
         """Closing video capture and window"""
         print("GraphBuilder close")
-
