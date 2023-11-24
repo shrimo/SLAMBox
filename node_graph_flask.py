@@ -50,6 +50,8 @@ class NodeBased(NodeGraph):
             node_type=None, node_class=gui.Read)
         self.menu.add_command('Stop', func=self.stop_server,
             node_type=None, node_class=gui.Viewer)
+        self.menu.add_command('Stop', func=self.stop_server_flask,
+            node_type=None, node_class=gui.WebStreaming)
         self.menu.add_command('Show image', func=self.show_image,
             node_type=None, node_class=gui.Image)
         self.context_menu = self.get_context_menu('graph')
@@ -146,6 +148,16 @@ class NodeBased(NodeGraph):
         out_script = {'command':'stop', 'script':None}
         self.script_transfer(out_script)
         print ('- Send a stop to server')
+
+    def stop_server_flask(self):
+        """ Stopping and shutting down """
+        if self.act is False:
+            self.act = True
+        out_script = {'command':'stop', 'script':None}
+        url = "http://127.0.0.1:5000/json"
+        # url = "http://192.168.88.253:5000/json"
+        r = requests.post(url, json=out_script, headers={'Connection':'close'})
+        print(f'{r.content}')
 
     def script_transfer(self, script):
         """ Sending node script by socket"""

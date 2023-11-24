@@ -397,7 +397,8 @@ class Show2DMap(Node):
                 2,
             )
 
-        return clean_plate
+            return clean_plate
+        return image
 
     def update(self, param):
         self.disabled = param["disabled"]
