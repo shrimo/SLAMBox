@@ -1,6 +1,5 @@
 """ Common nodes for building a pipeline """
 
-import cv2
 import numpy as np
 
 

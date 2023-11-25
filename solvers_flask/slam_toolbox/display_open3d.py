@@ -1,7 +1,6 @@
 """
 Show 3D map and camera path
 """
-import copy
 from multiprocessing import Process, Queue
 import numpy as np
 from scipy.spatial.transform import Rotation as scipyR  # type: ignore

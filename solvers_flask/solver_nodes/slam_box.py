@@ -5,33 +5,11 @@ Nodes for launching SLAM pipeline
 
 # import time
 import numpy as np
-
-# from numba import jit
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import Color, show_attributes, frame_error
-from solvers_flask.slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
+from solvers_flask import Node, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
-
-
-# @jit(nopython=True)
-def triangulate(pose1, pose2, pts1, pts2):
-    """Taking into account relative poses,
-    we calculate the 3d point.
-    linalg.svd - Singular Value Decomposition.
-    """
-    ret = np.zeros((pts1.shape[0], 4))
-    for i, p in enumerate(zip(pts1, pts2)):
-        A = np.zeros((4, 4))
-        A[0] = p[0][0] * pose1[2] - pose1[0]
-        A[1] = p[0][1] * pose1[2] - pose1[1]
-        A[2] = p[1][0] * pose2[2] - pose2[0]
-        A[3] = p[1][1] * pose2[2] - pose2[1]
-        _, _, vt = np.linalg.svd(A)
-        ret[i] = vt[3]
-    return ret
 
 
 class Camera(Node):
@@ -89,7 +67,7 @@ class DetectorDescriptor(Node):
         self.algorithm = self.param["algorithm"]
         self.nfeatures = self.param["nfeatures"]
         self.show_points = self.param["show_points"]
-        self.mapp = Map()
+        self.mapp = slam_toolbox.Map()
         self.mask = None
 
     def out_frame(self):
@@ -110,7 +88,7 @@ class DetectorDescriptor(Node):
                 x_offset=400,
             )
         K, W, H = self.buffer.variable["camera_data"]
-        frame = Frame(
+        frame = slam_toolbox.Frame(
             self.mapp,
             image,
             K,
@@ -168,7 +146,7 @@ class MatchPoints(Node):
         if frame.id == 0:
             return image
 
-        idx1, idx2, Rt = match_frame(
+        idx1, idx2, Rt = slam_toolbox.match_frame(
             mapp.frames[-1],
             mapp.frames[-2],
             self.m_samples,
@@ -276,7 +254,7 @@ class Triangulate(Node):
         good_pts4d = np.array([f1.pts[i] is None for i in idx1])
 
         # do triangulation in global frame
-        pts4d = triangulate(f1.pose, f2.pose, f1.kps[idx1], f2.kps[idx2])
+        pts4d = slam_toolbox.triangulate(f1.pose, f2.pose, f1.kps[idx1], f2.kps[idx2])
         good_pts4d &= np.abs(pts4d[:, 3]) != 0
         pts4d /= pts4d[:, 3:]  # homogeneous 3-D coords
 
@@ -319,7 +297,7 @@ class Triangulate(Node):
             cy = np.int32(f1.key_pts[idx1[i], 1])
             color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)[cy, cx]
 
-            pt = Point(mapp, p[0:3], color)
+            pt = slam_toolbox.Point(mapp, p[0:3], color)
             pt.add_observation(f2, idx2[i])
             pt.add_observation(f1, idx1[i])
             # new_pts_count += 1
@@ -377,11 +355,7 @@ class Show2DMap(Node):
                         np.int32(point.pt[2] + self.offsety),
                     ),
                     self.point_size,
-                    (
-                        int(point.color[0]),
-                        int(point.color[1]),
-                        int(point.color[2])
-                    ),
+                    (int(point.color[0]), int(point.color[1]), int(point.color[2])),
                     1,
                 )
 
@@ -419,7 +393,7 @@ class Open3DMap(Node):
         self.point_size = self.param["point_size"]
         self.point_color = self.param["point_color"]
         self.write_pcd = self.param["write_pcd"]
-        self.d3d = DisplayOpen3D(
+        self.d3d = slam_toolbox.DisplayOpen3D(
             width=int(self.param["window_size"][0]),
             height=int(self.param["window_size"][1]),
             scale=0.05,

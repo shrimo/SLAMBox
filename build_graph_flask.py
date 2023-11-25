@@ -4,7 +4,7 @@ Building and execution of a
 graph using a script from the graph editor
 """
 from typing import List, Dict, Any
-from solvers_flask import GraphBuilderFlask, Color
+from solvers_flask import pipeline, utility
 from config import version, date
 
 NodeType = Dict[Any, Any]
@@ -15,7 +15,7 @@ def build() -> None:
     """Default script start"""
     print("SLAMBOX (flask) version: " + version + date)
 
-    cc = Color()
+    cc = utility.Color()
     version_color = str(cc.gray)[1:-1]
     text_color = str(cc.white)[1:-1]
     test_version_system = "SLAMBOX (flask) version: " + version
@@ -57,7 +57,7 @@ def build() -> None:
         },
     ]
 
-    graph = GraphBuilderFlask(default)
+    graph = pipeline.GraphBuilderFlask(default)
 
     try:
         graph.run()

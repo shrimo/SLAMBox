@@ -8,9 +8,7 @@ import numpy as np
 
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import show_attributes, frame_error
-from solvers_flask.slam_toolbox import Kalman3D
+from solvers_flask import Node, show_attributes, frame_error, slam_toolbox
 
 class GeneralGraphOptimization(Node):
     """
@@ -122,7 +120,7 @@ class KalmanFilterOptimization(Node):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.KF = Kalman3D(
+        self.KF = slam_toolbox.Kalman3D(
             drag=self.param["drag"],
             debug=False,
             grav=self.param["grav"],

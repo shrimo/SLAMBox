@@ -4,8 +4,24 @@ Basic nodes for common video stream operations
 
 import cv2
 import numpy as np
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import get_tuple, frame_error
+from solvers_flask import Node, get_tuple, frame_error
+
+
+class WebStreaming(Node):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.node_name = self.param["node_name"]
+
+    def show_frame(self):
+        frame = self.get_frame(0)
+        if frame is None:
+            print("WebStreaming stop")
+            return None
+        return frame
+
+    def get_roi_from_flask(self, roi):
+        print(f"roi: {roi}")
+        self.buffer.roi = roi
 
 
 class SelectionBuffer(Node):
@@ -64,7 +80,7 @@ class Read(Node):
             "fps": fps,
             "width": width,
             "height": height,
-            "frame_size": [width, height]
+            "frame_size": [width, height],
         }
 
     def out_frame(self):
@@ -198,7 +214,7 @@ class Insert(Node):
         height_b, width_b, channels_b = frame_b.shape
         """ Check out of the border """
         if width_b + self.pos_x > width_a or height_b + self.pos_y > height_a:
-            return frame_error(frame_a, 'Inserted frame B - out of bounds')
+            return frame_error(frame_a, "Inserted frame B - out of bounds")
             # cv2.putText(frame_a, self.msg, (30, height_a-30), self.font , 1, (0,0,255), 1)
             return frame_a
         frame_a[
