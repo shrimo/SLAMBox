@@ -3,7 +3,7 @@
 import time
 import cv2
 import numpy as np
-from solvers_flask import Node, get_tuple
+from solvers import Node, get_tuple
 # from .misc import insert_frame, get_tuple
 
 

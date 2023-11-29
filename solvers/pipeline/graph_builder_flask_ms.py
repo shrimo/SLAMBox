@@ -16,7 +16,7 @@ from collections import defaultdict, Counter
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers_flask import pipeline, solver_nodes
+from solvers import pipeline, solver_nodes
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -31,14 +31,18 @@ class GraphBuilderFlaskMS:
     def __init__(self, script: ActionScriptType) -> None:
         self.buffer = pipeline.DataBuffer()
         self.script = script["script"]
-        self.graph = pipeline.build_rooted_graph(script["script"], self.buffer)
+        self.graph = pipeline.build_rooted_graph(
+            script["script"], "WebStreaming", self.buffer
+        )
 
     def execution_controller(self, input_script: ActionScriptType) -> None:
         """Controller for building a graph of nodes and control parameter updates"""
         match input_script["command"]:
             case "action":
                 self.script = input_script["script"]
-                self.graph = pipeline.build_rooted_graph(self.script, self.buffer)
+                self.graph = pipeline.build_rooted_graph(
+                    self.script, "WebStreaming", self.buffer
+                )
             case "update":
                 if pipeline.scripts_comparison(input_script["script"], self.script):
                     self.graph_update(self.graph, input_script["script"])
@@ -47,7 +51,7 @@ class GraphBuilderFlaskMS:
                 sys.exit(0)
 
     def graph_update(
-        self, graph: solver_nodes.WebStreaming, data_update: ScriptType
+        self, graph: solver_nodes.RootNode, data_update: ScriptType
     ) -> None:
         """Updating node graph in real time"""
         if graph.get_input():

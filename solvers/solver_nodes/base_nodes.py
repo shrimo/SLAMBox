@@ -4,16 +4,26 @@ Basic nodes for common video stream operations
 
 import cv2
 import numpy as np
-from solvers.root_nodes import Node
-from solvers.misc import get_tuple, frame_error
+from solvers import Node, SelectionTool, get_tuple, frame_error
 
+class RootNode(Node):
+    """Base class for root nodes"""
+    def show_frame(self):
+        ...
+    def stop(self):
+        ...
 
-class Viewer(Node):
+class Viewer(RootNode):
     """Displays frames. End node for nodes graph."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.frame_cache = []
+        cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
+        # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
+        cv2.moveWindow(self.window_name, 100,100)
+        # Initialization to invoke the selection tool
+        self.sel_tool = SelectionTool(self.window_name, self.selection_callback)
+        self.ROI_coordinates = None
 
     def show_frame(self):
         frame = self.get_frame(0)
@@ -21,12 +31,12 @@ class Viewer(Node):
             print("ViewerNode stop")
             return None
         # Add switch on/off selection tool (draw_selection - metod from class SelectionTool)
-        self.draw_selection(frame)
+        self.sel_tool.draw_selection(frame)
         if self.ROI_coordinates:
             # Save the ROI coordinates to the buffer
             self.buffer.roi = self.ROI_coordinates
             self.buffer.switch = True  # old metod
-            self.ROI_coordinates = self.empty_roi
+            self.ROI_coordinates = None
         cv2.imshow(self.window_name, frame)
         return True
 
@@ -34,6 +44,28 @@ class Viewer(Node):
         print("Stop Viewer")
         # self.buffer.variable['STOPSLAM'] = True
         cv2.waitKey(10)
+        return True
+
+class WebStreaming(RootNode):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.node_name = self.param["node_name"]
+
+    def show_frame(self):
+        frame = self.get_frame(0)
+        if frame is None:
+            print("WebStreaming stop")
+            return None
+        return frame
+
+    # def get_roi_from_flask(self, roi):
+    #     print(f"roi: {roi}")
+    #     self.buffer.roi = roi
+
+    def stop(self):
+        print("Stop WebStreaming")
+        # self.buffer.variable['STOPSLAM'] = True
+        # cv2.waitKey(10)
         return True
 
 
@@ -93,7 +125,7 @@ class Read(Node):
             "fps": fps,
             "width": width,
             "height": height,
-            "frame_size": [width, height]
+            "frame_size": [width, height],
         }
 
     def out_frame(self):
@@ -227,7 +259,7 @@ class Insert(Node):
         height_b, width_b, channels_b = frame_b.shape
         """ Check out of the border """
         if width_b + self.pos_x > width_a or height_b + self.pos_y > height_a:
-            return frame_error(frame_a, 'Inserted frame B - out of bounds')
+            return frame_error(frame_a, "Inserted frame B - out of bounds")
             # cv2.putText(frame_a, self.msg, (30, height_a-30), self.font , 1, (0,0,255), 1)
             return frame_a
         frame_a[

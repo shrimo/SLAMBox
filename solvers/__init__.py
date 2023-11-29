@@ -1,21 +1,19 @@
-from solvers.root_nodes import SelectionTool, Node
-from solvers.base_nodes import *
-from solvers.misc import *
-from solvers.draw import FPS, Counter, Constant, Text, Trajectory
-from solvers.dnn_slam import DNNMask
-from solvers.tracking import AllTrackers
-from solvers.cc import GRAY2BGR, Gamma, Brightness, CLAHE, Saturation
-from solvers.graph_builder import GraphBuilder
-from solvers.slam_toolbox import *
-from solvers.slam_box import (
-    Camera,
-    DetectorDescriptor,
-    MatchPoints,
-    Triangulate,
-    Open3DMap,
-)
-from solvers.slam_optimization import (
-    LineModelOptimization,
-    GeneralGraphOptimization,
-    KalmanFilterOptimization,
-)
+"""
+Package for SLAMBOX
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+
+from .root_node import Node, SelectionTool
+from .utility import *
+

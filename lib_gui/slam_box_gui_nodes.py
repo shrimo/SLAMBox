@@ -11,6 +11,7 @@ from NodeGraphQt.constants import (
     NODE_PROP_FILE,
     NODE_PROP_SLIDER,
     NODE_PROP_FILE,
+    NODE_PROP_FILE_SAVE,
     NODE_PROP_QCHECKBOX,
     NODE_PROP_FLOAT,
     NODE_PROP_INT,
@@ -177,6 +178,8 @@ class Open3DMap(BaseNode):
             "label_write_pcd", "Write point clouds", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("write_pcd", False, widget_type=NODE_PROP_QCHECKBOX)
+        self.create_property('label_file', 'File path', widget_type=NODE_PROP_QLABEL)
+        self.create_property('file', './data/pcd/slam_map_', widget_type=NODE_PROP_FILE_SAVE)
         self.set_color(*ncs.SLAMBox)
 
 

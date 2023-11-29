@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
-from solvers_flask import solver_nodes
+from solvers import solver_nodes
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -62,7 +62,7 @@ def cleaning_unplugged_nodes(
 
 def build_node_graph(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
-) -> solver_nodes.WebStreaming:
+) -> solver_nodes.RootNode:
     """Create dictionary and adding objects to the dictionary"""
 
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
@@ -79,12 +79,14 @@ def build_node_graph(
     return out
 
 
-def build_rooted_graph(script: ScriptType, buffer: DataBuffer) -> solver_nodes.WebStreaming:
+def build_rooted_graph(
+    script: ScriptType, root_name: str, buffer: DataBuffer
+) -> solver_nodes.RootNode:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
 
     # Get root node from which graph execution begins
-    root_node = find_node_by_attr(script, "WebStreaming", "type")
+    root_node = find_node_by_attr(script, root_name, "type")
     # Clearing the script of unlinked nodes
     clear_script = cleaning_unplugged_nodes(script, root_node, [root_node])
     return build_node_graph(clear_script, root_node, buffer)

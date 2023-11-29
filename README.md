@@ -127,8 +127,8 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 #### Launch Flask version
 
-- `python3.10 build_graph_flask.py`
-- `python3.10 node_graph_flask.py`
+- `python3.10 build_graph.py FlaskMS`
+- `python3.10 node_graph.py WebStreaming`
 
 <br>
 

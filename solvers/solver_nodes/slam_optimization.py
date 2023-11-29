@@ -8,7 +8,7 @@ import numpy as np
 
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers_flask import Node, show_attributes, frame_error, slam_toolbox
+from solvers import Node, show_attributes, frame_error, slam_toolbox
 
 class GeneralGraphOptimization(Node):
     """

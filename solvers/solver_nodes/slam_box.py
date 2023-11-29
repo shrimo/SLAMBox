@@ -7,7 +7,7 @@ Nodes for launching SLAM pipeline
 import numpy as np
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers_flask import Node, frame_error, Color, show_attributes, slam_toolbox
+from solvers import Node, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
 
@@ -399,6 +399,7 @@ class Open3DMap(Node):
             scale=0.05,
             point_size=self.point_size,
             write_pcd=self.write_pcd,
+            file=self.param["file"]
         )
 
     def out_frame(self):

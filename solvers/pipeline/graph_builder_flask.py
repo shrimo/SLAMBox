@@ -16,20 +16,23 @@ from collections import defaultdict, Counter
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers_flask import pipeline, solver_nodes
+from solvers import pipeline, solver_nodes
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
 class GraphBuilderFlask:
     """Building and execution of a node graph."""
 
-    def __init__(self, script: ScriptType) -> None:
+    def __init__(self, script: ActionScriptType) -> None:
         self.buffer = pipeline.DataBuffer()
-        self.graph = pipeline.build_rooted_graph(script, self.buffer)
+        self.graph = pipeline.build_rooted_graph(
+            script["script"], "WebStreaming", self.buffer
+        )
         self.app = Flask(__name__)
 
         @self.app.route("/")
@@ -81,7 +84,9 @@ class GraphBuilderFlask:
         match input_script["command"]:
             case "action":
                 self.script = input_script["script"]
-                self.graph = pipeline.build_rooted_graph(self.script, self.buffer)
+                self.graph = pipeline.build_rooted_graph(
+                    self.script, "WebStreaming", self.buffer
+                )
             case "update":
                 if pipeline.scripts_comparison(input_script["script"], self.script):
                     self.graph_update(self.graph, input_script["script"])
@@ -90,13 +95,15 @@ class GraphBuilderFlask:
                 sys.exit(0)
 
     def graph_update(
-        self, graph: solver_nodes.WebStreaming, data_update: ScriptType
+        self, graph: solver_nodes.RootNode, data_update: ScriptType
     ) -> None:
         """Updating node graph in real time"""
         if graph.get_input():
             for node in graph.get_input():
                 if node.get_input():
-                    node_update = pipeline.find_node_by_attr(data_update, node.id_, "id")
+                    node_update = pipeline.find_node_by_attr(
+                        data_update, node.id_, "id"
+                    )
                     if node_update is None:
                         return False
                     node.update(node_update["custom"])
