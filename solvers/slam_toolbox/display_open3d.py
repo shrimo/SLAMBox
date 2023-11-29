@@ -1,7 +1,6 @@
 """
 Show 3D map and camera path
 """
-import copy
 from multiprocessing import Process, Queue
 import numpy as np
 from scipy.spatial.transform import Rotation as scipyR  # type: ignore
@@ -14,7 +13,13 @@ class DisplayOpen3D:
     """
 
     def __init__(
-        self, width=1280, height=720, scale=0.05, point_size=2.0, write_pcd=False
+        self,
+        width=1280,
+        height=720,
+        scale=0.05,
+        point_size=2.0,
+        write_pcd=False,
+        file="./data/pcd/slam_map_"
     ):
         self.display_id = str(hex(id(self)))
         self.width = width
@@ -22,6 +27,7 @@ class DisplayOpen3D:
         self.scale = scale
         self.point_size = point_size
         self.write_pcd = write_pcd
+        self.file = file
         # Rotation matrix for the scene
         self.rotation_matrix = scipyR.from_euler("zyx", [0, 0, 180], degrees=True)
         self.state = None
@@ -99,7 +105,7 @@ class DisplayOpen3D:
             if self.write_pcd:
                 # write the point cloud to a file
                 o3d.io.write_point_cloud(
-                    f"./pcd/slam_map_{self.state[3]:04}.pcd", self.pcl
+                    f"{self.file}{self.state[3]:04}.pcd", self.pcl
                 )
 
         self.vis.update_geometry(self.pcl)
@@ -129,7 +135,7 @@ class DisplayOpen3D:
                 np.array(pts + cam_pts),
                 np.array(colors + cam_colors),
                 psize,
-                len(mapp.frames)
+                len(mapp.frames),
             )
         )
 

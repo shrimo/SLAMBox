@@ -2,8 +2,7 @@
 
 import cv2
 import numpy as np
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import get_tuple
+from solvers import Node, get_tuple
 
 class GRAY2BGR(Node):
     """ Gray to color """

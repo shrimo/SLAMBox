@@ -5,8 +5,7 @@ Deep Learning with OpenCV DNN Module
 
 import cv2
 import numpy as np
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import insert_frame, get_tuple
+from solvers import Node
 
 
 class DNNMask(Node):

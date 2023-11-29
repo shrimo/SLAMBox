@@ -5,33 +5,11 @@ Nodes for launching SLAM pipeline
 
 # import time
 import numpy as np
-
-# from numba import jit
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers.root_nodes import Node
-from solvers.misc import Color, show_attributes, frame_error
-from solvers.slam_toolbox import Frame, Map, Point, DisplayOpen3D, match_frame
+from solvers import Node, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
-
-
-# @jit(nopython=True)
-def triangulate(pose1, pose2, pts1, pts2):
-    """Taking into account relative poses,
-    we calculate the 3d point.
-    linalg.svd - Singular Value Decomposition.
-    """
-    ret = np.zeros((pts1.shape[0], 4))
-    for i, p in enumerate(zip(pts1, pts2)):
-        A = np.zeros((4, 4))
-        A[0] = p[0][0] * pose1[2] - pose1[0]
-        A[1] = p[0][1] * pose1[2] - pose1[1]
-        A[2] = p[1][0] * pose2[2] - pose2[0]
-        A[3] = p[1][1] * pose2[2] - pose2[1]
-        _, _, vt = np.linalg.svd(A)
-        ret[i] = vt[3]
-    return ret
 
 
 class Camera(Node):
@@ -89,7 +67,7 @@ class DetectorDescriptor(Node):
         self.algorithm = self.param["algorithm"]
         self.nfeatures = self.param["nfeatures"]
         self.show_points = self.param["show_points"]
-        self.mapp = Map()
+        self.mapp = slam_toolbox.Map()
         self.mask = None
 
     def out_frame(self):
@@ -110,7 +88,7 @@ class DetectorDescriptor(Node):
                 x_offset=400,
             )
         K, W, H = self.buffer.variable["camera_data"]
-        frame = Frame(
+        frame = slam_toolbox.Frame(
             self.mapp,
             image,
             K,
@@ -168,7 +146,7 @@ class MatchPoints(Node):
         if frame.id == 0:
             return image
 
-        idx1, idx2, Rt = match_frame(
+        idx1, idx2, Rt = slam_toolbox.match_frame(
             mapp.frames[-1],
             mapp.frames[-2],
             self.m_samples,
@@ -276,7 +254,7 @@ class Triangulate(Node):
         good_pts4d = np.array([f1.pts[i] is None for i in idx1])
 
         # do triangulation in global frame
-        pts4d = triangulate(f1.pose, f2.pose, f1.kps[idx1], f2.kps[idx2])
+        pts4d = slam_toolbox.triangulate(f1.pose, f2.pose, f1.kps[idx1], f2.kps[idx2])
         good_pts4d &= np.abs(pts4d[:, 3]) != 0
         pts4d /= pts4d[:, 3:]  # homogeneous 3-D coords
 
@@ -319,7 +297,7 @@ class Triangulate(Node):
             cy = np.int32(f1.key_pts[idx1[i], 1])
             color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)[cy, cx]
 
-            pt = Point(mapp, p[0:3], color)
+            pt = slam_toolbox.Point(mapp, p[0:3], color)
             pt.add_observation(f2, idx2[i])
             pt.add_observation(f1, idx1[i])
             # new_pts_count += 1
@@ -330,8 +308,8 @@ class Triangulate(Node):
         # print(np.linalg.inv(f1.pose))
         if self.show_marker:
             for pt1, pt2 in zip(
-                    mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
-                ):
+                mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
+            ):
                 # cv2.circle(image, np.int32(pt1), 3, (0, 255, 255))
                 cv2.drawMarker(image, np.int32(pt1), cc.red, 1, 5, 1, 8)
                 cv2.line(image, np.int32(pt1), np.int32(pt2), cc.red, 1)
@@ -342,6 +320,66 @@ class Triangulate(Node):
         self.disabled = param["disabled"]
         self.orb_distance = param["orb_distance"]
         self.show_marker = param["show_marker"]
+
+
+class Show2DMap(Node):
+    """
+    SLAM Open3DMap Node
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.amount = 500
+        self.point_size = self.param["point_size"]
+        self.point_color = self.param["point_color"]
+        self.offsetx = self.param["offsetx"]
+        self.offsety = self.param["offsety"]
+
+    def out_frame(self):
+        image = self.get_frame(0)
+        if image is None:
+            print("Open3DMap stop")
+            return None
+        elif self.disabled:
+            return image
+        elif "slam_data" in self.buffer.variable:
+            mapp = self.buffer.variable["slam_data"][1]
+            height, width = image.shape[:-1]
+            clean_plate = np.zeros((height, width, 3), np.uint8)
+            clean_plate[:] = (10, 10, 10)
+            for idx, point in enumerate(mapp.points):
+                cv2.circle(
+                    clean_plate,
+                    (
+                        np.int32(point.pt[0] + self.offsetx),
+                        np.int32(point.pt[2] + self.offsety),
+                    ),
+                    self.point_size,
+                    (int(point.color[0]), int(point.color[1]), int(point.color[2])),
+                    1,
+                )
+
+            cam_pts = np.linalg.inv(mapp.frames[-1].pose)[:, [-1]][:3].ravel()
+            cv2.circle(
+                clean_plate,
+                (
+                    np.int32(cam_pts[0] + self.offsetx),
+                    np.int32(cam_pts[2] + self.offsety),
+                ),
+                5,
+                (0, 0, 255),
+                2,
+            )
+
+            return clean_plate
+        return image
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.point_size = param["point_size"]
+        self.point_color = param["point_color"]
+        self.offsetx = param["offsetx"]
+        self.offsety = param["offsety"]
 
 
 class Open3DMap(Node):
@@ -355,12 +393,13 @@ class Open3DMap(Node):
         self.point_size = self.param["point_size"]
         self.point_color = self.param["point_color"]
         self.write_pcd = self.param["write_pcd"]
-        self.d3d = DisplayOpen3D(
+        self.d3d = slam_toolbox.DisplayOpen3D(
             width=int(self.param["window_size"][0]),
             height=int(self.param["window_size"][1]),
             scale=0.05,
             point_size=self.point_size,
-            write_pcd=self.write_pcd
+            write_pcd=self.write_pcd,
+            file=self.param["file"]
         )
 
     def out_frame(self):
@@ -381,5 +420,4 @@ class Open3DMap(Node):
         self.disabled = param["disabled"]
         self.point_size = param["point_size"]
         self.point_color = param["point_color"]
-        self.point_size = param["point_size"]
         self.write_pcd = param["write_pcd"]

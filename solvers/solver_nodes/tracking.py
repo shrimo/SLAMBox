@@ -4,8 +4,7 @@ Node and function library for Tracking
 
 import cv2
 import numpy as np
-from solvers_flask.root_nodes import Node
-from solvers_flask.misc import insert_frame, get_tuple, show_attributes, Color
+from solvers import Node, insert_frame, Color
 
 cc = Color()
 
@@ -32,9 +31,9 @@ class AllTrackers(Node):
             print("AllTrackers a stop")
         elif self.disabled:
             return frame
-        if self.buffer.roi:
+        if self.buffer.switch:
             self.go = self.calculations_for_ROI(frame, self.buffer.roi)
-            self.buffer.roi = self.empty_roi
+            self.buffer.switch = False
         elif self.go:
             tmp, bbox = self.tracker.update(frame)
             (x, y, w, h) = [np.int32(pt) for pt in bbox]
@@ -53,9 +52,9 @@ class AllTrackers(Node):
         """
         x0, y0, x1, y1 = coord
         track_window = (x0, y0, x1 - x0, y1 - y0)
-        if not sum(track_window):
-            return False
-        print(f'window: {track_window}')
+        # if not sum(track_window):
+        #     return False
+        # print(f'window: {track_window}')
         self.tracker = self.get_tracker(self.tracker_type)
         tmp = self.tracker.init(frame, track_window)
         if not tmp:
