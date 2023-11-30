@@ -266,12 +266,13 @@ class NodeBased(NodeGraph):
 
 
 if __name__ == "__main__":
-    print(cfg.name, cfg.gui)
-    app = QtWidgets.QApplication([])
+    # WebStreaming or Viewer key for start
     root_node = "Viewer"
     if len(sys.argv) > 1:
         root_node = sys.argv[1]
+    print(f"{cfg.name} {cfg.gui} {root_node}")
 
+    app = QtWidgets.QApplication([])
     node_based = NodeBased(root_node)
     node_based.create_nodes()
     node_based.widget.resize(500, 800)

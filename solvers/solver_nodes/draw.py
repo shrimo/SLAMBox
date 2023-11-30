@@ -3,11 +3,12 @@
 import time
 import cv2
 import numpy as np
-from solvers import Node, get_tuple
+from solvers import RootNode, get_tuple
+
 # from .misc import insert_frame, get_tuple
 
 
-class FPS(Node):
+class FPS(RootNode):
     """Show FPS Information"""
 
     def __init__(self, *args, **kwargs):
@@ -22,7 +23,7 @@ class FPS(Node):
         self.new_frame_time = time.time()
         frame = self.get_frame(0)
         if frame is None:
-            print("FPSNode stop")
+            print("FPS stop")
             return None
         elif self.disabled:
             return frame
@@ -54,7 +55,7 @@ class FPS(Node):
         self.color_x = self.color_reversed(param["color_picker"])
 
 
-class Counter(Node):
+class Counter(RootNode):
     """Show Frame Counter Information"""
 
     def __init__(self, *args, **kwargs):
@@ -66,7 +67,7 @@ class Counter(Node):
     def out_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("CounterNode stop")
+            print("Counter stop")
             return None
         elif self.disabled:
             return frame
@@ -89,7 +90,7 @@ class Counter(Node):
         self.color = get_tuple(param["counter_color"])
 
 
-class Constant(Node):
+class Constant(RootNode):
     """Constant background with specified color"""
 
     def __init__(self, *args, **kwargs):
@@ -113,7 +114,7 @@ class Constant(Node):
         self.height = int(param["height"])
 
 
-class Text(Node):
+class Text(RootNode):
     """Show FPS Information"""
 
     def __init__(self, *args, **kwargs):
@@ -128,7 +129,7 @@ class Text(Node):
     def out_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("TextNode stop")
+            print("Text stop")
             return None
         elif self.disabled:
             return frame
@@ -146,7 +147,7 @@ class Text(Node):
         self.size = float(param["size_"])
 
 
-class Trajectory(Node):
+class Trajectory(RootNode):
     """Trajectory tracking"""
 
     def __init__(self, *args, **kwargs):
@@ -161,7 +162,7 @@ class Trajectory(Node):
     def out_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("FPSNode stop")
+            print("FPS stop")
             return None
         elif self.disabled:
             return frame

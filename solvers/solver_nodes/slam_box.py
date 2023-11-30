@@ -7,12 +7,12 @@ Nodes for launching SLAM pipeline
 import numpy as np
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers import Node, frame_error, Color, show_attributes, slam_toolbox
+from solvers import RootNode, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
 
 
-class Camera(Node):
+class Camera(RootNode):
     """
     SLAM Camera Node
     The camera intrinsic matrix represents the internal
@@ -57,7 +57,7 @@ class Camera(Node):
         self.buffer.variable["camera_data"] = [K, W, H]
 
 
-class DetectorDescriptor(Node):
+class DetectorDescriptor(RootNode):
     """
     SLAM DetectorDescriptor Node
     """
@@ -113,7 +113,7 @@ class DetectorDescriptor(Node):
         self.show_points = param["show_points"]
 
 
-class MatchPoints(Node):
+class MatchPoints(RootNode):
     """
     SLAM MatchPoints Node
     """
@@ -172,7 +172,7 @@ class MatchPoints(Node):
         self.show_marker = param["show_marker"]
 
 
-class Triangulate(Node):
+class Triangulate(RootNode):
     """
     SLAM Triangulate Node
     """
@@ -322,7 +322,7 @@ class Triangulate(Node):
         self.show_marker = param["show_marker"]
 
 
-class Show2DMap(Node):
+class Show2DMap(RootNode):
     """
     SLAM Open3DMap Node
     """
@@ -338,7 +338,7 @@ class Show2DMap(Node):
     def out_frame(self):
         image = self.get_frame(0)
         if image is None:
-            print("Open3DMap stop")
+            print("Show2DMap stop")
             return None
         elif self.disabled:
             return image
@@ -382,7 +382,7 @@ class Show2DMap(Node):
         self.offsety = param["offsety"]
 
 
-class Open3DMap(Node):
+class Open3DMap(RootNode):
     """
     SLAM Open3DMap Node
     """
@@ -399,7 +399,7 @@ class Open3DMap(Node):
             scale=0.05,
             point_size=self.point_size,
             write_pcd=self.write_pcd,
-            file=self.param["file"]
+            file=self.param["file"],
         )
 
     def out_frame(self):

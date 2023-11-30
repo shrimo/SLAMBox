@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
-from solvers import solver_nodes
+from solvers import RootNode, solver_nodes
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -33,7 +33,7 @@ def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeTyp
 
 def get_object_by_script(
     node: NodeType, root_node: NodeType, buffer: DataBuffer
-) -> solver_nodes.Node:
+) -> RootNode:
     """Declare an object by type node"""
     node_object = getattr(solver_nodes, node["type"])
     return node_object(
@@ -62,7 +62,7 @@ def cleaning_unplugged_nodes(
 
 def build_node_graph(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
-) -> solver_nodes.RootNode:
+) -> RootNode:
     """Create dictionary and adding objects to the dictionary"""
 
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
@@ -81,7 +81,7 @@ def build_node_graph(
 
 def build_rooted_graph(
     script: ScriptType, root_name: str, buffer: DataBuffer
-) -> solver_nodes.RootNode:
+) -> RootNode:
     """rooted graph is a graph in which one
     node has been distinguished as the root"""
 

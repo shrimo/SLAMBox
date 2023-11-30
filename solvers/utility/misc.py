@@ -44,6 +44,7 @@ class Color:
     burnt_sienna: tuple = (82, 93, 198)
     viva_magenta: tuple = (85, 52, 190)
     persimmon: tuple = (102, 120, 246)
+    strong_blue: tuple = (160, 93, 31)
 
 
 cc = Color()
