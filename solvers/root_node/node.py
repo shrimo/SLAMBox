@@ -56,6 +56,7 @@ class RootNode:
         self.input_nodes = []
         self.param = param
         self.disabled = param["disabled"]
+        self.ROI_coordinates = None
 
     def show_frame(self):
         ...

@@ -18,7 +18,7 @@ RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 @dataclass
 class DataBuffer:
-    """Common data exchange buffer"""
+    """Class, buffer for exchanging data between nodes"""
 
     switch: bool = False
     roi: RoiType = (np.int64(0), np.int64(0), np.int64(0), np.int64(0))

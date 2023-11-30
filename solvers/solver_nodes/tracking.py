@@ -22,7 +22,7 @@ class AllTrackers(RootNode):
         self.tracker_type = self.param["tracker_type"]
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.tracker = None
-        self.go = None
+        self.go = False
         self.Image = None
 
     def out_frame(self):
@@ -31,7 +31,7 @@ class AllTrackers(RootNode):
             print("AllTrackers stop")
         elif self.disabled:
             return frame
-        if self.buffer.switch:
+        elif self.buffer.switch:
             self.go = self.calculations_for_ROI(frame, self.buffer.roi)
             self.buffer.switch = False
         elif self.go:

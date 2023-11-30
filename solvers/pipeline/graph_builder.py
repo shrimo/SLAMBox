@@ -26,9 +26,6 @@ ScriptType = List[NodeType]
 ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
-# Selector for communication with clients
-sel = selectors.DefaultSelector()
-
 
 class GraphCommunication:
     """Server for receiving data, non-blocking"""
@@ -41,17 +38,19 @@ class GraphCommunication:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind((host, port))
         sock.listen()
-        print("Listening on", host, port)
+        print(f"Listening on {host} {port}")
         sock.setblocking(False)
-        sel.register(sock, selectors.EVENT_READ, data=None)
+        # Selector for receiving data reception events
+        self.selector = selectors.DefaultSelector()
+        self.selector.register(sock, selectors.EVENT_READ, data=None)
 
     def accept_wrapper(self, sock) -> None:
         """Register an event"""
         conn, addr = sock.accept()
-        print("Accepted connection from ", addr)
+        print(f"Accepted connection from {addr}")
         conn.setblocking(False)
         events = selectors.EVENT_READ
-        sel.register(conn, events, data=addr)
+        self.selector.register(conn, events, data=addr)
 
     def service_connection(self, key, mask) -> None:
         """Receive and unpack data"""
@@ -60,10 +59,9 @@ class GraphCommunication:
             recv_data = sock.recv(self.recv_size)
             if recv_data:
                 self.data_change = pickle.loads(recv_data)
-                # print(type(self.data_change), self.data_change)
             else:
                 print("Closing connection")
-                sel.unregister(sock)
+                self.selector.unregister(sock)
                 sock.close()
 
 
@@ -92,7 +90,7 @@ class GraphBuilder:
             if not self.graph.show_frame():
                 break
 
-            events = sel.select(timeout=0)
+            events = self.com.selector.select(timeout=0)
             for key, mask in events:
                 if key.data is None:
                     self.com.accept_wrapper(key.fileobj)
@@ -112,12 +110,6 @@ class GraphBuilder:
                 if self.graph.stop():
                     break
 
-    def scripts_comparison(self, script: ScriptType) -> bool:
-        """comparison of a running script with an updated script"""
-        return Counter([x["id"] for x in script]) == Counter(
-            [x["id"] for x in self.script]
-        )
-
     def execution_controller(
         self, root_name: str, input_script: ActionScriptType
     ) -> None:
@@ -129,7 +121,7 @@ class GraphBuilder:
                     self.script, root_name, self.buffer
                 )
             case "update":
-                if self.scripts_comparison(input_script["script"]):
+                if pipeline.scripts_comparison(input_script["script"], self.script):
                     self.graph_update(self.graph, input_script["script"])
             case "stop":
                 cv2.destroyAllWindows()
@@ -144,12 +136,12 @@ class GraphBuilder:
                         data_update, node.id_, "id"
                     )
                     if node_update is None:
-                        return False
+                        continue
                     node.update(node_update["custom"])
                 self.graph_update(node, data_update)
         return None
 
     def __del__(self) -> None:
         """Closing video capture and window"""
+        self.com.selector.close()
         print("GraphBuilder close")
-        sel.close()
