@@ -16,7 +16,7 @@ from collections import defaultdict, Counter
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers import pipeline, solver_nodes
+from solvers import RootNode, pipeline, solver_nodes
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -50,9 +50,7 @@ class GraphBuilderFlaskMS:
                 #     cv2.destroyAllWindows()
                 sys.exit(0)
 
-    def graph_update(
-        self, graph: solver_nodes.RootNode, data_update: ScriptType
-    ) -> None:
+    def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
         """Updating node graph in real time"""
         if graph.get_input():
             for node in graph.get_input():

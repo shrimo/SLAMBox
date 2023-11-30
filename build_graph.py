@@ -10,26 +10,23 @@ from config import host, port, recv_size, version, date
 
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+ActionScriptType = Dict[str, str | ScriptType]
 
 
 def build() -> None:
-    """Default script start"""
-    print("SLAM box version: " + version + date)
+    """Default script setup (OpenCV, Flask, FlaskMS)"""
 
     cc = utility.Color()
-    graph_type: str = "OpenCV"
-    if len(sys.argv) > 1:
-        graph_type = sys.argv[1]
 
     # Settings for initializing the startup script
-    start_dict: dict = {
+    settings_dict: dict = {
         "OpenCV": {
             "type": "Viewer",
             "name": "Viewport",
-            "version_color": str(cc.persimmon)[1:-1],
+            "version_color": str(cc.strong_blue)[1:-1],
             "text_color": str(cc.white)[1:-1],
             "test_version_system": f"SLAM box. version: {version}",
-            "graph": pipeline.GraphBuilder,
+            "builder": pipeline.GraphBuilder,
             "px": "220",
         },
         "Flask": {
@@ -38,7 +35,7 @@ def build() -> None:
             "version_color": str(cc.gray)[1:-1],
             "text_color": str(cc.white)[1:-1],
             "test_version_system": f"SLAMBOX (Flask) version: {version}",
-            "graph": pipeline.GraphBuilderFlask,
+            "builder": pipeline.GraphBuilderFlask,
             "px": "140",
         },
         "FlaskMS": {
@@ -47,15 +44,19 @@ def build() -> None:
             "version_color": str(cc.gray)[1:-1],
             "text_color": str(cc.white)[1:-1],
             "test_version_system": f"SLAMBOX (FlaskMS) version: {version}",
-            "graph": pipeline.GraphStreaming,
+            "builder": pipeline.GraphStreaming,
             "px": "100",
         },
     }
 
-    graph_dict = start_dict[graph_type]
+    graph_type: str = "OpenCV"
+    if len(sys.argv) > 1:
+        graph_type = sys.argv[1]
+
+    graph_dict = settings_dict[graph_type]
 
     # default (startup script) node graph for example
-    default: ScriptType = {
+    default: ActionScriptType = {
         "command": "action",
         "script": [
             {
@@ -94,11 +95,8 @@ def build() -> None:
         ],
     }
 
-    if "OpenCV" in graph_type:
-        graph = graph_dict["graph"](default, host, port, recv_size)
-    else:
-        graph = graph_dict["graph"](default)
-
+    print(f'SLAM box version: {version} {graph_type} {date}')
+    graph = graph_dict["builder"](default)
     try:
         graph.run()
     except KeyboardInterrupt:

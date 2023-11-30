@@ -4,12 +4,12 @@ Node and function library for Tracking
 
 import cv2
 import numpy as np
-from solvers import Node, insert_frame, Color
+from solvers import RootNode, insert_frame, Color
 
 cc = Color()
 
 
-class AllTrackers(Node):
+class AllTrackers(RootNode):
     """
     A set of trackers available in the OpenCV library
     'BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'MOSSE', 'CSRT'
@@ -28,7 +28,7 @@ class AllTrackers(Node):
     def out_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("AllTrackers a stop")
+            print("AllTrackers stop")
         elif self.disabled:
             return frame
         if self.buffer.switch:

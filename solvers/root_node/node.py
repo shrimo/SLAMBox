@@ -5,7 +5,8 @@ import numpy as np
 
 
 class SelectionTool:
-    """ Frame selection tool """
+    """Frame selection tool"""
+
     def __init__(self, win_name, callback):
         self.win_name = win_name
         self.callback = callback
@@ -14,7 +15,7 @@ class SelectionTool:
         self.drag_rect = None
 
     def onmouse(self, event, x, y, flags, param):
-        """ Handling mouse events """
+        """Handling mouse events"""
         if event == cv2.EVENT_LBUTTONDOWN:
             self.drag_start = (x, y)
         if self.drag_start:
@@ -23,7 +24,7 @@ class SelectionTool:
                 x0, y0 = np.minimum([xo, yo], [x, y])
                 x1, y1 = np.maximum([xo, yo], [x, y])
                 self.drag_rect = None
-                if x1-x0 > 0 and y1-y0 > 0:
+                if x1 - x0 > 0 and y1 - y0 > 0:
                     self.drag_rect = (x0, y0, x1, y1)
             else:
                 rect = self.drag_rect
@@ -33,7 +34,7 @@ class SelectionTool:
                     self.callback(rect)
 
     def draw_selection(self, frame):
-        """ Draw a selection area """
+        """Draw a selection area"""
         if not self.drag_rect:
             return False
         x0, y0, x1, y1 = self.drag_rect
@@ -42,7 +43,8 @@ class SelectionTool:
         cv2.drawMarker(frame, (cx, cy), (0, 0, 255), 0, 20, 1, 8)
         cv2.rectangle(frame, (x0, y0), (x1, y1), (0, 250, 250), 1)
 
-class Node:
+
+class RootNode:
     """Root node that all nodes"""
 
     def __init__(self, type_, id_, param, window_name, buffer):
@@ -54,6 +56,12 @@ class Node:
         self.input_nodes = []
         self.param = param
         self.disabled = param["disabled"]
+
+    def show_frame(self):
+        ...
+
+    def stop(self):
+        ...
 
     def selection_callback(self, rect):
         self.ROI_coordinates = rect

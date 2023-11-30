@@ -25,4 +25,3 @@ def triangulate(pose1, pose2, pts1, pts2):
         _, _, vt = np.linalg.svd(A)
         ret[i] = vt[3]
     return ret
-

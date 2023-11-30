@@ -1,2 +1,2 @@
 # Root node
-from .node import Node, SelectionTool
+from .node import RootNode, SelectionTool

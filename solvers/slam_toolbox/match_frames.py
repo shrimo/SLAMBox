@@ -77,6 +77,7 @@ def match_frame(f1, f2, m_samples=8, r_threshold=0.01, m_trials=300):
     # print(f"Matches:  {len(f1.descriptors)} -> {len(matches)} -> {len(inliers)} -> {sum(inliers)}")
     return idx1[inliers], idx2[inliers], fundamentalRt(model.params)
 
+
 # Old functions
 # def fundamentalToRt(F):
 #     """Fundamental matrix"""

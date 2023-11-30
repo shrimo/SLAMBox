@@ -16,4 +16,3 @@ from .slam_optimization import (
     GeneralGraphOptimization,
     KalmanFilterOptimization,
 )
-

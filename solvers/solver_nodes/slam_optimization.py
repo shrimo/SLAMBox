@@ -8,11 +8,12 @@ import numpy as np
 
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers import Node, show_attributes, frame_error, slam_toolbox
+from solvers import RootNode, show_attributes, frame_error, slam_toolbox
 
-class GeneralGraphOptimization(Node):
+
+class GeneralGraphOptimization(RootNode):
     """
-    SLAM GeneralGraphOptimization Node
+    SLAM GeneralGraphOptimization(g2o) Node
     """
 
     def __init__(self, *args, **kwargs):
@@ -24,7 +25,7 @@ class GeneralGraphOptimization(Node):
     def out_frame(self):
         image = self.get_frame(0)
         if image is None:
-            print("LineModelOptimization stop")
+            print("GeneralGraphOptimization stop")
             return None
         elif self.disabled:
             return image
@@ -59,7 +60,7 @@ class GeneralGraphOptimization(Node):
         self.step_frame = param["step_frame"]
 
 
-class LineModelOptimization(Node):
+class LineModelOptimization(RootNode):
     """
     SLAM LineModelOptimization Node
     """
@@ -113,7 +114,7 @@ class LineModelOptimization(Node):
         self.delete_points = param["delete_points"]
 
 
-class KalmanFilterOptimization(Node):
+class KalmanFilterOptimization(RootNode):
     """
     SLAM KalmanFilterOptimization Node
     """
@@ -164,4 +165,3 @@ class KalmanFilterOptimization(Node):
 
     def update(self, param):
         self.disabled = param["disabled"]
-

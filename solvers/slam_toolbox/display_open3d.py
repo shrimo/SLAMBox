@@ -19,7 +19,7 @@ class DisplayOpen3D:
         scale=0.05,
         point_size=2.0,
         write_pcd=False,
-        file="./data/pcd/slam_map_"
+        file="./data/pcd/slam_map_",
     ):
         self.display_id = str(hex(id(self)))
         self.width = width
@@ -104,9 +104,7 @@ class DisplayOpen3D:
 
             if self.write_pcd:
                 # write the point cloud to a file
-                o3d.io.write_point_cloud(
-                    f"{self.file}{self.state[3]:04}.pcd", self.pcl
-                )
+                o3d.io.write_point_cloud(f"{self.file}{self.state[3]:04}.pcd", self.pcl)
 
         self.vis.update_geometry(self.pcl)
         self.vis.update_geometry(self.robot)

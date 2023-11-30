@@ -4,14 +4,8 @@ Basic nodes for common video stream operations
 
 import cv2
 import numpy as np
-from solvers import Node, SelectionTool, get_tuple, frame_error
+from solvers import RootNode, SelectionTool, get_tuple, frame_error
 
-class RootNode(Node):
-    """Base class for root nodes"""
-    def show_frame(self):
-        ...
-    def stop(self):
-        ...
 
 class Viewer(RootNode):
     """Displays frames. End node for nodes graph."""
@@ -20,7 +14,7 @@ class Viewer(RootNode):
         super().__init__(*args, **kwargs)
         cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
         # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
-        cv2.moveWindow(self.window_name, 100,100)
+        cv2.moveWindow(self.window_name, 100, 100)
         # Initialization to invoke the selection tool
         self.sel_tool = SelectionTool(self.window_name, self.selection_callback)
         self.ROI_coordinates = None
@@ -28,7 +22,7 @@ class Viewer(RootNode):
     def show_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("ViewerNode stop")
+            print("Viewer stop")
             return None
         # Add switch on/off selection tool (draw_selection - metod from class SelectionTool)
         self.sel_tool.draw_selection(frame)
@@ -45,6 +39,7 @@ class Viewer(RootNode):
         # self.buffer.variable['STOPSLAM'] = True
         cv2.waitKey(10)
         return True
+
 
 class WebStreaming(RootNode):
     def __init__(self, *args, **kwargs):
@@ -69,7 +64,7 @@ class WebStreaming(RootNode):
         return True
 
 
-class SelectionBuffer(Node):
+class SelectionBuffer(RootNode):
     """Frame selection tool"""
 
     def __init__(self, *args, **kwargs):
@@ -100,7 +95,7 @@ class SelectionBuffer(Node):
         pass
 
 
-class Read(Node):
+class Read(RootNode):
     """Node Read for receive video data"""
 
     def __init__(self, *args, **kwargs):
@@ -141,7 +136,7 @@ class Read(Node):
         return None
 
 
-class VideoWriter(Node):
+class VideoWriter(RootNode):
     """Write stream to file"""
 
     def __init__(self, *args, **kwargs):
@@ -166,7 +161,7 @@ class VideoWriter(Node):
         pass
 
 
-class Image(Node):
+class Image(RootNode):
     """Node Read for receive image data"""
 
     def __init__(self, *args, **kwargs):
@@ -187,7 +182,7 @@ class Image(Node):
         self.image = cv2.imread(self.file, cv2.IMREAD_COLOR)
 
 
-class SwitchFrame(Node):
+class SwitchFrame(RootNode):
     """Switch two streams"""
 
     def __init__(self, *args, **kwargs):
@@ -206,7 +201,7 @@ class SwitchFrame(Node):
         self.channel_number = param["switch_channel"]
 
 
-class Merge(Node):
+class Merge(RootNode):
     """Node to merge two streams"""
 
     def __init__(self, *args, **kwargs):
@@ -218,10 +213,10 @@ class Merge(Node):
         frame_a = self.get_frame(0)
         frame_b = self.get_frame(1)
         if frame_a is None:
-            print("MergeNode a stop")
+            print("Merge A stop")
             return None
         elif frame_b is None:
-            print("MergeNode b stop")
+            print("Merge B stop")
             return frame_a
         height_a, width_a, channels_a = frame_a.shape
         height_b, width_b, channels_b = frame_b.shape
@@ -236,7 +231,7 @@ class Merge(Node):
         self.op_b = float(param["opacity_b"])
 
 
-class Insert(Node):
+class Insert(RootNode):
     """Inserting one video stream into another"""
 
     def __init__(self, *args, **kwargs):
@@ -250,10 +245,10 @@ class Insert(Node):
         frame_a = self.get_frame(0)
         frame_b = self.get_frame(1)
         if frame_a is None:
-            print("InsertNode a stop")
+            print("Insert A stop")
             return None
         elif frame_b is None:
-            print("InsertNode b stop")
+            print("Insert B stop")
             return frame_a
         height_a, width_a, channels_a = frame_a.shape
         height_b, width_b, channels_b = frame_b.shape
@@ -272,7 +267,7 @@ class Insert(Node):
         self.pos_y = int(param["offset_y"])
 
 
-class Move(Node):
+class Move(RootNode):
     """Move frame along the axes"""
 
     def __init__(self, *args, **kwargs):
@@ -311,7 +306,7 @@ class Move(Node):
         self.movey = int(param["movey"])
 
 
-class Resize(Node):
+class Resize(RootNode):
     """Rescale frame in percents"""
 
     def __init__(self, *args, **kwargs):
@@ -341,7 +336,7 @@ class Resize(Node):
         self.resize = int(param["resize"])
 
 
-class Reformat(Node):
+class Reformat(RootNode):
     """Reformat lets you resize and reposition your image
     sequences to a different format (width and height)."""
 
@@ -353,7 +348,7 @@ class Reformat(Node):
     def out_frame(self):
         frame = self.get_frame(0)
         if frame is None:
-            print("Resize stop")
+            print("Reformat stop")
             return None
         if self.disabled:
             # restore original value

@@ -29,8 +29,9 @@ def featureMappingAKAZE(*frame):
 
 
 def normalize(count_inv, pts):
-    return (count_inv @ np.concatenate([pts,
-        np.ones((pts.shape[0], 1))], axis=1).T).T[:, 0:2]
+    return (count_inv @ np.concatenate([pts, np.ones((pts.shape[0], 1))], axis=1).T).T[
+        :, 0:2
+    ]
 
 
 def denormalize(count_inv, pt):

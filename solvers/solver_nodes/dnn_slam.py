@@ -5,10 +5,10 @@ Deep Learning with OpenCV DNN Module
 
 import cv2
 import numpy as np
-from solvers import Node
+from solvers import RootNode
 
 
-class DNNMask(Node):
+class DNNMask(RootNode):
     """Deep Neural Networks. Mask for Detector Descriptor."""
 
     def __init__(self, *args, **kwargs):
@@ -32,7 +32,7 @@ class DNNMask(Node):
             "motorcycle",
             "bicycle",
             "person",
-            "bird"
+            "bird",
         ]
         with open(self.param["class_names"]) as f:
             self.classNames = f.read().rstrip("\n").split("\n")
