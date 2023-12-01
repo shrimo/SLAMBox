@@ -17,7 +17,7 @@ class Viewer(RootNode):
         cv2.moveWindow(self.window_name, 100, 100)
         # Initialization to invoke the selection tool
         self.sel_tool = SelectionTool(self.window_name, self.selection_callback)
-        self.ROI_coordinates = None
+        # self.ROI_coordinates = None
 
     def show_frame(self):
         frame = self.get_frame(0)
@@ -76,10 +76,14 @@ class SelectionBuffer(RootNode):
         if frame is None:
             print("SelectionTools stop")
             return None
-        if self.buffer.roi:
+        elif self.disabled:
+            return frame
+        # if self.buffer.roi:
+        #     self.calculations_for_ROI(frame, self.buffer.roi)
+        #     self.buffer.roi = self.empty_roi
+        elif self.buffer.switch:
             self.calculations_for_ROI(frame, self.buffer.roi)
-            self.buffer.roi = self.empty_roi
-            # self.buffer.switch = True
+            self.buffer.switch = False
         return self.Image
 
     def calculations_for_ROI(self, frame, coord):
@@ -247,22 +251,22 @@ class Insert(RootNode):
         if frame_a is None:
             print("Insert A stop")
             return None
-        elif frame_b is None:
-            print("Insert B stop")
+        elif self.disabled:
             return frame_a
+        elif frame_b is None:
+            return frame_error(frame_a, "No data from input B")
         height_a, width_a, channels_a = frame_a.shape
         height_b, width_b, channels_b = frame_b.shape
         """ Check out of the border """
         if width_b + self.pos_x > width_a or height_b + self.pos_y > height_a:
             return frame_error(frame_a, "Inserted frame B - out of bounds")
-            # cv2.putText(frame_a, self.msg, (30, height_a-30), self.font , 1, (0,0,255), 1)
-            return frame_a
         frame_a[
             self.pos_y : self.pos_y + height_b, self.pos_x : self.pos_x + width_b
         ] = frame_b
         return frame_a
 
     def update(self, param):
+        self.disabled = param["disabled"]
         self.pos_x = int(param["offset_x"])
         self.pos_y = int(param["offset_y"])
 

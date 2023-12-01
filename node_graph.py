@@ -93,7 +93,7 @@ class NodeBased(NodeGraph):
         self.show_about.setAlignment(QtCore.Qt.AlignCenter)
         self.show_about.setStyleSheet(cfg.css_style)
         self.show_about.setText(
-            str(cfg.name + " " + cfg.version + "\n" + cfg.date + "\n" + cfg.system)
+            f"{cfg.name} {cfg.version} {self.root_node}\n{cfg.date}\n{cfg.system}"
         )
         self.show_about.setFixedSize(500, 300)
         self.show_about.setWordWrap(True)
@@ -143,8 +143,6 @@ class NodeBased(NodeGraph):
             url = "http://127.0.0.1:5000/json"
             r = requests.post(url, json=out_script)
             print(f"{r.content}")
-            # out_script = {'command':'update', 'script':self.buld_script()}
-            # self.script_transfer(out_script)
 
     def node_property_changed(self):
         """Updating node settings"""
@@ -199,30 +197,6 @@ class NodeBased(NodeGraph):
             print("- Send script")
             soc.close()
 
-    def clean_script(self, script):
-        """Finding and deleting nodes with empty outputs, except for the Viewer node"""
-        parent_node = None
-        for node in script:
-            if not node["out"] and not node["type"] in "WebStreaming":
-                for in_node in node["in"]:
-                    parent_node = self.node_by_id(in_node, script)
-                    script.remove(node)
-                    if node["id"] in parent_node["out"]:
-                        script.remove(parent_node)
-                        parent_node["out"].remove(node["id"])
-                        script.append(parent_node)
-                return self.clean_script(script)
-        return script
-
-    def clean_script2(self, script):
-        """Finding and removing nodes with empty outputs and empty inputs"""
-        for node in script:
-            if not node["in"] and not node["out"]:
-                script.remove(node)
-            elif not node["out"] and "WebStreaming" not in node["type"]:
-                script.remove(node)
-        return script
-
     def buld_script(self):
         """Preparing data for sending in a video core"""
         export_nodes = []
@@ -251,12 +225,6 @@ class NodeBased(NodeGraph):
                     "in": input_node_id,
                 }
             )
-
-        # Clean and sending to video core
-        # script = self.clean_script2(export_nodes)
-        # script = self.clean_script(self.clean_script2(export_nodes))
-        # for node in script:
-        #     print('type:',node['type'],',id:',node['id'],',out:',node['out'],',in',node['in'])
 
         # Writing to a file, for debugging
         # pickle.dump(script, open("default.oc", "wb"))

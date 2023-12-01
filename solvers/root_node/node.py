@@ -56,6 +56,7 @@ class RootNode:
         self.input_nodes = []
         self.param = param
         self.disabled = param["disabled"]
+        self.ROI_coordinates = None
 
     def show_frame(self):
         ...
@@ -78,3 +79,4 @@ class RootNode:
 
     def color_reversed(self, x):
         return (x[2], x[1], x[0])
+

@@ -1,5 +1,6 @@
 from .graph_factory import (
     DataBuffer,
+    GraphBuilderTemplate,
     build_rooted_graph,
     scripts_comparison,
     find_node_by_attr,

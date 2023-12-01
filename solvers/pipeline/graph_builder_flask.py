@@ -11,12 +11,10 @@ Static type version.
 """
 import sys
 from typing import List, Dict, Any, Tuple
-from dataclasses import dataclass, field
-from collections import defaultdict, Counter
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers import RootNode, pipeline, solver_nodes
+from solvers import RootNode, pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -25,14 +23,13 @@ ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
-class GraphBuilderFlask:
+class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
     """Building and execution of a node graph."""
 
-    def __init__(self, script: ActionScriptType) -> None:
-        self.buffer = pipeline.DataBuffer()
-        self.graph = pipeline.build_rooted_graph(
-            script["script"], "WebStreaming", self.buffer
-        )
+    def __init__(
+        self, script: ActionScriptType, root_node: str = "WebStreaming"
+    ) -> None:
+        super().__init__(script, root_node)
         self.app = Flask(__name__)
 
         @self.app.route("/")
@@ -93,20 +90,6 @@ class GraphBuilderFlask:
             case "stop":
                 # cv2.destroyAllWindows()
                 sys.exit(0)
-
-    def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-        """Updating node graph in real time"""
-        if graph.get_input():
-            for node in graph.get_input():
-                if node.get_input():
-                    node_update = pipeline.find_node_by_attr(
-                        data_update, node.id_, "id"
-                    )
-                    if node_update is None:
-                        return False
-                    node.update(node_update["custom"])
-                self.graph_update(node, data_update)
-        return None
 
     def __del__(self) -> None:
         """Closing video capture and window"""
