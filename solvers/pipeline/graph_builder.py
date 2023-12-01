@@ -1,5 +1,5 @@
 """
-Building and execution of a node graph.
+Building and execution of a node graph (OpenCV cv2.imshow()).
 
 Main classes that describe the connection between the 
 server and the graph editor and the construction and 
@@ -9,7 +9,7 @@ for processing and analyzing a optical stream.
 
 Static type version.
 """
-import sys
+# import sys
 from typing import List, Dict, Any, Tuple
 import socket
 import pickle
@@ -68,6 +68,17 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
     host: str = "localhost",
     port: int = 50001,
     recv_size: int = 10240,
+
+    attributes from template:
+    self.buffer = DataBuffer()
+    self.script = script["script"]
+    self.root_node = root_node
+    self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
+    self.controller_dict = {
+    "action":self.action,
+    "update":self.update,
+    "stop":self.stop
+    }
     """
 
     def __init__(
@@ -79,10 +90,6 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
         root_node: str = "Viewer",
     ) -> None:
         super().__init__(script, root_node)
-        # self.buffer = pipeline.DataBuffer()
-        # self.script = script["script"]
-        # self.graph = pipeline.build_rooted_graph(self.script, "Viewer", self.buffer)
-        # self.root_node = root_node
         self.com = GraphCommunication(host, port, recv_size)
 
     def run(self) -> None:
@@ -98,7 +105,9 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
                 else:
                     self.com.service_connection(key, mask)
                     if self.com.data_change:
-                        self.execution_controller(self.root_node, self.com.data_change)
+                        self.controller_dict[str(self.com.data_change["command"])](
+                            self.com.data_change
+                        )
                         self.com.data_change.clear()
 
             # Playback control
@@ -110,37 +119,6 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
             elif p_key == ord("q") or p_key == 27:
                 if self.graph.stop():
                     break
-
-    # def execution_controller(
-    #     self, root_name: str, input_script: ActionScriptType
-    # ) -> None:
-    #     """Controller for building a graph of nodes and control parameter updates"""
-    #     match input_script["command"]:
-    #         case "action":
-    #             self.script = input_script["script"]
-    #             self.graph = pipeline.build_rooted_graph(
-    #                 self.script, root_name, self.buffer
-    #             )
-    #         case "update":
-    #             if pipeline.scripts_comparison(input_script["script"], self.script):
-    #                 self.graph_update(self.graph, input_script["script"])
-    #         case "stop":
-    #             cv2.destroyAllWindows()
-    #             sys.exit(0)
-
-    # def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-    #     """Updating node graph in real time"""
-    #     if graph.get_input():
-    #         for node in graph.get_input():
-    #             if node.get_input():
-    #                 node_update = pipeline.find_node_by_attr(
-    #                     data_update, node.id_, "id"
-    #                 )
-    #                 if node_update is None:
-    #                     continue
-    #                 node.update(node_update["custom"])
-    #             self.graph_update(node, data_update)
-    #     return None
 
     def __del__(self) -> None:
         """Closing video capture and window"""

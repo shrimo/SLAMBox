@@ -30,10 +30,6 @@ class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
         self, script: ActionScriptType, root_node: str = "WebStreaming"
     ) -> None:
         super().__init__(script, root_node)
-        # self.buffer = pipeline.DataBuffer()
-        # self.graph = pipeline.build_rooted_graph(
-        #     script["script"], "WebStreaming", self.buffer
-        # )
         self.app = Flask(__name__)
 
         @self.app.route("/")
@@ -94,20 +90,6 @@ class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
             case "stop":
                 # cv2.destroyAllWindows()
                 sys.exit(0)
-
-    # def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-    #     """Updating node graph in real time"""
-    #     if graph.get_input():
-    #         for node in graph.get_input():
-    #             if node.get_input():
-    #                 node_update = pipeline.find_node_by_attr(
-    #                     data_update, node.id_, "id"
-    #                 )
-    #                 if node_update is None:
-    #                     return False
-    #                 node.update(node_update["custom"])
-    #             self.graph_update(node, data_update)
-    #     return None
 
     def __del__(self) -> None:
         """Closing video capture and window"""

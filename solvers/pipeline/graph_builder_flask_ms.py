@@ -29,13 +29,8 @@ class GraphBuilderFlaskMS(pipeline.GraphBuilderTemplate):
     def __init__(
         self, script: ActionScriptType, root_node: str = "WebStreaming"
     ) -> None:
+        # Initializing the template class
         super().__init__(script, root_node)
-        # self.root_node = root_node
-        # self.buffer = pipeline.DataBuffer()
-        # self.script = script["script"]
-        # self.graph = pipeline.build_rooted_graph(
-        #     script["script"], "WebStreaming", self.buffer
-        # )
 
     def execution_controller(self, input_script: ActionScriptType) -> None:
         """Controller for building a graph of nodes and control parameter updates"""
@@ -50,20 +45,6 @@ class GraphBuilderFlaskMS(pipeline.GraphBuilderTemplate):
                     self.graph_update(self.graph, input_script["script"])
             case "stop":
                 sys.exit(0)
-
-    # def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-    #     """Updating node graph in real time"""
-    #     if graph.get_input():
-    #         for node in graph.get_input():
-    #             if node.get_input():
-    #                 node_update = pipeline.find_node_by_attr(
-    #                     data_update, node.id_, "id"
-    #                 )
-    #                 if node_update is None:
-    #                     return False
-    #                 node.update(node_update["custom"])
-    #             self.graph_update(node, data_update)
-    #     return None
 
 
 class GraphStreaming:

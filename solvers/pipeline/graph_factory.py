@@ -4,10 +4,12 @@ A set of functions for building
 a node graph based on script.
 """
 
+import sys
 from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
+import cv2
 from solvers import RootNode, solver_nodes
 
 # Define data types for the node graph script and for the node itself.
@@ -31,10 +33,16 @@ class GraphBuilderTemplate:
     """General class for builders"""
 
     def __init__(self, script: ActionScriptType, root_node: str):
+        """Attributes for an inherited class"""
         self.buffer = DataBuffer()
         self.script = script["script"]
         self.root_node = root_node
         self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
+        self.controller_dict: ActionScriptType = {
+            "action": self.action,
+            "update": self.update,
+            "stop": self.stop,
+        }
 
     def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
         """Updating node graph in real time"""
@@ -48,20 +56,25 @@ class GraphBuilderTemplate:
                 self.graph_update(node, data_update)
         return None
 
-    def execution_controller(
-        self, root_name: str, input_script: ActionScriptType
-    ) -> None:
-        """Controller for building a graph of nodes and control parameter updates"""
-        match input_script["command"]:
-            case "action":
-                self.script = input_script["script"]
-                self.graph = build_rooted_graph(self.script, root_name, self.buffer)
-            case "update":
-                if scripts_comparison(input_script["script"], self.script):
-                    self.graph_update(self.graph, input_script["script"])
-            case "stop":
-                cv2.destroyAllWindows()
-                sys.exit(0)
+    def action(self, input_script: ActionScriptType) -> None:
+        # Method for initially starting the script
+        self.script = input_script["script"]
+        self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
+
+    def update(self, input_script: ActionScriptType) -> None:
+        """The method starts a comparison of the working
+        script and the one received from the client;
+        if the parameters are different,
+        the parameters of the running nodes are updated.
+        """
+        if scripts_comparison(input_script["script"], self.script):
+            self.graph_update(self.graph, input_script["script"])
+
+    def stop(self, input_script: ActionScriptType):
+        """Shutting down and exiting node graph execution"""
+        if "stop" in input_script["command"]:
+            cv2.destroyAllWindows()
+            sys.exit(0)
 
 
 def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeType:
