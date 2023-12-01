@@ -11,12 +11,10 @@ Static type version.
 """
 import sys
 from typing import List, Dict, Any, Tuple
-from dataclasses import dataclass, field
-from collections import defaultdict, Counter
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers import RootNode, pipeline, solver_nodes
+from solvers import RootNode, pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -25,15 +23,19 @@ ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
-class GraphBuilderFlaskMS:
+class GraphBuilderFlaskMS(pipeline.GraphBuilderTemplate):
     """Building and execution of a node graph"""
 
-    def __init__(self, script: ActionScriptType) -> None:
-        self.buffer = pipeline.DataBuffer()
-        self.script = script["script"]
-        self.graph = pipeline.build_rooted_graph(
-            script["script"], "WebStreaming", self.buffer
-        )
+    def __init__(
+        self, script: ActionScriptType, root_node: str = "WebStreaming"
+    ) -> None:
+        super().__init__(script, root_node)
+        # self.root_node = root_node
+        # self.buffer = pipeline.DataBuffer()
+        # self.script = script["script"]
+        # self.graph = pipeline.build_rooted_graph(
+        #     script["script"], "WebStreaming", self.buffer
+        # )
 
     def execution_controller(self, input_script: ActionScriptType) -> None:
         """Controller for building a graph of nodes and control parameter updates"""
@@ -47,22 +49,21 @@ class GraphBuilderFlaskMS:
                 if pipeline.scripts_comparison(input_script["script"], self.script):
                     self.graph_update(self.graph, input_script["script"])
             case "stop":
-                #     cv2.destroyAllWindows()
                 sys.exit(0)
 
-    def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-        """Updating node graph in real time"""
-        if graph.get_input():
-            for node in graph.get_input():
-                if node.get_input():
-                    node_update = pipeline.find_node_by_attr(
-                        data_update, node.id_, "id"
-                    )
-                    if node_update is None:
-                        return False
-                    node.update(node_update["custom"])
-                self.graph_update(node, data_update)
-        return None
+    # def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
+    #     """Updating node graph in real time"""
+    #     if graph.get_input():
+    #         for node in graph.get_input():
+    #             if node.get_input():
+    #                 node_update = pipeline.find_node_by_attr(
+    #                     data_update, node.id_, "id"
+    #                 )
+    #                 if node_update is None:
+    #                     return False
+    #                 node.update(node_update["custom"])
+    #             self.graph_update(node, data_update)
+    #     return None
 
 
 class GraphStreaming:

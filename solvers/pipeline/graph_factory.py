@@ -13,6 +13,7 @@ from solvers import RootNode, solver_nodes
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
@@ -24,6 +25,43 @@ class DataBuffer:
     roi: RoiType = (np.int64(0), np.int64(0), np.int64(0), np.int64(0))
     metadata: Dict[Any, Any] = field(default_factory=dict)
     variable: Dict[Any, Any] = field(default_factory=dict)
+
+
+class GraphBuilderTemplate:
+    """General class for builders"""
+
+    def __init__(self, script: ActionScriptType, root_node: str):
+        self.buffer = DataBuffer()
+        self.script = script["script"]
+        self.root_node = root_node
+        self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
+
+    def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
+        """Updating node graph in real time"""
+        if graph.get_input():
+            for node in graph.get_input():
+                if node.get_input():
+                    node_update = find_node_by_attr(data_update, node.id_, "id")
+                    if node_update is None:
+                        continue
+                    node.update(node_update["custom"])
+                self.graph_update(node, data_update)
+        return None
+
+    def execution_controller(
+        self, root_name: str, input_script: ActionScriptType
+    ) -> None:
+        """Controller for building a graph of nodes and control parameter updates"""
+        match input_script["command"]:
+            case "action":
+                self.script = input_script["script"]
+                self.graph = build_rooted_graph(self.script, root_name, self.buffer)
+            case "update":
+                if scripts_comparison(input_script["script"], self.script):
+                    self.graph_update(self.graph, input_script["script"])
+            case "stop":
+                cv2.destroyAllWindows()
+                sys.exit(0)
 
 
 def find_node_by_attr(nodes: ScriptType, target: str, attribute: str) -> NodeType:

@@ -11,14 +11,12 @@ Static type version.
 """
 import sys
 from typing import List, Dict, Any, Tuple
-from dataclasses import dataclass, field
-from collections import defaultdict, Counter
 import socket
 import pickle
 import selectors
 import numpy as np
 import cv2
-from solvers import RootNode, pipeline, solver_nodes
+from solvers import pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -65,7 +63,7 @@ class GraphCommunication:
                 sock.close()
 
 
-class GraphBuilder:
+class GraphBuilder(pipeline.GraphBuilderTemplate):
     """Building and execution of a node graph.
     host: str = "localhost",
     port: int = 50001,
@@ -78,10 +76,13 @@ class GraphBuilder:
         host: str = "localhost",
         port: int = 50001,
         recv_size: int = 10240,
+        root_node: str = "Viewer",
     ) -> None:
-        self.buffer = pipeline.DataBuffer()
-        self.script = script["script"]
-        self.graph = pipeline.build_rooted_graph(self.script, "Viewer", self.buffer)
+        super().__init__(script, root_node)
+        # self.buffer = pipeline.DataBuffer()
+        # self.script = script["script"]
+        # self.graph = pipeline.build_rooted_graph(self.script, "Viewer", self.buffer)
+        # self.root_node = root_node
         self.com = GraphCommunication(host, port, recv_size)
 
     def run(self) -> None:
@@ -97,7 +98,7 @@ class GraphBuilder:
                 else:
                     self.com.service_connection(key, mask)
                     if self.com.data_change:
-                        self.execution_controller("Viewer", self.com.data_change)
+                        self.execution_controller(self.root_node, self.com.data_change)
                         self.com.data_change.clear()
 
             # Playback control
@@ -110,36 +111,36 @@ class GraphBuilder:
                 if self.graph.stop():
                     break
 
-    def execution_controller(
-        self, root_name: str, input_script: ActionScriptType
-    ) -> None:
-        """Controller for building a graph of nodes and control parameter updates"""
-        match input_script["command"]:
-            case "action":
-                self.script = input_script["script"]
-                self.graph = pipeline.build_rooted_graph(
-                    self.script, root_name, self.buffer
-                )
-            case "update":
-                if pipeline.scripts_comparison(input_script["script"], self.script):
-                    self.graph_update(self.graph, input_script["script"])
-            case "stop":
-                cv2.destroyAllWindows()
-                sys.exit(0)
+    # def execution_controller(
+    #     self, root_name: str, input_script: ActionScriptType
+    # ) -> None:
+    #     """Controller for building a graph of nodes and control parameter updates"""
+    #     match input_script["command"]:
+    #         case "action":
+    #             self.script = input_script["script"]
+    #             self.graph = pipeline.build_rooted_graph(
+    #                 self.script, root_name, self.buffer
+    #             )
+    #         case "update":
+    #             if pipeline.scripts_comparison(input_script["script"], self.script):
+    #                 self.graph_update(self.graph, input_script["script"])
+    #         case "stop":
+    #             cv2.destroyAllWindows()
+    #             sys.exit(0)
 
-    def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
-        """Updating node graph in real time"""
-        if graph.get_input():
-            for node in graph.get_input():
-                if node.get_input():
-                    node_update = pipeline.find_node_by_attr(
-                        data_update, node.id_, "id"
-                    )
-                    if node_update is None:
-                        continue
-                    node.update(node_update["custom"])
-                self.graph_update(node, data_update)
-        return None
+    # def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
+    #     """Updating node graph in real time"""
+    #     if graph.get_input():
+    #         for node in graph.get_input():
+    #             if node.get_input():
+    #                 node_update = pipeline.find_node_by_attr(
+    #                     data_update, node.id_, "id"
+    #                 )
+    #                 if node_update is None:
+    #                     continue
+    #                 node.update(node_update["custom"])
+    #             self.graph_update(node, data_update)
+    #     return None
 
     def __del__(self) -> None:
         """Closing video capture and window"""
