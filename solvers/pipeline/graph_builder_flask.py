@@ -14,13 +14,12 @@ from typing import List, Dict, Any, Tuple
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers import RootNode, pipeline
+from solvers import pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
 ActionScriptType = Dict[str, Any]
-RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
 class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
@@ -75,21 +74,6 @@ class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
         """The main loop, processing the node execution script tree"""
         # self.app.run(host='192.168.88.253', debug=True)
         self.app.run(debug=True)
-
-    def execution_controller(self, input_script: NodeType) -> None:
-        """Controller for building a graph of nodes and control parameter updates"""
-        match input_script["command"]:
-            case "action":
-                self.script = input_script["script"]
-                self.graph = pipeline.build_rooted_graph(
-                    self.script, "WebStreaming", self.buffer
-                )
-            case "update":
-                if pipeline.scripts_comparison(input_script["script"], self.script):
-                    self.graph_update(self.graph, input_script["script"])
-            case "stop":
-                # cv2.destroyAllWindows()
-                sys.exit(0)
 
     def __del__(self) -> None:
         """Closing video capture and window"""
