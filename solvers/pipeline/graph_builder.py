@@ -22,7 +22,6 @@ from solvers import pipeline
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
 ActionScriptType = Dict[str, Any]
-RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
 
 
 class GraphCommunication:
@@ -69,16 +68,9 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
     port: int = 50001,
     recv_size: int = 10240,
 
-    attributes from template:
-    self.buffer = DataBuffer()
+    Attributes from template:
     self.script = script["script"]
     self.root_node = root_node
-    self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
-    self.controller_dict = {
-    "action":self.action,
-    "update":self.update,
-    "stop":self.stop
-    }
     """
 
     def __init__(
@@ -105,9 +97,7 @@ class GraphBuilder(pipeline.GraphBuilderTemplate):
                 else:
                     self.com.service_connection(key, mask)
                     if self.com.data_change:
-                        self.controller_dict[str(self.com.data_change["command"])](
-                            self.com.data_change
-                        )
+                        self.execution_controller(self.com.data_change)
                         self.com.data_change.clear()
 
             # Playback control

@@ -42,7 +42,12 @@ class GraphBuilderTemplate:
             "action": self.action,
             "update": self.update,
             "stop": self.stop,
+            "stop_flask": self.stop_flask,
         }
+
+    def execution_controller(self, input_script: ActionScriptType) -> None:
+        """Controller for building a graph of nodes and control parameter updates"""
+        self.controller_dict[str(input_script["command"])](input_script)
 
     def graph_update(self, graph: RootNode, data_update: ScriptType) -> None:
         """Updating node graph in real time"""
@@ -64,8 +69,8 @@ class GraphBuilderTemplate:
     def update(self, input_script: ActionScriptType) -> None:
         """The method starts a comparison of the working
         script and the one received from the client;
-        if the parameters are different,
-        the parameters of the running nodes are updated.
+        If the composition of nodes in the graph has not changed,
+        we update the state of the node parameters.
         """
         if scripts_comparison(input_script["script"], self.script):
             self.graph_update(self.graph, input_script["script"])
@@ -74,6 +79,11 @@ class GraphBuilderTemplate:
         """Shutting down and exiting node graph execution"""
         if "stop" in input_script["command"]:
             cv2.destroyAllWindows()
+            sys.exit(0)
+
+    def stop_flask(self, input_script: ActionScriptType):
+        """Shutting down and exiting node graph execution"""
+        if "stop_flask" in input_script["command"]:
             sys.exit(0)
 
 
@@ -111,9 +121,9 @@ def cleaning_unplugged_nodes(
     return clear_script
 
 
-def build_node_graph(
+def build_node_dict(
     script: ScriptType, root_node: NodeType, buffer: DataBuffer
-) -> RootNode:
+) -> NodeType:
     """Create dictionary and adding objects to the dictionary"""
 
     node_dict: NodeType = defaultdict(lambda: {"node": None, "in": []})
@@ -121,13 +131,16 @@ def build_node_graph(
         node_id = node["id"]
         node_dict[node_id]["node"] = get_object_by_script(node, root_node, buffer)
         node_dict[node_id]["in"] = node["in"]
-    # Nodes connection
+    return node_dict
+
+
+def connection_nodes(node_dict: NodeType, root_node: NodeType) -> RootNode:
+    """We connect the inputs of nodes
+    with their outputs of related nodes."""
     for host_node in node_dict.values():
         for input_node_id in host_node["in"]:
             host_node["node"].add_input(node_dict[input_node_id]["node"])
-    # Getting Viewer node from dictionary and return
-    out = node_dict[root_node["id"]]["node"]
-    return out
+    return node_dict[root_node["id"]]["node"]
 
 
 def build_rooted_graph(
@@ -138,9 +151,9 @@ def build_rooted_graph(
 
     # Get root node from which graph execution begins
     root_node = find_node_by_attr(script, root_name, "type")
-    # Clearing the script of unlinked nodes
     clear_script = cleaning_unplugged_nodes(script, root_node, [root_node])
-    return build_node_graph(clear_script, root_node, buffer)
+    nodes_dict = build_node_dict(clear_script, root_node, buffer)
+    return connection_nodes(nodes_dict, root_node)
 
 
 def scripts_comparison(script_a: ScriptType, script_b: ScriptType) -> bool:

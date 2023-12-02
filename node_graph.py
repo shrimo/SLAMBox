@@ -136,26 +136,18 @@ class NodeBased(NodeGraph):
                 return node
         return False
 
-    def node_property_changed_flask(self):
-        """Updating node settings"""
-        if self.act:
-            out_script = {"command": "update", "script": self.buld_script()}
-            url = "http://127.0.0.1:5000/json"
-            r = requests.post(url, json=out_script)
-            print(f"{r.content}")
-
-    def node_property_changed(self):
-        """Updating node settings"""
-        if self.act:
-            out_script = {"command": "update", "script": self.buld_script()}
-            self.script_transfer(out_script)
-
     def execute_script(self):
         """Executing or Reloading a Node Graph"""
         if self.act is False:
             self.act = True
         out_script = {"command": "action", "script": self.buld_script()}
         self.script_transfer(out_script)
+
+    def node_property_changed(self):
+        """Updating node settings"""
+        if self.act:
+            out_script = {"command": "update", "script": self.buld_script()}
+            self.script_transfer(out_script)
 
     def execute_script_flask(self):
         """Executing or Reloading a Node Graph"""
@@ -167,6 +159,14 @@ class NodeBased(NodeGraph):
         r = requests.post(url, json=out_script, headers={"Connection": "close"})
         print(f"{r.content}")
 
+    def node_property_changed_flask(self):
+        """Updating node settings"""
+        if self.act:
+            out_script = {"command": "update", "script": self.buld_script()}
+            url = "http://127.0.0.1:5000/json"
+            r = requests.post(url, json=out_script)
+            print(f"{r.content}")
+
     def stop_server(self):
         """Stopping and shutting down"""
         out_script = {"command": "stop", "script": None}
@@ -177,7 +177,7 @@ class NodeBased(NodeGraph):
         """Stopping and shutting down"""
         if self.act is False:
             self.act = True
-        out_script = {"command": "stop", "script": None}
+        out_script = {"command": "stop_flask", "script": None}
         url = "http://127.0.0.1:5000/json"
         # url = "http://192.168.88.253:5000/json"
         r = requests.post(url, json=out_script, headers={"Connection": "close"})

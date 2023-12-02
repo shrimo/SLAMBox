@@ -44,7 +44,7 @@ def build() -> None:
             "version_color": str(cc.gray)[1:-1],
             "text_color": str(cc.white)[1:-1],
             "title_text": f"SLAMBOX (FlaskMS) version: {version}",
-            "builder": pipeline.GraphStreaming,
+            "builder": pipeline.GraphBuilderFlaskMS,
             "px": "100",
         },
     }
