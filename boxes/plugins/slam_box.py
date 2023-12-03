@@ -7,7 +7,7 @@ Nodes for launching SLAM pipeline
 import numpy as np
 import cv2
 from skimage.measure import LineModelND, ransac  # type: ignore
-from solvers import RootNode, frame_error, Color, show_attributes, slam_toolbox
+from boxes import RootNode, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
 

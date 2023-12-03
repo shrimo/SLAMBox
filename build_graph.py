@@ -5,7 +5,7 @@ graph using a script from the graph editor
 """
 import sys
 from typing import List, Dict, Any
-from solvers import pipeline, utility
+from boxes import pipeline, utility
 from config import host, port, recv_size, version, date
 
 NodeType = Dict[Any, Any]
@@ -51,7 +51,8 @@ def build() -> None:
 
     graph_type: str = "OpenCV"
     if len(sys.argv) > 1:
-        graph_type = sys.argv[1]
+        if sys.argv[1] in list(settings_dict.keys()):
+            graph_type = sys.argv[1]
 
     graph_dict = settings_dict[graph_type]
 

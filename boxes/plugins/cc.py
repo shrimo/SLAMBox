@@ -2,7 +2,7 @@
 
 import cv2
 import numpy as np
-from solvers import RootNode, get_tuple
+from boxes import RootNode, get_tuple
 
 
 class GRAY2BGR(RootNode):

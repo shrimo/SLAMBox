@@ -1,6 +1,6 @@
 """ GUI for tracking nodes """
 from Qt import QtCore, QtWidgets
-from lib_gui import NodeColorStyle
+from plugins_ui.main_gui_nodes import NodeColorStyle
 from NodeGraphQt import BaseNode
 from NodeGraphQt.constants import (NODE_PROP_QLABEL,
                                    NODE_PROP_QLINEEDIT,

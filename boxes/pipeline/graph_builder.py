@@ -10,13 +10,13 @@ for processing and analyzing a optical stream.
 Static type version.
 """
 # import sys
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import socket
 import pickle
 import selectors
 import numpy as np
 import cv2
-from solvers import pipeline
+from boxes import pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]

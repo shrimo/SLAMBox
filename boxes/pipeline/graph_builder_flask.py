@@ -1,5 +1,5 @@
 """
-Building and execution of a node graph(multi-stream broadcasting).
+Building and execution of a node graph(single-stream broadcasting).
 
 Main classes that describe the connection between the 
 server and the graph editor and the construction and 
@@ -14,20 +14,22 @@ from typing import List, Dict, Any, Tuple
 from flask import Flask, Response, request, jsonify, render_template
 import numpy as np
 import cv2
-from solvers import pipeline
+from boxes import pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
+ActionScriptType = Dict[str, Any]
 
 
-class GraphBuilderFlaskMS:
-    """Launching and updating streaming graph"""
+class GraphBuilderFlask(pipeline.GraphBuilderTemplate):
+    """Building and execution of a node graph."""
 
-    def __init__(self, script: ScriptType) -> None:
-        self.script = script
+    def __init__(
+        self, script: ActionScriptType, root_node: str = "WebStreaming"
+    ) -> None:
+        super().__init__(script, root_node)
         self.app = Flask(__name__)
-        self.update = False
 
         @self.app.route("/")
         def index():
@@ -35,17 +37,12 @@ class GraphBuilderFlaskMS:
 
         @self.app.route("/video_feed")
         def video_feed():
-            return Response(
-                self.generate_frames(
-                    pipeline.GraphBuilderTemplate(self.script, "WebStreaming")
-                ),
-                mimetype="multipart/x-mixed-replace; boundary=frame",
-            )
+            return self.get_video()
 
         @self.app.route("/json", methods=["POST"])
         def receive_json():
-            self.script = request.get_json()
-            self.update = True
+            data = request.get_json()
+            self.execution_controller(data)
             return f"Video server received script"
 
         @self.app.route("/selected_area", methods=["POST"])
@@ -56,17 +53,22 @@ class GraphBuilderFlaskMS:
             end_x = int(data["end_x"])
             end_y = int(data["end_y"])
             print(f"-> get roi: {data}")
+            # self.graph.get_roi_from_flask((start_x, start_y, end_x, end_y))
             return jsonify({"message": "data received"})
 
-    def generate_frames(self, graph_builder):
-        while True:
-            frame = graph_builder.graph.show_frame()
-            if self.update:
-                graph_builder.execution_controller(self.script)
-                self.update = False
-            ret, buffer = cv2.imencode(".jpg", frame)
-            frame = buffer.tobytes()
-            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+    def get_video(self):
+        def generate_frames():
+            while True:
+                frame = self.graph.show_frame()
+                ret, buffer = cv2.imencode(".jpg", frame)
+                frame = buffer.tobytes()
+                yield (
+                    b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
+                )
+
+        return Response(
+            generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame"
+        )
 
     def run(self) -> None:
         """The main loop, processing the node execution script tree"""

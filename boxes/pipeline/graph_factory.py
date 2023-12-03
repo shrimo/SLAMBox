@@ -3,20 +3,22 @@ Graph Factory.
 A set of functions for building 
 a node graph based on script.
 """
-
 import sys
 from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
-import cv2
-from solvers import RootNode, solver_nodes
+from cv2 import destroyAllWindows
+
+from boxes import RootNode, plugins
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
 ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
+
+PLUGINS = plugins.PluginRegistration()
 
 
 @dataclass
@@ -78,7 +80,7 @@ class GraphBuilderTemplate:
     def stop(self, input_script: ActionScriptType):
         """Shutting down and exiting node graph execution"""
         if "stop" in input_script["command"]:
-            cv2.destroyAllWindows()
+            destroyAllWindows()
             sys.exit(0)
 
     def stop_flask(self, input_script: ActionScriptType):
@@ -96,7 +98,7 @@ def get_object_by_script(
     node: NodeType, root_node: NodeType, buffer: DataBuffer
 ) -> RootNode:
     """Declare an object by type node"""
-    node_object = getattr(solver_nodes, node["type"])
+    node_object = PLUGINS.get_plugin(node["type"])
     return node_object(
         node["type"],
         node["id"],
