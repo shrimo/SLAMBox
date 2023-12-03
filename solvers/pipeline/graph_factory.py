@@ -10,13 +10,16 @@ from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
 import cv2
-from solvers import RootNode, solver_nodes
+
+from solvers import RootNode, plugins
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
 ScriptType = List[NodeType]
 ActionScriptType = Dict[str, Any]
 RoiType = Tuple[Any, Any, Any, Any]  # type for region of interest
+
+PLUGINS = plugins.PluginRegistration()
 
 
 @dataclass
@@ -96,7 +99,7 @@ def get_object_by_script(
     node: NodeType, root_node: NodeType, buffer: DataBuffer
 ) -> RootNode:
     """Declare an object by type node"""
-    node_object = getattr(solver_nodes, node["type"])
+    node_object = PLUGINS.get_plugin(node["type"])
     return node_object(
         node["type"],
         node["id"],

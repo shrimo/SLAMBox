@@ -10,7 +10,7 @@ for processing and analyzing a optical stream.
 Static type version.
 """
 # import sys
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import socket
 import pickle
 import selectors
