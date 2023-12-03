@@ -1,10 +1,13 @@
 ![logo](doc/slambox_logo.png)
  
-SLAMBOX is designed for use metod simultaneous localization and mapping ([SLAM][def]) in education, experiments, research and development by Node-based user interface. This is a box with tools that you can quickly and conveniently experiment with separate SLAM nodes. You can watch the demo here: [Demo video.](https://vimeo.com/881531969/eee24a6330)
+SLAMBOX is designed for use metod simultaneous localization and mapping ([SLAM][def]) in education, experiments, research and development by Node-based user interface. This is a box with tools that you can quickly and conveniently experiment with separate SLAM nodes.
 <br>
 
 ![Screenshot01](doc/screenshot01.png)
 <sup> [examples/slambox_base.json](examples/slambox_base.json) </sup>
+
+> [!NOTE]  
+> You can watch demo via Vimeo link here: [Demo video.](https://vimeo.com/881531969/eee24a6330)
 
 ## Introduction
 
@@ -85,23 +88,7 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 ### Dependent libraries 
 
-- `pip install numpy`
-
-- `pip install opencv-python`
-
-- `pip install opencv-contrib-python`
-
-- `pip3 install open3d`
-
-- `pip install scikit-image`
-
-- `pip install scipy`
-
-- `pip install -U g2o-python`
-
-- `pip install PySide2`
-
-- `pip install Qt.py`
+- `pip install -r requirements.txt`
 
 - `dnf install ffmpeg`
 
@@ -120,6 +107,10 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 - `chmod 777 slambox.sh`
 - `./slambox.sh`
 
+Or you can specify a custom version of Python
+
+- `./slambox.sh 3.10`
+
 <br>
 
 ![Screenshot05](doc/screenshot05.png)
@@ -127,16 +118,30 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 #### Launch Flask version
 
-- `python3.10 build_graph.py FlaskMS`
-- `python3.10 node_graph.py WebStreaming`
+- `python build_graph.py FlaskMS`
+- `python node_graph.py WebStreaming`
 
 <br>
 
 ## Custom node development
 
 ### Node for server part (backend)
+Create a class named SimpleNode, which will inherit the properties and methods from the [RootNode](boxes/root_node/node.py) class.
+Receives node parameters from the client side when the object is initialized.
+#### Class Methods
+- **color_reversed** - method reverses colors from RGB to BGR which is used by OpenCV library
+- **out_frame** - called by the next node and returns a frame, here we write our code to work with the frame
+- **get_input** - returns a list of all input nodes in a given node.
+- **update** - updates the parameters
+- **get_frame** - this method, common to all nodes, retrieves the frame from the previous connected node, this method is passed input number to the node
 
-Receives node parameters from the client side when the object is initialized, **out_frame** method is called by the next node and returns a frame, **update** method updates the parameters, **get_frame** method, common to all nodes, retrieves the frame from the previous connected node. The **color_reversed** method reverses colors from RGB to BGR which is used by OpenCV library.
+#### Class attributes
+- **window_name** - contains the name of the root viewer
+- **buffer** - contains a [DataBuffer](boxes/pipeline/graph_factory.py) datalass common to all nodes
+- **disabled** - this attribute contains the state of the node: enabled or disabled.
+- **param** - contains a dictionary with node parameters received from the client part
+
+<br>
 
 ```python
 """Example of a simple node (backend)"""
@@ -179,7 +184,7 @@ class SimpleNode(RootNode):
 
 ### Node for client part (frontend)
 
-In the client part of the node, we describe the parameters that are passed to the server part. ```__identifier__``` attribute indicates whether the node belongs to a type, in this case it is **Draw**. Also the color of the node type is set in **set_color**
+In the client part of the node, we describe the parameters that are passed to the server part. `__identifier__` attribute indicates whether the node belongs to a type, in this case it is **Draw**. Also the color of the node type is set in **set_color**
 
 ```python
 """Example of a simple node (frontend)"""
