@@ -4,7 +4,7 @@ Node and function library for Tracking
 
 import cv2
 import numpy as np
-from solvers import RootNode, insert_frame, Color
+from boxes import RootNode, insert_frame, Color
 
 cc = Color()
 

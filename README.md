@@ -122,13 +122,101 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 <br>
 
-![Screenshot04](doc/screenshot05.png)
+![Screenshot05](doc/screenshot05.png)
 <sup> [examples/slambox_base_flask.json](examples/slambox_base.json) </sup>
 
 #### Launch Flask version
 
 - `python3.10 build_graph.py FlaskMS`
 - `python3.10 node_graph.py WebStreaming`
+
+<br>
+
+## Custom node development
+
+### Node for server part (backend)
+
+Receives node parameters from the client side when the object is initialized, **out_frame** method is called by the next node and returns a frame, **update** method updates the parameters, **get_frame** method, common to all nodes, retrieves the frame from the previous connected node. The **color_reversed** method reverses colors from RGB to BGR which is used by OpenCV library.
+
+```python
+"""Example of a simple node (backend)"""
+
+import cv2
+import numpy as np
+from boxes import RootNode
+
+
+class SimpleNode(RootNode):
+    """A simple node that draws
+    a circle with a specific color
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.size = self.param["size"]
+        self.color = self.color_reversed(self.param["picker"])
+
+    def out_frame(self):
+        frame = self.get_frame(0)
+        if self.disabled:
+            return frame
+        height, width, channels = frame.shape
+        cv2.circle(
+            frame,
+            (np.int32(width * 0.5), np.int32(height * 0.5)),
+            self.size,
+            self.color,
+            -1,
+        )
+        return frame
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.size = param["size"]
+        self.color = self.color_reversed(param["picker"])
+```
+[boxes/plugins/simple_node.py](boxes/plugins/simple_node.py)
+
+### Node for client part (frontend)
+
+In the client part of the node, we describe the parameters that are passed to the server part. ```__identifier__``` attribute indicates whether the node belongs to a type, in this case it is **Draw**. Also the color of the node type is set in **set_color**
+
+```python
+"""Example of a simple node (frontend)"""
+
+from Qt import QtCore, QtWidgets
+from plugins_ui.main_gui_nodes import NodeColorStyle
+from NodeGraphQt import BaseNode
+from NodeGraphQt.constants import (
+    NODE_PROP_QLABEL,
+    NODE_PROP_COLORPICKER,
+    NODE_PROP_SLIDER,
+)
+
+ncs = NodeColorStyle()
+ncs.set_value(15)
+
+
+class SimpleNode(BaseNode):
+    __identifier__ = "nodes.Draw"
+    NODE_NAME = "SimpleNode"
+
+    def __init__(self):
+        super().__init__()
+        self.add_input("in", color=(180, 80, 180))
+        self.add_output("out")
+        self.create_property("label_color", "Color", widget_type=NODE_PROP_QLABEL)
+        self.create_property("picker", (0, 255, 0), widget_type=NODE_PROP_COLORPICKER)
+        self.create_property("label_size", "Size", widget_type=NODE_PROP_QLABEL)
+        self.create_property("size", 100, range=(1, 300), widget_type=NODE_PROP_SLIDER)
+        self.set_color(*ncs.Draw)
+```
+[plugins_ui/simple_gui_node.py](plugins_ui/simple_gui_node.py)
+
+![Screenshot06](doc/screenshot06.png)
+<sup>Example of a simple node working</sup>
+
+Ready modules (nodes) must be placed in the following directories: **plugins_ui/** for the client part, **boxes/plugins/** for the server part. SLAMBOX will automatically upload them to existing nodes.
 
 <br>
 

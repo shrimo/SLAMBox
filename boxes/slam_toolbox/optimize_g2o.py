@@ -38,7 +38,7 @@ finally:
                 "DenseSE3": g2o.LinearSolverDenseSE3,
             }
 
-from solvers.slam_toolbox.match_frames import poseRt
+from boxes.slam_toolbox.match_frames import poseRt
 
 
 def optimize(

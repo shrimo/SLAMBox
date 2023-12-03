@@ -3,15 +3,14 @@ Graph Factory.
 A set of functions for building 
 a node graph based on script.
 """
-
 import sys
 from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
-import cv2
+from cv2 import destroyAllWindows
 
-from solvers import RootNode, plugins
+from boxes import RootNode, plugins
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]
@@ -81,7 +80,7 @@ class GraphBuilderTemplate:
     def stop(self, input_script: ActionScriptType):
         """Shutting down and exiting node graph execution"""
         if "stop" in input_script["command"]:
-            cv2.destroyAllWindows()
+            destroyAllWindows()
             sys.exit(0)
 
     def stop_flask(self, input_script: ActionScriptType):

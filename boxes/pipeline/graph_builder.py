@@ -16,7 +16,7 @@ import pickle
 import selectors
 import numpy as np
 import cv2
-from solvers import pipeline
+from boxes import pipeline
 
 # Define data types for the node graph script and for the node itself.
 NodeType = Dict[Any, Any]

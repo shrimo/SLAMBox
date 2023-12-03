@@ -22,17 +22,9 @@ if cfg.nodegraphqt not in sys.path:
     sys.path.append(cfg.nodegraphqt)
 
 from NodeGraphQt import NodeGraph, PropertiesBinWidget
-import lib_gui as gui
+import plugins_ui as plugins
 
-
-def get_nodes():
-    """Get list of nodes object"""
-    node_list = []
-    for node in dir(gui):
-        obj = getattr(gui, node)
-        if hasattr(obj, "__identifier__"):
-            node_list.append(getattr(gui, node))
-    return node_list
+PLUGINS = plugins.PluginRegistration()
 
 
 class NodeBased(NodeGraph):
@@ -44,31 +36,43 @@ class NodeBased(NodeGraph):
         self.show_about = QtWidgets.QLabel()
         self.properties_bin = PropertiesBinWidget(node_graph=self)
         self.properties_bin.setWindowFlags(QtCore.Qt.Tool)
-        self.register_nodes(get_nodes())
+        self.register_nodes(PLUGINS.get_list_plugin())
         self.menu = self.get_context_menu("nodes")
         self.menu.add_command(
-            "Action", func=self.execute_script, node_type=None, node_class=gui.Viewer
+            "Action",
+            func=self.execute_script,
+            node_type=None,
+            node_class=PLUGINS.get_plugin("Viewer"),
         )
         self.menu.add_command(
             "Action",
             func=self.execute_script_flask,
             node_type=None,
-            node_class=gui.WebStreaming,
+            node_class=PLUGINS.get_plugin("WebStreaming"),
         )
         self.menu.add_command(
-            "Node Info", func=self.node_info, node_type=None, node_class=gui.Read
+            "Node Info",
+            func=self.node_info,
+            node_type=None,
+            node_class=PLUGINS.get_plugin("Read"),
         )
         self.menu.add_command(
-            "Stop", func=self.stop_server, node_type=None, node_class=gui.Viewer
+            "Stop",
+            func=self.stop_server,
+            node_type=None,
+            node_class=PLUGINS.get_plugin("Viewer"),
         )
         self.menu.add_command(
             "Stop",
             func=self.stop_server_flask,
             node_type=None,
-            node_class=gui.WebStreaming,
+            node_class=PLUGINS.get_plugin("WebStreaming"),
         )
         self.menu.add_command(
-            "Show image", func=self.show_image, node_type=None, node_class=gui.Image
+            "Show image",
+            func=self.show_image,
+            node_type=None,
+            node_class=PLUGINS.get_plugin("Image"),
         )
         self.context_menu = self.get_context_menu("graph")
         self.context_menu.add_separator()
