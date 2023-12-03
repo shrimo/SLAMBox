@@ -1,0 +1,14 @@
+Flask==3.0.0
+Flask-Cors==4.0.0
+g2o-python==0.0.12
+numpy==1.26.1
+open3d==0.17.0
+opencv-contrib-python==4.8.1.78
+opencv-python==4.8.1.78
+PySide2==5.15.2.1
+Qt.py==1.3.8
+scikit-build==0.17.6
+scikit-image==0.22.0
+scikit-learn==1.3.2
+scipy==1.11.3
+
