@@ -4,6 +4,43 @@ import cv2
 import numpy as np
 
 
+class RootNode:
+    """Root node that all nodes"""
+
+    def __init__(self, type_, id_, param, window_name, buffer):
+        self.buffer = buffer
+        self.empty_roi = (np.int64(), np.int64(), np.int64(), np.int64())
+        self.type_ = type_
+        self.id_ = id_
+        self.window_name = window_name
+        self.input_nodes = []
+        self.param = param
+        self.disabled = param["disabled"]
+        self.ROI_coordinates = None
+
+    def show_frame(self):
+        ...
+
+    def stop(self):
+        ...
+
+    def selection_callback(self, rect):
+        self.ROI_coordinates = rect
+
+    def add_input(self, node):
+        self.input_nodes.append(node)
+
+    def get_input(self):
+        return self.input_nodes
+
+    def get_frame(self, port_number):
+        """Port number - node input number"""
+        return self.input_nodes[port_number].out_frame()
+
+    def color_reversed(self, x):
+        return (x[2], x[1], x[0])
+
+
 class SelectionTool:
     """Frame selection tool"""
 
@@ -42,41 +79,3 @@ class SelectionTool:
         cy = int(y1 * 0.5) + int(y0 * 0.5)
         cv2.drawMarker(frame, (cx, cy), (0, 0, 255), 0, 20, 1, 8)
         cv2.rectangle(frame, (x0, y0), (x1, y1), (0, 250, 250), 1)
-
-
-class RootNode:
-    """Root node that all nodes"""
-
-    def __init__(self, type_, id_, param, window_name, buffer):
-        self.buffer = buffer
-        self.empty_roi = (np.int64(), np.int64(), np.int64(), np.int64())
-        self.type_ = type_
-        self.id_ = id_
-        self.window_name = window_name
-        self.input_nodes = []
-        self.param = param
-        self.disabled = param["disabled"]
-        self.ROI_coordinates = None
-
-    def show_frame(self):
-        ...
-
-    def stop(self):
-        ...
-
-    def selection_callback(self, rect):
-        self.ROI_coordinates = rect
-
-    def add_input(self, node):
-        self.input_nodes.append(node)
-
-    def get_input(self):
-        return self.input_nodes
-
-    def get_frame(self, port_number):
-        """Port number - node input number"""
-        return self.input_nodes[port_number].out_frame()
-
-    def color_reversed(self, x):
-        return (x[2], x[1], x[0])
-

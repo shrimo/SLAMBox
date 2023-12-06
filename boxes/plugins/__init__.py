@@ -7,7 +7,7 @@ from importlib import util, import_module
 from collections import defaultdict
 import inspect
 
-def print_profiling(text:str, t1:List[float], t2:List[float]) -> None:
+def speed_profiling(text:str, t1:List[float], t2:List[float]) -> None:
     print(f"{text}\n Real time: {t2[0] - t1[0]:.2f} seconds")
     print(f" CPU time: {t2[1] - t1[1]:.2f} seconds")
 
@@ -29,7 +29,7 @@ class PluginRegistration:
                 # t1 = time.perf_counter(), time.process_time()
                 plugin = self.load_module(os.path.join(self.__dirpath, fname))
                 # t2 = time.perf_counter(), time.process_time()
-                # print_profiling(fname, t1, t2)
+                # speed_profiling(fname, t1, t2)
                 for name, obj in inspect.getmembers(plugin, inspect.isclass):
                     self.__plugins[name] = obj
 

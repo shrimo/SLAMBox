@@ -3,9 +3,66 @@
 import time
 import cv2
 import numpy as np
-from boxes import RootNode, get_tuple
+from dataclasses import fields
+from boxes import RootNode, get_tuple, Color, show_attributes
 
-# from .misc import insert_frame, get_tuple
+
+class ColorSet(RootNode):
+    """Shows the set of colors available in the system"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.num_rows = self.param["num_rows"]
+        self.num_cols = self.param["num_cols"]
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.color_set = Color()
+        self.color_dict = {}
+        self.color_inv = {
+            "white": self.color_set.black,
+            "black": self.color_set.white,
+            "yellow": self.color_set.gray,
+            "cyan": self.color_set.gray,
+            "green": self.color_set.gray,
+        }
+        for field in fields(self.color_set):
+            field_value = getattr(self.color_set, field.name)
+            self.color_dict[field.name] = field_value
+
+    def out_frame(self):
+        frame = self.get_frame(0)
+        if frame is None:
+            print("ColorSet stop")
+            return None
+        elif self.disabled:
+            return frame
+        frame_height, frame_width, _ = frame.shape
+        tile_width = frame_width // self.num_cols
+        tile_height = frame_height // self.num_rows
+        for i, key in enumerate(self.color_dict):
+            row = i // self.num_cols
+            col = i % self.num_cols
+            x1, y1 = col * tile_width, row * tile_height
+            x2, y2 = (col + 1) * tile_width, (row + 1) * tile_height
+            cv2.rectangle(frame, (x1, y1), (x2, y2), self.color_dict[key], -1)
+            text_color = self.color_set.white
+            if key in self.color_inv.keys():
+                text_color = self.color_inv[key]
+            cv2.putText(
+                frame,
+                key.replace("_", " ").capitalize(),
+                (x1 + 5, y2 - 10),
+                self.font,
+                0.5,
+                text_color,
+                1,
+            )
+        show_attributes(frame, [f'SLAMBOX{" "*4}'])
+        return frame
+
+    def update(self, param):
+        self.disabled = param["disabled"]
+        self.num_rows = param["num_rows"]
+        self.num_cols = param["num_cols"]
 
 
 class FPS(RootNode):

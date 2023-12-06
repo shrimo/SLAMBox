@@ -9,7 +9,7 @@ from NodeGraphQt.constants import (NODE_PROP_QLABEL,
                                    NODE_PROP_SLIDER,
                                    NODE_PROP_FILE,
                                    NODE_PROP_QCHECKBOX,
-                                   NODE_PROP_FLOAT)
+                                   NODE_PROP_INT)
 
 class NodeColorStyle:
     """ Node Colors Style """
@@ -120,6 +120,19 @@ class SwitchFrame(BaseNode):
         self.add_output('out', color=(80, 120, 120))
         self.add_checkbox('switch_channel', 'Switch', text='On/Off', state=False, tab='attributes')
         self.set_color(*ncs.Fusion)
+
+class ColorSet(BaseNode):
+    __identifier__ = 'nodes.Draw'
+    NODE_NAME = 'ColorSet'
+    def __init__(self):
+        super(ColorSet, self).__init__()
+        self.add_input('in', color=(180, 80, 0))
+        self.create_property('label_num_rows', 'Num rows', widget_type=NODE_PROP_QLABEL)
+        self.create_property('num_rows', 6, widget_type=NODE_PROP_INT)
+        self.create_property('label_num_cols', 'Num cols', widget_type=NODE_PROP_QLABEL)
+        self.create_property('num_cols', 6, widget_type=NODE_PROP_INT)
+        self.add_output('out')
+        self.set_color(*ncs.Draw)
 
 class FPS(BaseNode):
     __identifier__ = 'nodes.Draw'
