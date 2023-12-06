@@ -12,16 +12,16 @@ class Color:
     OpenCV uses BGR image format
     """
 
+    white: tuple = (255, 255, 255)
+    gray: tuple = (25, 25, 25)
+    black: tuple = (0, 0, 0)
     red: tuple = (0, 0, 255)
-    dark_red: tuple = (0, 0, 150)
     green: tuple = (0, 255, 0)
     blue: tuple = (255, 0, 0)
     yellow: tuple = (0, 255, 255)
     cyan: tuple = (255, 255, 0)
     magenta: tuple = (255, 0, 255)
-    white: tuple = (255, 255, 255)
-    gray: tuple = (25, 25, 25)
-    black: tuple = (0, 0, 0)
+    dark_red: tuple = (0, 0, 150)
     midnight_blue: tuple = (110, 50, 30)
     cerulean: tuple = (167, 123, 0)
     claret: tuple = (49, 19, 129)
@@ -45,6 +45,9 @@ class Color:
     viva_magenta: tuple = (85, 52, 190)
     persimmon: tuple = (102, 120, 246)
     strong_blue: tuple = (160, 93, 31)
+    kohlrabi: tuple = (101, 207, 156)
+    red_orange: tuple = (39, 83, 239)
+    high_visibility: tuple = (0, 199, 241)
 
 
 cc = Color()

@@ -35,8 +35,8 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 - This node, based on the parameters, calculates [Camera Intrinsic Matrix][CameraMatrix]. Intrinsic parameters are specific to a camera. They include information like focal length *(Fx, Fy)* and optical centers *(Cx, Cy)*. The focal length and optical centers can be used to create a camera matrix, which can be used to remove distortion due to the lenses of a specific camera. The camera matrix is unique to a specific camera, so once calculated, it can be reused on other images taken by the same camera. It is expressed as a 3x3 matrix:
 
 #### DetectorDescriptor
-- [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) (Oriented FAST and Rotated BRIEF)
-- [AKAZE](https://docs.opencv.org/4.8.0/db/d70/tutorial_akaze_matching.html)  local features matching
+- [ORB](https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html) Oriented FAST and Rotated BRIEF
+- [A-KAZE](http://www.robesafe.com/personal/pablo.alcantarilla/kaze.html)  Accelerated-KAZE Features uses a novel mathematical framework called Fast Explicit Diffusion embedded in a pyramidal framework to speed-up dramatically the nonlinear scale space computation. 
 
 #### MatchPoints
 - [Brute-Force](https://docs.opencv.org/4.8.0/dc/dc3/tutorial_py_matcher.html) matcher is simple. It takes the descriptor of one feature in first set and is matched with all other features in second set using some distance calculation. And the closest one is returned.
