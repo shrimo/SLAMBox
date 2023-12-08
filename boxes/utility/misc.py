@@ -86,6 +86,10 @@ def get_tuple(in_str, ttype=int):
     return tuple(map(ttype, in_str.split(",")))
 
 
+def rgb2bgr(x):
+    return (x[2], x[1], x[0])
+
+
 def move_to_center(tx, ty, cx, cy):
     """function shifts frame along tracker point to center of frame"""
     return np.float32([[1, 0, -(tx - cx)], [0, 1, -(ty - cy)]])

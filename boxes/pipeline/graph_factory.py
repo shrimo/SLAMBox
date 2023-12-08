@@ -61,10 +61,9 @@ class GraphBuilderTemplate:
                         continue
                     node.update(node_update["custom"])
                 self.graph_update(node, data_update)
-        return None
 
     def action(self, input_script: ActionScriptType) -> None:
-        # Method for initially starting the script
+        """Method for initially starting the script"""
         self.script = input_script["script"]
         self.graph = build_rooted_graph(self.script, self.root_node, self.buffer)
 

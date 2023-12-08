@@ -70,10 +70,9 @@ class FPS(RootNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.color = get_tuple(self.param["fps_color"])
         self.prev_frame_time = 0
         self.new_frame_time = 0
-        self.color_x = self.color_reversed(self.param["color_picker"])
+        self.color = self.color_reversed(self.param["color_picker"])
         self.font = cv2.FONT_HERSHEY_SIMPLEX
 
     def out_frame(self):
@@ -100,7 +99,7 @@ class FPS(RootNode):
             (int(WH[1] - 130), int(WH[0] - 20)),
             self.font,
             0.75,
-            (self.color_x),
+            (self.color),
             1,
         )
         self.prev_frame_time = self.new_frame_time
@@ -108,8 +107,7 @@ class FPS(RootNode):
 
     def update(self, param):
         self.disabled = param["disabled"]
-        self.color = get_tuple(param["fps_color"])
-        self.color_x = self.color_reversed(param["color_picker"])
+        self.color = self.color_reversed(param["color_picker"])
 
 
 class Counter(RootNode):
@@ -117,7 +115,7 @@ class Counter(RootNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.color = get_tuple(self.param["counter_color"])
+        self.color = self.color_reversed(self.param["counter_color"])
         self.frame_counter = 0
         self.font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -144,7 +142,7 @@ class Counter(RootNode):
 
     def update(self, param):
         self.disabled = param["disabled"]
-        self.color = get_tuple(param["counter_color"])
+        self.color = self.color_reversed(param["counter_color"])
 
 
 class Constant(RootNode):
@@ -152,7 +150,7 @@ class Constant(RootNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.color = get_tuple(self.param["constant_color"])
+        self.color = self.color_reversed(self.param["constant_color"])
         self.width = int(self.param["width_"])
         self.height = int(self.param["height_"])
 
@@ -166,7 +164,7 @@ class Constant(RootNode):
         return image
 
     def update(self, param):
-        self.color = get_tuple(param["constant_color"])
+        self.color = self.color_reversed(param["constant_color"])
         self.width = int(param["width"])
         self.height = int(param["height"])
 
@@ -176,7 +174,7 @@ class Text(RootNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.color = get_tuple(self.param["text_color_"])
+        self.color = self.color_reversed(self.param["text_color_"])        
         self.text = self.param["text"]
         self.px = int(self.param["px"])
         self.py = int(self.param["py"])
@@ -197,7 +195,7 @@ class Text(RootNode):
 
     def update(self, param):
         self.disabled = param["disabled"]
-        self.color = get_tuple(param["text_color_"])
+        self.color = self.color_reversed(param["text_color_"])
         self.text = param["text"]
         self.px = int(param["px"])
         self.py = int(param["py"])
@@ -211,7 +209,7 @@ class Trajectory(RootNode):
         super().__init__(*args, **kwargs)
         self.length = int(self.param["length"])
         self.size = int(self.param["size"])
-        self.color = get_tuple(self.param["track_color"])
+        self.color = self.color_reversed(self.param["track_color"])
         self.variable = self.param["variable"]
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.tr = []
@@ -237,5 +235,6 @@ class Trajectory(RootNode):
             self.tr.clear()
         self.length = int(param["length"])
         self.size = int(param["size"])
-        self.track_color = get_tuple(param["track_color"])
+        self.track_color = self.color_reversed(param["track_color"])
         self.variable = param["variable"]
+
