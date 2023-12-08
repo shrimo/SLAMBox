@@ -38,7 +38,6 @@
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
-        "fps_color":"250,250,250",
         "color_picker":[
           255,
           255,

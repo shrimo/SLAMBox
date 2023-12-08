@@ -23,29 +23,29 @@ def build() -> None:
         "OpenCV": {
             "type": "Viewer",
             "name": "Viewport",
-            "version_color": str(cc.strong_blue)[1:-1],
-            "text_color": str(cc.white)[1:-1],
+            "version_color": utility.rgb2bgr(cc.strong_blue),
+            "text_color": cc.white,
             "title_text": f"SLAM box. version: {version}",
             "builder": pipeline.GraphBuilder,
-            "px": "220",
+            "px": "220"
         },
         "Flask": {
             "type": "WebStreaming",
             "name": "Viewport",
-            "version_color": str(cc.gray)[1:-1],
-            "text_color": str(cc.white)[1:-1],
+            "version_color": cc.gray,
+            "text_color": cc.white,
             "title_text": f"SLAMBOX (Flask) version: {version}",
             "builder": pipeline.GraphBuilderFlask,
-            "px": "140",
+            "px": "140"
         },
         "FlaskMS": {
             "type": "WebStreaming",
             "name": "Viewport",
-            "version_color": str(cc.gray)[1:-1],
-            "text_color": str(cc.white)[1:-1],
+            "version_color": cc.gray,
+            "text_color": cc.white,
             "title_text": f"SLAMBOX (FlaskMS) version: {version}",
             "builder": pipeline.GraphBuilderFlaskMS,
-            "px": "100",
+            "px": "100"
         },
     }
 
