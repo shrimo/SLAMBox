@@ -2,14 +2,27 @@
 
 import time
 import os
-from typing import List
-from importlib import util, import_module
-from collections import defaultdict
 import inspect
+from importlib import util
+from collections import defaultdict
 
-def speed_profiling(text:str, t1:List[float], t2:List[float]) -> None:
-    print(f"{text}\n Real time: {t2[0] - t1[0]:.2f} seconds")
-    print(f" CPU time: {t2[1] - t1[1]:.2f} seconds")
+
+class TimeProfiling:
+    """Class for profiling time"""
+
+    def __init__(self):
+        self.t1 = float
+        print('Loading plugins:')
+
+    def get_start(self):
+        """Start point"""
+        self.t1 = time.process_time()
+
+    def get_end(self, text: str = 'plugins'):
+        """End point"""
+        t2 = time.process_time()
+        print(f"-> {text}: {t2 - self.t1:.5f} seconds")
+
 
 class PluginRegistration:
     """Registering plugins in the dictionary"""
@@ -17,6 +30,7 @@ class PluginRegistration:
     def __init__(self):
         self.__dirpath = os.path.dirname(os.path.abspath(__file__))
         self.__plugins = defaultdict(lambda: {"name": None})
+        self.tp = TimeProfiling()
         self.registration()
 
     def registration(self):
@@ -26,10 +40,9 @@ class PluginRegistration:
                 and not fname.startswith("__")
                 and fname.endswith(".py")
             ):
-                # t1 = time.perf_counter(), time.process_time()
+                self.tp.get_start()
                 plugin = self.load_module(os.path.join(self.__dirpath, fname))
-                # t2 = time.perf_counter(), time.process_time()
-                # speed_profiling(fname, t1, t2)
+                self.tp.get_end(fname)
                 for name, obj in inspect.getmembers(plugin, inspect.isclass):
                     self.__plugins[name] = obj
 

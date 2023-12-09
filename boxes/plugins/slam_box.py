@@ -6,7 +6,6 @@ Nodes for launching SLAM pipeline
 # import time
 import numpy as np
 import cv2
-from skimage.measure import LineModelND, ransac  # type: ignore
 from boxes import RootNode, frame_error, Color, show_attributes, slam_toolbox
 
 cc = Color()
@@ -298,6 +297,7 @@ class Triangulate(RootNode):
             color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)[cy, cx]
 
             pt = slam_toolbox.Point(mapp, p[0:3], color)
+
             pt.add_observation(f2, idx2[i])
             pt.add_observation(f1, idx1[i])
             # new_pts_count += 1

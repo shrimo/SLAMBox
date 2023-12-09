@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7f29dd7a5590":{
+    "0x7f89f35301f0":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -32,8 +32,8 @@
       "width":160,
       "height":232.0,
       "pos":[
-        307.98283370446546,
-        -194.63518909770048
+        295.96566740893064,
+        -201.50214126657747
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -46,7 +46,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7f29def90650":{
+    "0x7f89f35305b0":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -72,14 +72,15 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":93.0,
+      "height":60,
       "pos":[
-        333.7339043377538,
-        729.9999999999999
+        323.4334760844381,
+        742.0171662955347
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
+        "label_color":"Color",
         "color_picker":[
           255,
           255,
@@ -87,7 +88,7 @@
         ]
       }
     },
-    "0x7f29dd7bea50":{
+    "0x7f89f3530880":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -115,8 +116,8 @@
       "width":160,
       "height":71.0,
       "pos":[
-        333.73390433775404,
-        848.28326195778
+        323.4334760844383,
+        839.699571746684
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -124,7 +125,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7f29dd7b4510":{
+    "0x7f89f3530b20":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -152,8 +153,8 @@
       "width":160,
       "height":60,
       "pos":[
-        307.29610955724587,
-        66.95278364655084
+        295.27894326171105,
+        60.08583147767385
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -164,7 +165,7 @@
         "height_":576
       }
     },
-    "0x7f29dd7a6bd0":{
+    "0x7f89f3530df0":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -192,8 +193,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        334.7639182327542,
-        278.11156283951874
+        322.74675193721924,
+        271.24461067064175
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -205,7 +206,7 @@
         "algorithm":"ORB"
       }
     },
-    "0x7f29dd796c10":{
+    "0x7f89f3531090":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -233,8 +234,8 @@
       "width":160,
       "height":100.0,
       "pos":[
-        334.7639182327544,
-        394.8497497104278
+        322.74675193721947,
+        387.98279754155067
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -250,7 +251,7 @@
         "show_marker":false
       }
     },
-    "0x7f29dd7b44d0":{
+    "0x7f89f3531420":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -278,17 +279,19 @@
       "width":160,
       "height":60,
       "pos":[
-        334.7639182327544,
-        521.888364834652
+        322.74675193721947,
+        515.0214126657748
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
         "label_m_orb_distance":"ORB distance",
-        "orb_distance":64.0
+        "orb_distance":64.0,
+        "label_show_marker":"Show marker",
+        "show_marker":false
       }
     },
-    "0x7f29def58590":{
+    "0x7f89f35316f0":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -316,8 +319,8 @@
       "width":160,
       "height":60,
       "pos":[
-        334.76391823275463,
-        616.308957156711
+        322.7467519372197,
+        609.4420049878341
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -330,11 +333,18 @@
           0,
           0
         ],
+        "label_windiw_size":"Windiw size",
+        "window_size":[
+          1024,
+          576
+        ],
         "label_write_pcd":"Write point clouds",
-        "write_pcd":false
+        "write_pcd":false,
+        "label_file":"File path",
+        "file":"./data/pcd/slam_map_"
       }
     },
-    "0x7f29ddfa2a50":{
+    "0x7f89f3531990":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -362,8 +372,8 @@
       "width":160,
       "height":60,
       "pos":[
-        307.2961095572462,
-        181.97423247524077
+        295.2789432617113,
+        175.10728030636372
       ],
       "port_deletion_allowed":false,
       "subgraph_session":{},
@@ -382,81 +392,81 @@
   "connections":[
     {
       "out":[
-        "0x7f29dd7a5590",
+        "0x7f89f35301f0",
         "out"
       ],
       "in":[
-        "0x7f29dd7b4510",
+        "0x7f89f3530b20",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f29def90650",
+        "0x7f89f35305b0",
         "in"
       ],
       "out":[
-        "0x7f29def58590",
+        "0x7f89f35316f0",
         "out"
-      ]
-    },
-    {
-      "out":[
-        "0x7f29def90650",
-        "out"
-      ],
-      "in":[
-        "0x7f29dd7bea50",
-        "in"
       ]
     },
     {
       "out":[
-        "0x7f29dd7b4510",
+        "0x7f89f35305b0",
         "out"
       ],
       "in":[
-        "0x7f29ddfa2a50",
+        "0x7f89f3530880",
+        "in"
+      ]
+    },
+    {
+      "out":[
+        "0x7f89f3530b20",
+        "out"
+      ],
+      "in":[
+        "0x7f89f3531990",
         "in"
       ]
     },
     {
       "in":[
-        "0x7f29dd7a6bd0",
+        "0x7f89f3530df0",
         "ina"
       ],
       "out":[
-        "0x7f29ddfa2a50",
+        "0x7f89f3531990",
         "out"
       ]
     },
     {
       "out":[
-        "0x7f29dd7a6bd0",
+        "0x7f89f3530df0",
         "out"
       ],
       "in":[
-        "0x7f29dd796c10",
+        "0x7f89f3531090",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f29dd796c10",
+        "0x7f89f3531090",
         "out"
       ],
       "in":[
-        "0x7f29dd7b44d0",
+        "0x7f89f3531420",
         "in"
       ]
     },
     {
       "out":[
-        "0x7f29dd7b44d0",
+        "0x7f89f3531420",
         "out"
       ],
       "in":[
-        "0x7f29def58590",
+        "0x7f89f35316f0",
         "in"
       ]
     }
