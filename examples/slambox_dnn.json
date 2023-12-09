@@ -4,7 +4,7 @@
     "pipe_collision":false
   },
   "nodes":{
-    "0x7eff0cd43e50":{
+    "0x7f4ab972c1f0":{
       "type_":"nodes.Draw.FPS",
       "icon":null,
       "name":"FPS",
@@ -30,7 +30,7 @@
       "selected":false,
       "visible":true,
       "width":160,
-      "height":93.0,
+      "height":60,
       "pos":[
         448.76518312088376,
         1097.0330999256119
@@ -38,6 +38,7 @@
       "port_deletion_allowed":false,
       "subgraph_session":{},
       "custom":{
+        "label_color":"Color",
         "color_picker":[
           255,
           255,
@@ -45,7 +46,7 @@
         ]
       }
     },
-    "0x7eff0cd901f0":{
+    "0x7f4ab972c340":{
       "type_":"nodes.Viewer.Viewer",
       "icon":null,
       "name":"Viewer",
@@ -68,7 +69,7 @@
         180
       ],
       "disabled":false,
-      "selected":true,
+      "selected":false,
       "visible":true,
       "width":160,
       "height":71.0,
@@ -82,7 +83,7 @@
         "node_name":"Viewport"
       }
     },
-    "0x7eff0cd90490":{
+    "0x7f4ab972c5b0":{
       "type_":"nodes.SLAMBox.DetectorDescriptor",
       "icon":null,
       "name":"DetectorDescriptor",
@@ -117,13 +118,13 @@
       "subgraph_session":{},
       "custom":{
         "label_nfeatures":"Number of features",
-        "nfeatures":600,
+        "nfeatures":1000,
         "show_points":false,
         "label_algorithm":"Algorithm",
         "algorithm":"ORB"
       }
     },
-    "0x7eff0cd908e0":{
+    "0x7f4ab972ca00":{
       "type_":"nodes.SLAMBox.MatchPoints",
       "icon":null,
       "name":"MatchPoints",
@@ -168,7 +169,7 @@
         "show_marker":false
       }
     },
-    "0x7eff0cd90c70":{
+    "0x7f4ab9703be0":{
       "type_":"nodes.SLAMBox.Triangulate",
       "icon":null,
       "name":"Triangulate",
@@ -208,7 +209,7 @@
         "show_marker":true
       }
     },
-    "0x7eff0cd90f40":{
+    "0x7f4ab972cee0":{
       "type_":"nodes.SLAMBox.Open3DMap",
       "icon":null,
       "name":"Open3DMap",
@@ -256,10 +257,12 @@
           576
         ],
         "label_write_pcd":"Write point clouds",
-        "write_pcd":false
+        "write_pcd":false,
+        "label_file":"File path",
+        "file":"./data/pcd/slam_map_"
       }
     },
-    "0x7eff0cd911e0":{
+    "0x7f4ab972d180":{
       "type_":"nodes.SLAMBox.Camera",
       "icon":null,
       "name":"Camera",
@@ -303,7 +306,7 @@
         "calibration_data":"data/calibration_data.npz"
       }
     },
-    "0x7eff0cd91480":{
+    "0x7f4ab972d420":{
       "type_":"nodes.SLAMBox.KalmanFilterOptimization",
       "icon":null,
       "name":"KalmanFilterOptimization",
@@ -349,7 +352,7 @@
         "measNoise":0.1
       }
     },
-    "0x7eff0cd91720":{
+    "0x7f4ab972d6c0":{
       "type_":"nodes.Transform.Resize",
       "icon":null,
       "name":"Resize",
@@ -387,7 +390,7 @@
         "resize":30
       }
     },
-    "0x7eff0cd919c0":{
+    "0x7f4ab972d960":{
       "type_":"nodes.Fusion.Insert",
       "icon":null,
       "name":"Insert",
@@ -427,7 +430,7 @@
         "offset_y":0
       }
     },
-    "0x7eff0cd91d20":{
+    "0x7f4ab972dcc0":{
       "type_":"nodes.Transform.Reformat",
       "icon":null,
       "name":"Reformat",
@@ -467,7 +470,7 @@
         "height_":576
       }
     },
-    "0x7eff0cd91f90":{
+    "0x7f4ab972df30":{
       "type_":"nodes.Read.Read",
       "icon":null,
       "name":"Read",
@@ -509,7 +512,7 @@
         "file":"./video/road.mp4"
       }
     },
-    "0x7eff0cd924d0":{
+    "0x7f4ab972e470":{
       "type_":"nodes.SLAMBox.DNNMask",
       "icon":null,
       "name":"DNNMask 1",
@@ -554,7 +557,7 @@
         "show_mask":true
       }
     },
-    "0x7eff0cd929e0":{
+    "0x7f4ab972e980":{
       "type_":"nodes.SLAMBox.LineModelOptimization",
       "icon":null,
       "name":"LineModelOptimization",
@@ -601,151 +604,151 @@
   "connections":[
     {
       "in":[
-        "0x7eff0cd43e50",
+        "0x7f4ab972c1f0",
         "in"
       ],
       "out":[
-        "0x7eff0cd919c0",
+        "0x7f4ab972d960",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd43e50",
+        "0x7f4ab972c1f0",
         "out"
       ],
       "in":[
-        "0x7eff0cd901f0",
+        "0x7f4ab972c340",
         "in"
       ]
     },
     {
       "in":[
-        "0x7eff0cd90490",
+        "0x7f4ab972c5b0",
         "ina"
       ],
       "out":[
-        "0x7eff0cd911e0",
+        "0x7f4ab972d180",
         "out"
       ]
     },
     {
       "in":[
-        "0x7eff0cd90490",
+        "0x7f4ab972c5b0",
         "inb"
       ],
       "out":[
-        "0x7eff0cd924d0",
+        "0x7f4ab972e470",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd90490",
+        "0x7f4ab972c5b0",
         "out"
       ],
       "in":[
-        "0x7eff0cd908e0",
+        "0x7f4ab972ca00",
         "in"
       ]
     },
     {
       "out":[
-        "0x7eff0cd908e0",
+        "0x7f4ab972ca00",
         "out"
       ],
       "in":[
-        "0x7eff0cd90c70",
+        "0x7f4ab9703be0",
         "in"
       ]
     },
     {
       "out":[
-        "0x7eff0cd90c70",
+        "0x7f4ab9703be0",
         "out"
       ],
       "in":[
-        "0x7eff0cd91480",
+        "0x7f4ab972d420",
         "in"
       ]
     },
     {
       "in":[
-        "0x7eff0cd90f40",
+        "0x7f4ab972cee0",
         "in"
       ],
       "out":[
-        "0x7eff0cd929e0",
+        "0x7f4ab972e980",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd90f40",
+        "0x7f4ab972cee0",
         "out"
       ],
       "in":[
-        "0x7eff0cd919c0",
+        "0x7f4ab972d960",
         "in_a"
       ]
     },
     {
       "in":[
-        "0x7eff0cd911e0",
+        "0x7f4ab972d180",
         "in"
       ],
       "out":[
-        "0x7eff0cd91d20",
+        "0x7f4ab972dcc0",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd91480",
+        "0x7f4ab972d420",
         "out"
       ],
       "in":[
-        "0x7eff0cd929e0",
+        "0x7f4ab972e980",
         "in"
       ]
     },
     {
       "in":[
-        "0x7eff0cd91720",
+        "0x7f4ab972d6c0",
         "in"
       ],
       "out":[
-        "0x7eff0cd924d0",
+        "0x7f4ab972e470",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd91720",
+        "0x7f4ab972d6c0",
         "out"
       ],
       "in":[
-        "0x7eff0cd919c0",
+        "0x7f4ab972d960",
         "in_b"
       ]
     },
     {
       "in":[
-        "0x7eff0cd91d20",
+        "0x7f4ab972dcc0",
         "in"
       ],
       "out":[
-        "0x7eff0cd91f90",
+        "0x7f4ab972df30",
         "out"
       ]
     },
     {
       "out":[
-        "0x7eff0cd91d20",
+        "0x7f4ab972dcc0",
         "out"
       ],
       "in":[
-        "0x7eff0cd924d0",
+        "0x7f4ab972e470",
         "in"
       ]
     }
