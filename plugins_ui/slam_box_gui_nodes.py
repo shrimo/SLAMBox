@@ -15,7 +15,7 @@ from NodeGraphQt.constants import (
     NODE_PROP_QCHECKBOX,
     NODE_PROP_FLOAT,
     NODE_PROP_INT,
-    NODE_PROP_VECTOR2
+    NODE_PROP_VECTOR2,
 )
 
 ncs = NodeColorStyle()
@@ -121,10 +121,13 @@ class Triangulate(BaseNode):
         self.create_property(
             "orb_distance", 64.0, range=(1.0, 100.0), widget_type=NODE_PROP_FLOAT
         )
-        self.create_property("label_show_marker", "Show marker", widget_type=NODE_PROP_QLABEL)
+        self.create_property(
+            "label_show_marker", "Show marker", widget_type=NODE_PROP_QLABEL
+        )
         self.create_property("show_marker", False, widget_type=NODE_PROP_QCHECKBOX)
 
         self.set_color(*ncs.SLAMBox)
+
 
 class Show2DMap(BaseNode):
     __identifier__ = "nodes.SLAMBox"
@@ -144,15 +147,12 @@ class Show2DMap(BaseNode):
         self.create_property(
             "point_color", (1, 0, 0), widget_type=NODE_PROP_COLORPICKER
         )
-        self.create_property(
-            "label_offsetx", "offset x", widget_type=NODE_PROP_QLABEL
-        )
+        self.create_property("label_offsetx", "offset x", widget_type=NODE_PROP_QLABEL)
         self.create_property("offsetx", 500, widget_type=NODE_PROP_INT)
-        self.create_property(
-            "label_offsety", "offset y", widget_type=NODE_PROP_QLABEL
-        )
+        self.create_property("label_offsety", "offset y", widget_type=NODE_PROP_QLABEL)
         self.create_property("offsety", 0, widget_type=NODE_PROP_INT)
         self.set_color(*ncs.SLAMBox)
+
 
 class Open3DMap(BaseNode):
     __identifier__ = "nodes.SLAMBox"
@@ -172,14 +172,18 @@ class Open3DMap(BaseNode):
         self.create_property(
             "point_color", (1, 0, 0), widget_type=NODE_PROP_COLORPICKER
         )
-        self.create_property('label_windiw_size', 'Windiw size', widget_type=NODE_PROP_QLABEL)
-        self.create_property('window_size', [1024, 576], widget_type=NODE_PROP_VECTOR2)
+        self.create_property(
+            "label_windiw_size", "Windiw size", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("window_size", [1024, 576], widget_type=NODE_PROP_VECTOR2)
         self.create_property(
             "label_write_pcd", "Write point clouds", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("write_pcd", False, widget_type=NODE_PROP_QCHECKBOX)
-        self.create_property('label_file', 'File path', widget_type=NODE_PROP_QLABEL)
-        self.create_property('file', './data/pcd/slam_map_', widget_type=NODE_PROP_FILE_SAVE)
+        self.create_property("label_file", "File path", widget_type=NODE_PROP_QLABEL)
+        self.create_property(
+            "file", "./data/pcd/slam_map_", widget_type=NODE_PROP_FILE_SAVE
+        )
         self.set_color(*ncs.SLAMBox)
 
 
@@ -221,12 +225,7 @@ class GeneralGraphOptimization(BaseNode):
         self.add_output("out")
         # Pymem version Dictionary containing solvers
         # https://github.com/RainerKuemmerle/g2o/tree/pymem
-        SolverSE3 = [
-            "CSparseSE3",
-            "EigenSE3",
-            "CholmodSE3",
-            "DenseSE3"
-        ]
+        SolverSE3 = ["CSparseSE3", "EigenSE3", "CholmodSE3", "DenseSE3"]
         # version by https://github.com/miquelmassot/g2o-python
         # SolverSE3 = [
         #     "SolverEigenSE3",
