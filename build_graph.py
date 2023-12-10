@@ -50,9 +50,11 @@ def build() -> None:
     }
 
     graph_type: str = "OpenCV"
-    if len(sys.argv) > 1:
-        if sys.argv[1] in list(settings_dict.keys()):
-            graph_type = sys.argv[1]
+    if (
+        len(sys.argv) > 1
+        and sys.argv[1] in list(settings_dict.keys())
+    ):
+        graph_type = sys.argv[1]
 
     graph_dict = settings_dict[graph_type]
 
