@@ -7,33 +7,38 @@ import os
 import sys
 import numpy as np
 
-from config import g2opy_path
+# from config import g2opy_path
+# if g2opy_path not in sys.path:
+#     sys.path.append(g2opy_path)
 
-if g2opy_path not in sys.path:
-    sys.path.append(g2opy_path)
+# # Checking for the presence of the framework and required methods
+# try:
+#     import g2opy as g2o  # type: ignore
+# except ModuleNotFoundError as er:
+#     print(f"{er}: Framework g2opy not available")
+#     try:
+#         import g2o  # type: ignore
+#     except ModuleNotFoundError as er:
+#         print(f"{er}: Framework g2o not available")
+# finally:
+#     if getattr(g2o, "__name__", None):
+#         if getattr(g2o, "LinearSolverCSparseSE3", None):
+#             # Pymem version https://github.com/RainerKuemmerle/g2o/tree/pymem
+#             SolverSE3 = {
+#                 "CSparseSE3": g2o.LinearSolverCSparseSE3,
+#                 "EigenSE3": g2o.LinearSolverEigenSE3,
+#                 "CholmodSE3": g2o.LinearSolverCholmodSE3,
+#                 "DenseSE3": g2o.LinearSolverDenseSE3,
+#             }
+#         else:
+#             # g2o version by https://github.com/miquelmassot/g2o-python
+#             SolverSE3 = {
+#                 "EigenSE3": g2o.LinearSolverEigenSE3,
+#                 "DenseSE3": g2o.LinearSolverDenseSE3,
+#             }
 
-# Checking for the presence of the framework and required methods
-try:
-    import g2opy as g2o  # type: ignore
-except ModuleNotFoundError as er:
-    print(f"{er}: Framework g2opy not available")
-    try:
-        import g2o  # type: ignore
-    except ModuleNotFoundError as er:
-        print(f"{er}: Framework g2o not available")
-finally:
-    if getattr(g2o, "__name__", None):
-        if getattr(g2o, "LinearSolverCSparseSE3", None):
-            # Pymem version https://github.com/RainerKuemmerle/g2o/tree/pymem
-            SolverSE3 = {
-                "CSparseSE3": g2o.LinearSolverCSparseSE3,
-                "EigenSE3": g2o.LinearSolverEigenSE3,
-                "CholmodSE3": g2o.LinearSolverCholmodSE3,
-                "DenseSE3": g2o.LinearSolverDenseSE3,
-            }
-        else:
-            # g2o version by https://github.com/miquelmassot/g2o-python
-            SolverSE3 = {
+import g2o  # type: ignore
+SolverSE3 = {
                 "EigenSE3": g2o.LinearSolverEigenSE3,
                 "DenseSE3": g2o.LinearSolverDenseSE3,
             }
