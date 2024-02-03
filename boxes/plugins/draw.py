@@ -116,7 +116,6 @@ class Counter(RootNode):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.color = self.color_reversed(self.param["counter_color"])
-        self.frame_counter = 0
         self.font = cv2.FONT_HERSHEY_SIMPLEX
 
     def out_frame(self):
@@ -130,14 +129,13 @@ class Counter(RootNode):
         cv2.rectangle(frame, (20, height - 50), (180, height), (110, 50, 30), -1)
         cv2.putText(
             frame,
-            "frame:" + str(self.frame_counter),
+            "frame:" + str(self.buffer.metadata['current_frame']),
             (int(30), int(height - 20)),
             self.font,
             0.75,
             self.color,
             1,
         )
-        self.frame_counter += 1
         return frame
 
     def update(self, param):
