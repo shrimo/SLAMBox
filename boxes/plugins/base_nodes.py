@@ -32,6 +32,7 @@ class Viewer(RootNode):
             self.buffer.switch = True  # old metod
             self.ROI_coordinates = None
         cv2.imshow(self.window_name, frame)
+        self.buffer.variable["next_frame"] = True
         return True
 
     def stop(self):
@@ -51,6 +52,7 @@ class WebStreaming(RootNode):
         if frame is None:
             print("WebStreaming stop")
             return None
+        self.buffer.variable["next_frame"] = True
         return frame
 
     # def get_roi_from_flask(self, roi):
@@ -119,22 +121,34 @@ class Read(RootNode):
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         width = np.int32(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = np.int32(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        current_frame = np.int32(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
         # Storing metadata in a buffer. Additional tmp buffer to save the reference value.
         self.buffer.metadata = {
             "fps": fps,
             "width": width,
             "height": height,
             "frame_size": [width, height],
+            "current_frame": current_frame,
         }
+        self.frame_buffer = None
+        self.buffer.variable["next_frame"] = True
 
     def out_frame(self):
-        success, frame = self.cap.read()
-        if success:
-            return frame
-        elif self.loop:
-            """If it's a loop, set the counter to start frame and return current frame"""
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.start_frame)
-            return self.out_frame()
+        if self.buffer.variable["next_frame"]:
+            success, frame = self.cap.read()
+            if success:
+                self.frame_buffer = frame.copy()
+                self.buffer.variable["next_frame"] = False
+                self.buffer.metadata["current_frame"] = np.int32(
+                    self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                )
+                return frame
+            elif self.loop:
+                """If it's a loop, set the counter to start frame and return current frame"""
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.start_frame)
+                return self.out_frame()
+        else:
+            return self.frame_buffer
         self.cap.release()
         print("ReadNode a stop")
         return None
