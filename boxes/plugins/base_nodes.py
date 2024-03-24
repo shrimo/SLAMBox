@@ -7,41 +7,6 @@ import numpy as np
 from boxes import RootNode, SelectionTool, get_tuple, frame_error
 
 
-class Viewer(RootNode):
-    """Displays frames. End node for nodes graph."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
-        # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
-        cv2.moveWindow(self.window_name, 100, 100)
-        # Initialization to invoke the selection tool
-        self.sel_tool = SelectionTool(self.window_name, self.selection_callback)
-        # self.ROI_coordinates = None
-
-    def show_frame(self):
-        frame = self.get_frame(0)
-        if frame is None:
-            print("Viewer stop")
-            return None
-        # Add switch on/off selection tool (draw_selection - metod from class SelectionTool)
-        self.sel_tool.draw_selection(frame)
-        if self.ROI_coordinates:
-            # Save the ROI coordinates to the buffer
-            self.buffer.roi = self.ROI_coordinates
-            self.buffer.switch = True  # old metod
-            self.ROI_coordinates = None
-        cv2.imshow(self.window_name, frame)
-        self.buffer.variable["next_frame"] = True
-        return True
-
-    def stop(self):
-        print("Stop Viewer")
-        # self.buffer.variable['STOPSLAM'] = True
-        cv2.waitKey(10)
-        return True
-
-
 class WebStreaming(RootNode):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,9 +45,6 @@ class SelectionBuffer(RootNode):
             return None
         elif self.disabled:
             return frame
-        # if self.buffer.roi:
-        #     self.calculations_for_ROI(frame, self.buffer.roi)
-        #     self.buffer.roi = self.empty_roi
         elif self.buffer.switch:
             self.calculations_for_ROI(frame, self.buffer.roi)
             self.buffer.switch = False
@@ -131,27 +93,55 @@ class Read(RootNode):
             "current_frame": current_frame,
         }
         self.frame_buffer = None
-        self.buffer.variable["next_frame"] = True
 
-    def out_frame(self):
-        if self.buffer.variable["next_frame"]:
-            success, frame = self.cap.read()
-            if success:
-                self.frame_buffer = frame.copy()
-                self.buffer.variable["next_frame"] = False
-                self.buffer.metadata["current_frame"] = np.int32(
-                    self.cap.get(cv2.CAP_PROP_POS_FRAMES)
-                )
-                return frame
-            elif self.loop:
-                """If it's a loop, set the counter to start frame and return current frame"""
-                self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.start_frame)
-                return self.out_frame()
-        else:
-            return self.frame_buffer
+    def out_frame(self):        
+        success, frame = self.cap.read()
+        if success:            
+            self.buffer.metadata["current_frame"] = np.int32(
+                self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+            )
+            return frame
+        elif self.loop:
+            """If it's a loop, set the counter to start frame and return current frame"""
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.start_frame)
+            return self.out_frame()        
         self.cap.release()
         print("ReadNode a stop")
         return None
+
+
+class Viewer(RootNode):
+    """Displays frames. End node for nodes graph."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_NORMAL | cv2.WINDOW_AUTOSIZE)
+        # cv2.namedWindow(self.window_name, cv2.WINDOW_GUI_EXPANDED | cv2.WINDOW_AUTOSIZE)
+        cv2.moveWindow(self.window_name, 100, 100)
+        # Initialization to invoke the selection tool
+        self.sel_tool = SelectionTool(self.window_name, self.selection_callback)
+        # self.ROI_coordinates = None
+
+    def show_frame(self):
+        frame = self.get_frame(0)
+        if frame is None:
+            print("Viewer stop")
+            return None
+        # Add switch on/off selection tool (draw_selection - metod from class SelectionTool)
+        self.sel_tool.draw_selection(frame)
+        if self.ROI_coordinates:
+            # Save the ROI coordinates to the buffer
+            self.buffer.roi = self.ROI_coordinates
+            self.buffer.switch = True  # old metod
+            self.ROI_coordinates = None
+        cv2.imshow(self.window_name, frame)
+        return True
+
+    def stop(self):
+        print("Stop Viewer")
+        # self.buffer.variable['STOPSLAM'] = True
+        cv2.waitKey(10)
+        return True
 
 
 class VideoWriter(RootNode):
