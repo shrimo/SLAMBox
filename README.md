@@ -86,12 +86,22 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 ![Screenshot04](doc/screenshot04.png)
 <sup> [examples/slambox_g2o.json](examples/slambox_g2o.json) <sup>
 
-### Dependent libraries 
+### Installing dependent libraries
+Fedora
+```bash
+cd ~/your_fav_code_directory
+git clone https://github.com/shrimo/SLAMBox.git
+cd SLAMBox
+pip install -r requirements.txt
+dnf install ffmpeg
+```
 
-- `pip install -r requirements.txt`
-
-- `dnf install ffmpeg`
-
+Ubuntu
+```bash
+...
+sudo apt update
+sudo apt install ffmpeg
+```
 <br>
 
 **g2o** framework for Python can also be build from [source code](https://github.com/RainerKuemmerle/g2o/tree/pymem), also add path to the compiled library in file *config.py*, see the *g2opy_path* variable.
@@ -99,17 +109,19 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 
 *SLAMBOX is distributed in the hope that it will be useful, but there is no guarantee that it will work perfectly. There are no warranty as to its quality or suitability for a particular purpose. Our primary development platform is Linux and Python 3.10 (Fedora Linux 36-39, Ubuntu 22). Has been tested on Mac OS X 10.15 (Only the AKAZE descriptor works; the ORB detector still works with errors.)*
 
-### Installation and launch
+### launch
 
-- `cd ~/your_fav_code_directory`
-- `git clone https://github.com/shrimo/SLAMBox.git`
-- `cd SLAMBox`
-- `chmod 777 slambox.sh`
-- `./slambox.sh`
+```bash
+cd SLAMBox
+chmod 777 slambox.sh
+./slambox.sh
+```
 
 Or you can specify a custom version of Python
 
-- `./slambox.sh 3.10`
+```bash
+/slambox.sh 3.10
+```
 
 <br>
 
@@ -118,8 +130,10 @@ Or you can specify a custom version of Python
 
 #### Launch Flask version
 
-- `python build_graph.py FlaskMS`
-- `python node_graph.py WebStreaming`
+```bash
+python build_graph.py FlaskMS
+python node_graph.py WebStreaming
+```
 
 <br>
 

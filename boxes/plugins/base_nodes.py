@@ -17,7 +17,7 @@ class WebStreaming(RootNode):
         if frame is None:
             print("WebStreaming stop")
             return None
-        self.buffer.variable["next_frame"] = True
+        # self.buffer.variable["next_frame"] = True
         return frame
 
     # def get_roi_from_flask(self, roi):
