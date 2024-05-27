@@ -1,7 +1,7 @@
 #!/usr/bin/python3.10
 
 """
-GUI for video or image analysis and processing
+Graphical interface for managing navigation objects
 Based on the NodeGraphQt a node graph UI framework
 written in python that can be implemented and re-purposed
 into applications supporting PySide2.
