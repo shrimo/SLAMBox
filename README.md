@@ -99,10 +99,18 @@ dnf install ffmpeg
 Ubuntu
 ```bash
 ...
+
 sudo apt update
 sudo apt install ffmpeg
 ```
 <br>
+
+> [!NOTE]  
+> Please install latest opencv-python  
+```bash
+python3 -m pip install --upgrade opencv-python
+```
+
 
 **g2o** framework for Python can also be build from [source code](https://github.com/RainerKuemmerle/g2o/tree/pymem), also add path to the compiled library in file *config.py*, see the *g2opy_path* variable.
 <br>
