@@ -18,23 +18,24 @@ ncs = NodeColorStyle()
 ncs.set_value(15)
 
 
-class AllTrackers(BaseNode):
+class VitTrack(BaseNode):
     __identifier__ = "nodes.Tracking"
-    NODE_NAME = "AllTrackers"
+    NODE_NAME = "VitTrack"
 
     def __init__(self):
         super().__init__()
         self.add_input("in", color=(180, 80, 180))
         self.add_output("out")
-        tracker_type = ["BOOSTING", "MIL", "KCF", "TLD", "MEDIANFLOW", "MOSSE", "CSRT"]
+        self.create_property(
+            "label_model_path", "Model path", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property(
+            "model_path",
+            "data/object_tracking_vittrack_2023sep.onnx",
+            widget_type=NODE_PROP_FILE,
+        )
         self.create_property("label_variable", "Variable", widget_type=NODE_PROP_QLABEL)
         self.create_property("variable", "track1", widget_type=NODE_PROP_QLINEEDIT)
-        self.create_property(
-            "label_tracker_types", "Tracker type", widget_type=NODE_PROP_QLABEL
-        )
-        self.create_property(
-            "tracker_type", "CSRT", items=tracker_type, widget_type=NODE_PROP_QCOMBO
-        )
         self.add_checkbox(
             "show_ROI", "Show ROI", text="On/Off", state=False, tab="attributes"
         )
