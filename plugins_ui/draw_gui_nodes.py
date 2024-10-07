@@ -79,6 +79,27 @@ class Constant(BaseNode):
         self.add_text_input("width_", "Width", text="1280", tab="attributes")
         self.add_text_input("height_", "Height", text="720", tab="attributes")
 
+class ChessboardDrawer(BaseNode):
+    __identifier__ = "nodes.Draw"
+    NODE_NAME = "ChessboardDrawer"
+
+    def __init__(self):
+        super(ChessboardDrawer, self).__init__()
+        self.add_output("out")
+        self.set_color(*ncs.Draw)
+        self.create_property("label_color1", "Color1", widget_type=NODE_PROP_QLABEL)
+        self.create_property(
+            "color1", (0, 0, 0), widget_type=NODE_PROP_COLORPICKER
+        )
+        self.create_property("label_color2", "Color2", widget_type=NODE_PROP_QLABEL)
+        self.create_property(
+            "color2", (255, 255, 255), widget_type=NODE_PROP_COLORPICKER
+        )
+        self.add_text_input("width_", "Width", text="1280", tab="attributes")
+        self.add_text_input("height_", "Height", text="1280", tab="attributes")
+        self.add_text_input("grid_size_w", "Grid size Width", text="9", tab="attributes")
+        self.add_text_input("grid_size_h", "Grid size Height", text="16", tab="attributes")
+
 
 class Text(BaseNode):
     __identifier__ = "nodes.Draw"
