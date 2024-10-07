@@ -129,7 +129,7 @@ class Counter(RootNode):
         cv2.rectangle(frame, (20, height - 50), (180, height), (110, 50, 30), -1)
         cv2.putText(
             frame,
-            "frame:" + str(self.buffer.metadata['current_frame']),
+            "frame:" + str(self.buffer.metadata["current_frame"]),
             (int(30), int(height - 20)),
             self.font,
             0.75,
@@ -163,8 +163,66 @@ class Constant(RootNode):
 
     def update(self, param):
         self.color = self.color_reversed(param["constant_color"])
-        self.width = int(param["width"])
-        self.height = int(param["height"])
+        self.width = int(param["width_"])
+        self.height = int(param["height_"])
+
+
+class ChessboardDrawer(RootNode):
+    """ChessboardDrawer background with specified color"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.color1 = self.color_reversed(self.param["color1"])
+        self.color2 = self.color_reversed(self.param["color2"])
+        self.width = int(self.param["width_"])
+        self.height = int(self.param["height_"])
+        self.grid_size_w = int(self.param["grid_size_w"])
+        self.grid_size_h = int(self.param["grid_size_h"])
+        self.square_calc()
+
+    def square_calc(self):
+        square_width = self.width // self.grid_size_w
+        square_height = self.height // self.grid_size_h
+        self.square_size = min(square_width, square_height)  # Ensure square squares
+
+    def out_frame(self):
+        """
+        Draws the calibration chessboard with square squares.
+        """
+        rows, cols = self.grid_size_w, self.grid_size_h
+        img_height = rows * self.square_size
+        img_width = cols * self.square_size
+
+        # Create an empty image
+        chessboard_img = np.zeros((img_height, img_width, 3), dtype=np.uint8)
+
+        # Iterate through the grid and draw squares
+        for i in range(rows):
+            for j in range(cols):
+                # Determine the current square's color
+                if (i + j) % 2 == 0:
+                    color = self.color1
+                else:
+                    color = self.color2
+
+                # Calculate the top-left and bottom-right corners of the square
+                top_left = (j * self.square_size, i * self.square_size)
+                bottom_right = ((j + 1) * self.square_size, (i + 1) * self.square_size)
+
+                # Draw the square on the image
+                cv2.rectangle(chessboard_img, top_left, bottom_right, color, -1)
+
+        return chessboard_img
+
+    def update(self, param):
+        print("update")
+        self.color1 = self.color_reversed(param["color1"])
+        self.color2 = self.color_reversed(param["color2"])
+        self.width = int(param["width_"])
+        self.height = int(param["height_"])
+        self.grid_size_w = int(param["grid_size_w"])
+        self.grid_size_h = int(param["grid_size_h"])
+        self.square_calc()
 
 
 class Text(RootNode):
@@ -172,7 +230,7 @@ class Text(RootNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.color = self.color_reversed(self.param["text_color_"])        
+        self.color = self.color_reversed(self.param["text_color_"])
         self.text = self.param["text"]
         self.px = int(self.param["px"])
         self.py = int(self.param["py"])
@@ -235,4 +293,3 @@ class Trajectory(RootNode):
         self.size = int(param["size"])
         self.track_color = self.color_reversed(param["track_color"])
         self.variable = param["variable"]
-

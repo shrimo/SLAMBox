@@ -48,6 +48,7 @@ class Color:
     kohlrabi: tuple = (101, 207, 156)
     red_orange: tuple = (39, 83, 239)
     high_visibility: tuple = (0, 199, 241)
+    scarlet_smile: tuple = (54, 36, 159)
 
 
 cc = Color()

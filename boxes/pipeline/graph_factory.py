@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import numpy as np
-from cv2 import destroyAllWindows # pylint: disable=E0611
+from cv2 import destroyAllWindows  # pylint: disable=E0611
 
 from boxes import RootNode, plugins
 
@@ -46,6 +46,7 @@ class GraphBuilderTemplate:
             "stop": self.stop,
             "stop_flask": self.stop_flask,
         }
+        self.top_nodes = ["ChessboardDrawer", "Constant"]
 
     def execution_controller(self, input_script: ActionScriptType) -> None:
         """Controller for building a graph of nodes and control parameter updates"""
@@ -55,7 +56,7 @@ class GraphBuilderTemplate:
         """Updating node graph in real time"""
         if graph.get_input():
             for node in graph.get_input():
-                if node.get_input():
+                if node.get_input() or node.type_ in self.top_nodes:
                     node_update = find_node_by_attr(data_update, node.id_, "id")
                     if node_update is None:
                         continue

@@ -121,14 +121,13 @@ python3 -m pip install --upgrade opencv-python
 
 ```bash
 cd SLAMBox
-chmod 777 slambox.sh
-./slambox.sh
+bash slambox.sh
 ```
 
 Or you can specify a custom version of Python
 
 ```bash
-/slambox.sh 3.10
+bash slambox.sh 3.10
 ```
 
 <br>
