@@ -49,6 +49,7 @@ class Color:
     red_orange: tuple = (39, 83, 239)
     high_visibility: tuple = (0, 199, 241)
     scarlet_smile: tuple = (54, 36, 159)
+    mocha_mousse:tuple = (71, 87, 102)
 
 
 cc = Color()

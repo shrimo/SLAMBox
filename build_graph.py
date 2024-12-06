@@ -23,7 +23,7 @@ def build() -> None:
         "OpenCV": {
             "type": "Viewer",
             "name": "Viewport",
-            "version_color": utility.rgb2bgr(cc.scarlet_smile),
+            "version_color": utility.rgb2bgr(cc.mocha_mousse),
             "text_color": cc.white,
             "title_text": f"SLAM box. version: {version}",
             "builder": pipeline.GraphBuilder,
