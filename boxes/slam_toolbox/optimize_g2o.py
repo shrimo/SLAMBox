@@ -38,13 +38,13 @@ import numpy as np
 #             }
 
 import g2o  # type: ignore
+from boxes.slam_toolbox.match_frames import poseRt
+
 SolverSE3 = {
                 "EigenSE3": g2o.LinearSolverEigenSE3,
                 "DenseSE3": g2o.LinearSolverDenseSE3,
+                "PCGSE3": g2o.LinearSolverPCGSE3,
             }
-
-from boxes.slam_toolbox.match_frames import poseRt
-
 
 def optimize(
     frames,
