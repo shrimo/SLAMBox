@@ -22,6 +22,7 @@ class GeneralGraphOptimization(RootNode):
         self.solverSE3 = self.param["solverSE3"]
         self.step_frame = self.param["step_frame"]
         self.turn_on_sliding_window = self.param["sliding_window"]
+        self.sliding_window_size = self.param["sliding_window_size"]
         self.culled_pt = 0
 
     def out_frame(self):
@@ -45,6 +46,7 @@ class GeneralGraphOptimization(RootNode):
             err, self.culled_pt = self.mapp.g2optimize(
                 solverSE3=self.solverSE3,
                 slid_win=self.turn_on_sliding_window,
+                win_size=self.sliding_window_size,
             )  # verbose=False
             # print("Optimize: %f units of error" % err)
 
@@ -62,6 +64,7 @@ class GeneralGraphOptimization(RootNode):
         self.solverSE3 = param["solverSE3"]
         self.step_frame = param["step_frame"]
         self.turn_on_sliding_window = param["sliding_window"]
+        self.sliding_window_size = param["sliding_window_size"]
 
 
 class LineModelOptimization(RootNode):

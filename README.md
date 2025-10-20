@@ -54,6 +54,9 @@ The basic graph for SLAM in SLAMBOX consists of the following nodes: **Camera, D
 #### GeneralGraphOptimization
 - Optimize a pose graph based on the nodes and edge constraints. This node contains three different methods that solve PGO, GaussNewton Levenberg-Marquardt and Powell’s Dogleg. It is mainly used to solve the SLAM problem in robotics and the bundle adjustment problems in computer vision. ORB-SLAM uses [g2o][def2] as a back-end for camera pose optimization.
 
+#### Sliding Window
+- In SLAM, the sliding window is a feature-based optimization technique that maintains a fixed-size set of recent frames and landmarks for pose and map refinement. By limiting the optimization to this local window, it reduces computational cost while preserving accuracy, as older frames are marginalized or converted into priors. This approach enables continuous real-time refinement of the trajectory and 3D structure without processing the entire history.
+
 <br>
 
 ![Screenshot03](doc/screenshot03.png)
