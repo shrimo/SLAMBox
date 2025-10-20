@@ -231,13 +231,17 @@ class GeneralGraphOptimization(BaseNode):
             "solverSE3", "PCGSE3", items=SolverSE3, widget_type=NODE_PROP_QCOMBO
         )
         self.create_property(
-            "label_step_frame", "Step frame", widget_type=NODE_PROP_QLABEL
+            "label_step_frame", "Optimization step frame", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("step_frame", 4, widget_type=NODE_PROP_INT)
         self.create_property(
             "label_sliding_window", "Sliding window", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("sliding_window", False, widget_type=NODE_PROP_QCHECKBOX)
+        self.create_property(
+            "label_sliding_window_size", "Sliding window size", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("sliding_window_size", 10, widget_type=NODE_PROP_INT)
         
         self.set_color(*ncs.slam_optimization)
 
