@@ -223,24 +223,22 @@ class GeneralGraphOptimization(BaseNode):
         super().__init__()
         self.add_input("in", color=(180, 80, 180))
         self.add_output("out")
-        # Pymem version Dictionary containing solvers
-        # https://github.com/RainerKuemmerle/g2o/tree/pymem
         SolverSE3 = ["CSparseSE3", "EigenSE3", "CholmodSE3", "DenseSE3", "PCGSE3"]
-        # version by https://github.com/miquelmassot/g2o-python
-        # SolverSE3 = [
-        #     "SolverEigenSE3",
-        #     "SolverDenseSE3"
-        # ]
         self.create_property(
             "label_solverSE3", "SolverSE3", widget_type=NODE_PROP_QLABEL
         )
         self.create_property(
-            "solverSE3", "EigenSE3", items=SolverSE3, widget_type=NODE_PROP_QCOMBO
+            "solverSE3", "PCGSE3", items=SolverSE3, widget_type=NODE_PROP_QCOMBO
         )
         self.create_property(
             "label_step_frame", "Step frame", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("step_frame", 4, widget_type=NODE_PROP_INT)
+        self.create_property(
+            "label_sliding_window", "Sliding window", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("sliding_window", False, widget_type=NODE_PROP_QCHECKBOX)
+        
         self.set_color(*ncs.slam_optimization)
 
 

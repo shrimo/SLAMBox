@@ -153,6 +153,10 @@ class MatchPoints(RootNode):
             self.m_trials,
         )
 
+        if Rt is None:
+            print("[SLAM] Skipping frame due to insufficient matches.")
+            return
+
         # Adding new data to the buffer
         self.buffer.variable["slam_data"].extend([idx1, idx2, Rt])
 
