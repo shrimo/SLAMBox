@@ -21,6 +21,7 @@ class GeneralGraphOptimization(RootNode):
         super().__init__(*args, **kwargs)
         self.solverSE3 = self.param["solverSE3"]
         self.step_frame = self.param["step_frame"]
+        self.turn_on_sliding_window = self.param["sliding_window"]
         self.culled_pt = 0
 
     def out_frame(self):
@@ -42,7 +43,8 @@ class GeneralGraphOptimization(RootNode):
         # optimize the map
         if frame.id >= 2 and frame.id % self.step_frame == 0:
             err, self.culled_pt = self.mapp.g2optimize(
-                solverSE3=self.solverSE3
+                solverSE3=self.solverSE3,
+                slid_win=self.turn_on_sliding_window,
             )  # verbose=False
             # print("Optimize: %f units of error" % err)
 
@@ -59,6 +61,7 @@ class GeneralGraphOptimization(RootNode):
         self.disabled = param["disabled"]
         self.solverSE3 = param["solverSE3"]
         self.step_frame = param["step_frame"]
+        self.turn_on_sliding_window = param["sliding_window"]
 
 
 class LineModelOptimization(RootNode):

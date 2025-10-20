@@ -7,13 +7,7 @@ import numpy as np
 from boxes.slam_toolbox.optimize_g2o import optimize
 
 CULLING_ERR_THRES = 0.02
-
-
-# def add_ones(x):
-#     if len(x.shape) == 1:
-#         return np.concatenate([x, np.array([1.0])], axis=0)
-#     else:
-#         return np.concatenate([x, np.ones((x.shape[0], 1))], axis=1)
+SLIDING_WINDOW_SIZE = 10  # number of keyframes to keep
 
 
 def hamming_distance(a, b):
@@ -36,7 +30,6 @@ class Point:
         if len(self.pt.shape) == 1:
             return np.concatenate([self.pt, np.array([1.0])], axis=0)
         return np.concatenate([self.pt, np.ones((self.pt.shape[0], 1))], axis=1)
-        # return add_ones(self.pt)
 
     def orb(self):
         return [f.descriptors[idx] for f, idx in zip(self.frames, self.idxs)]
@@ -63,6 +56,9 @@ class Map:
         self.points = []
         self.max_frame = 0
         self.max_point = 0
+        self.max_point
+        # priors collected from marginalization: list of dicts {'frame_id', 'pose', 'info'}
+        self.priors = []
 
     def add_point(self, point):
         ret = self.max_point
@@ -84,7 +80,13 @@ class Map:
         verbose=False,
         rounds=50,
         solverSE3="SolverEigenSE3",
+        slid_win=False,
     ):
+
+        # Apply sliding window before optimization
+        if slid_win:
+            self.slide_window()
+
         err = optimize(
             self.frames,
             self.points,
@@ -117,3 +119,32 @@ class Map:
         # print("Culled:   %d points" % (culled_pt_count))
         # print("Optimize: %f units of error" % err)
         return err, culled_pt_count
+
+    def slide_window(self):
+        """
+        Keep only the most recent frames and points observed in them.
+        """
+        if len(self.frames) <= SLIDING_WINDOW_SIZE:
+            return
+
+        # keep only last N frames
+        active_frames = self.frames[-SLIDING_WINDOW_SIZE:]
+        active_frame_ids = {f.id for f in active_frames}
+
+        # remove old frames
+        old_frames = [f for f in self.frames if f.id not in active_frame_ids]
+        for f in old_frames:
+            self.frames.remove(f)
+
+        # remove points that are not seen in active frames
+        removed_points = 0
+        for p in list(self.points):
+            # keep point if any observation is from active frames
+            if not any(f.id in active_frame_ids for f in p.frames):
+                self.points.remove(p)
+                p.delete()
+                removed_points += 1
+
+        print(
+            f"[SlidingWindow] Removed {len(old_frames)} old frames and {removed_points} points."
+        )

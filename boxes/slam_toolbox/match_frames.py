@@ -41,8 +41,8 @@ def fundamentalRt(F):
 
 def match_frame(f1, f2, m_samples=8, r_threshold=0.01, m_trials=300):
     """
-    BFMatcher.knnMatch() - method returns k best matches
-    where k is specified by the user.
+    Match keypoints between two frames and estimate relative pose using Essential matrix.
+    Returns indices of inliers and relative pose (4x4 SE3).
     """
     matches = bf.knnMatch(f1.descriptors, f2.descriptors, k=2)
 
@@ -61,22 +61,31 @@ def match_frame(f1, f2, m_samples=8, r_threshold=0.01, m_trials=300):
                 idx2s.add(m.trainIdx)
                 ret.append((p1, p2))
 
-    assert len(ret) >= 8
+    # Check for minimal number of matches
+    if len(ret) < 8:
+        print(f"[WARN] Too few matches: {len(ret)} (need >= 8). Skipping frame.")
+        return None, None, None
 
     ret = np.array(ret)
     idx1, idx2 = np.array(idx1), np.array(idx2)
 
-    # Fit matrix. Random sample consensus (RANSAC)
-    model, inliers = ransac(
-        (ret[:, 0], ret[:, 1]),
-        EssentialMatrixTransform,
-        min_samples=m_samples,
-        residual_threshold=r_threshold,
-        max_trials=m_trials,
-    )
-    # print(f"Matches:  {len(f1.descriptors)} -> {len(matches)} -> {len(inliers)} -> {sum(inliers)}")
-    return idx1[inliers], idx2[inliers], fundamentalRt(model.params)
+    try:
+        model, inliers = ransac(
+            (ret[:, 0], ret[:, 1]),
+            EssentialMatrixTransform,
+            min_samples=m_samples,
+            residual_threshold=r_threshold,
+            max_trials=m_trials,
+        )
+    except Exception as e:
+        print(f"[WARN] RANSAC failed: {e}")
+        return None, None, None
 
+    if inliers is None or np.sum(inliers) < 8:
+        print(f"[WARN] Not enough inliers after RANSAC: {np.sum(inliers)}")
+        return None, None, None
+
+    return idx1[inliers], idx2[inliers], fundamentalRt(model.params)
 
 # Old functions
 # def fundamentalToRt(F):
