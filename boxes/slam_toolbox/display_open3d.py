@@ -40,6 +40,9 @@ class DisplayOpen3D:
         opt.show_coordinate_frame = True
         opt.background_color = [0.0] * 3
         opt.point_size = self.point_size
+        opt.mesh_show_back_face = True
+        # opt.mesh_show_wireframe = True
+        # opt.light_on = False
 
         # Initialize point cloud with one dummy point
         self.pcl = o3d.geometry.PointCloud()
@@ -47,7 +50,7 @@ class DisplayOpen3D:
         self.pcl.colors = o3d.utility.Vector3dVector(np.array([[0.5, 0.5, 0.5]], dtype=np.float64))
 
         # Create world coordinate axis
-        self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0)
+        self.axis = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5)
 
         # Create camera frustum representing the robot
         self.robot = self._create_camera_frustum(0.3)
@@ -69,7 +72,7 @@ class DisplayOpen3D:
         self.ctr.set_constant_z_far(5000)
         self.ctr.set_constant_z_near(0.01)
         self.vis.reset_view_point(True)
-        self.ctr.set_zoom(2.5)
+        self.ctr.set_zoom(2.3)
 
         # Run visualization update loop
         while self.vis.poll_events():
