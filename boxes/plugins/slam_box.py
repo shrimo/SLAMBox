@@ -315,8 +315,8 @@ class Triangulate(RootNode):
                 mapp.frames[-1].key_pts[idx1], mapp.frames[-2].key_pts[idx2]
             ):
                 # cv2.circle(image, np.int32(pt1), 3, (0, 255, 255))
-                cv2.drawMarker(image, np.int32(pt1), cc.red, 1, 5, 1, 8)
-                cv2.line(image, np.int32(pt1), np.int32(pt2), cc.red, 1)
+                cv2.drawMarker(image, np.int32(pt1), cc.red, 1, 7, 1, 8)
+                cv2.line(image, np.int32(pt1), np.int32(pt2), cc.yellow, 1)
 
         return image
 
