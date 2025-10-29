@@ -235,6 +235,10 @@ class GeneralGraphOptimization(BaseNode):
         )
         self.create_property("step_frame", 4, widget_type=NODE_PROP_INT)
         self.create_property(
+            "label_rounds", "Maximum number of iterations", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property("rounds", 50, widget_type=NODE_PROP_INT)
+        self.create_property(
             "label_sliding_window", "Sliding window", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("sliding_window", False, widget_type=NODE_PROP_QCHECKBOX)

@@ -72,7 +72,7 @@ class DisplayOpen3D:
         self.ctr.set_constant_z_far(5000)
         self.ctr.set_constant_z_near(0.01)
         self.vis.reset_view_point(True)
-        self.ctr.set_zoom(2.3)
+        self.ctr.set_zoom(2.5)
 
         # Run visualization update loop
         while self.vis.poll_events():
