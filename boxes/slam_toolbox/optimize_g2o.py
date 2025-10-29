@@ -57,7 +57,7 @@ def optimize(
         float: Final chi2 error
     """
 
-    # --- Select frames for optimization ---
+    # Select frames for optimization
     if local_window is None:
         local_frames = frames
     else:
@@ -65,26 +65,26 @@ def optimize(
 
     local_ids = {f.id for f in local_frames}
 
-    # --- Create optimizer ---
+    # Create optimizer
     optimizer = g2o.SparseOptimizer()
     solver = g2o.BlockSolverSE3(SolverSE3[solverSE3]())
     solver = g2o.OptimizationAlgorithmLevenberg(solver)
     optimizer.set_algorithm(solver)
 
-    # --- Camera parameters (shared) ---
+    # Camera parameters (shared)
     cam = g2o.CameraParameters(1.0, (0.0, 0.0), 0)
     cam.set_id(0)
     optimizer.add_parameter(cam)
 
-    # --- Shared robust kernel and info matrix ---
+    # Shared robust kernel and info matrix
     robust_kernel = g2o.RobustKernelHuber(np.sqrt(5.991))
     info_matrix = np.eye(2)
 
-    # --- Precompute: dictionary for frame keypoints for faster access ---
+    # Precompute: dictionary for frame keypoints for faster access
     frame_kps = {f.id: np.array(f.kps) for f in frames}
     graph_frames, graph_points = {}, {}
 
-    # --- Add frame vertices ---
+    # Add frame vertices
     for f in (local_frames if fix_points else frames):
         pose = f.pose
         se3 = g2o.SE3Quat(pose[0:3, 0:3], pose[0:3, 3])
@@ -96,12 +96,12 @@ def optimize(
         optimizer.add_vertex(v_se3)
         graph_frames[f.id] = v_se3
 
-    # --- Pre-filter points that are seen in the local window ---
+    # Pre-filter points that are seen in the local window
     filtered_points = [
         p for p in points if any(fr.id in local_ids for fr in p.frames)
     ]
 
-    # --- Add 3D point vertices and projection edges ---
+    # Add 3D point vertices and projection edges
     for p in filtered_points:
         pt = g2o.VertexPointXYZ()
         pt.set_id(p.id * 2 + 1)
@@ -111,7 +111,7 @@ def optimize(
         optimizer.add_vertex(pt)
         graph_points[p] = pt
 
-        # --- Fast zip over frame references and keypoint indices ---
+        # Fast zip over frame references and keypoint indices
         for f, idx in zip(p.frames, p.idxs):
             if f.id not in graph_frames:
                 continue
@@ -124,7 +124,7 @@ def optimize(
             edge.set_robust_kernel(robust_kernel)
             optimizer.add_edge(edge)
 
-    # --- Add bridge constraints (from sliding window) ---
+    # Add bridge constraints (from sliding window)
     if bridge_edges:
         valid_bridges = [
             b for b in bridge_edges
@@ -140,15 +140,15 @@ def optimize(
                 b["info"],
             )
 
-    # --- Run optimization ---
+    # Run optimization
     optimizer.set_verbose(verbose)
     optimizer.initialize_optimization()
     optimizer.optimize(rounds)
 
-    # --- Final error ---
+    # Final error
     final_error = optimizer.active_chi2()
 
-    # --- Batch update frame poses using NumPy for compactness ---
+    # Batch update frame poses using NumPy for compactness
     for fid, vertex in graph_frames.items():
         est = vertex.estimate()
         R = est.rotation().matrix()
@@ -158,7 +158,7 @@ def optimize(
                 fr.pose = poseRt(R, t)
                 break
 
-    # --- Batch update 3D points (if not fixed) ---
+    # Batch update 3D points (if not fixed)
     if not fix_points:
         for p, vertex in graph_points.items():
             p.pt = np.array(vertex.estimate())
