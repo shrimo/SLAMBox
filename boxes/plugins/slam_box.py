@@ -124,6 +124,12 @@ class MatchPoints(RootNode):
         self.m_trials = self.param["m_trials"]
         self.marker_size = self.param["marker_size"]
         self.show_marker = self.param["show_marker"]
+        self.method = self.param["method"]
+        self.m_dict = {
+            "USAC_ACCURATE" : cv2.USAC_ACCURATE,
+            "USAC_MAGSAC": cv2.USAC_MAGSAC,
+            "RANSAC": cv2.RANSAC,
+        }
 
     def out_frame(self):
         # start_time = time.time()
@@ -145,12 +151,13 @@ class MatchPoints(RootNode):
         if frame.id == 0:
             return image
 
-        idx1, idx2, Rt = slam_toolbox.match_frame(
+        idx1, idx2, Rt = slam_toolbox.match_frame_USAC(
             mapp.frames[-1],
             mapp.frames[-2],
             self.m_samples,
             self.r_threshold,
             self.m_trials,
+            self.m_dict[self.method],
         )
 
         if Rt is None:
@@ -173,6 +180,7 @@ class MatchPoints(RootNode):
         self.m_trials = param["m_trials"]
         self.marker_size = param["marker_size"]
         self.show_marker = param["show_marker"]
+        self.method = param["method"]
 
 
 class Triangulate(RootNode):
