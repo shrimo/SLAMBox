@@ -96,11 +96,18 @@ class MatchPoints(BaseNode):
         )
         self.create_property("r_threshold", 0.02, widget_type=NODE_PROP_FLOAT)
         self.create_property("label_m_trials", "m_trials", widget_type=NODE_PROP_QLABEL)
-        self.create_property("m_trials", 300, widget_type=NODE_PROP_INT)
+        self.create_property("m_trials", 500, widget_type=NODE_PROP_INT)
         self.create_property(
             "label_size_marker", "Marker size", widget_type=NODE_PROP_QLABEL
         )
         self.create_property("marker_size", 5, widget_type=NODE_PROP_INT)
+        method_items = ["RANSAC", "USAC_ACCURATE", "USAC_MAGSAC"]
+        self.create_property(
+            "label_method", "Method", widget_type=NODE_PROP_QLABEL
+        )
+        self.create_property(
+            "method", "USAC_ACCURATE", items=method_items, widget_type=NODE_PROP_QCOMBO
+        )
         self.add_checkbox(
             "show_marker", "Show marker", text="On/Off", state=False, tab="attributes"
         )
